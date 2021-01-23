@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { UserService } from 'src/app/services/user.service';
@@ -22,7 +23,8 @@ export class ExitEventDialogComponent implements OnInit {
     private eventService: EventService,
     private userService: UserService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -36,9 +38,12 @@ export class ExitEventDialogComponent implements OnInit {
     await this.userService.deleteJoinedEventId(uid, eventId);
 
     if (this.isDeleteAllImages) {
-      console.log('hit');
+      // ここに画像削除処理実装予定
     }
-
-    this.snackBar.open('イベントから退会しました');
+    this.dialogRef.close();
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.snackBar.open('イベントから退会しました');
+      this.router.navigateByUrl('/');
+    });
   }
 }

@@ -8,10 +8,21 @@ import { ShellComponent } from './shell/shell.component';
 const routes: Routes = [
   {
     path: 'welcome',
+    pathMatch: 'full',
     loadChildren: () =>
       import('./welcome/welcome.module').then((m) => m.WelcomeModule),
     canLoad: [LoginGuard],
     canActivate: [LoginGuard],
+  },
+  {
+    path: '404',
+    pathMatch: 'full',
+    component: NotFoundComponent,
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsModule),
   },
   {
     path: '',

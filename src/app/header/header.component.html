@@ -1,6 +1,8 @@
 <header class="header">
   <h1 class="header__logo">
-    <a href="" class="header__logo-link">Instacircle</a>
+    <a href="" class="header__logo-link"
+      ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
+    >
   </h1>
   <ng-container *ngIf="authService.user$ | async as user; else default">
     <ng-container *ngIf="event$ | async as event">
@@ -25,6 +27,10 @@
       <a mat-menu-item (click)="openJoinEventDialog()">
         <mat-icon>group</mat-icon>
         <span>イベントに参加する</span>
+      </a>
+      <a mat-menu-item routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>設定</span>
       </a>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>

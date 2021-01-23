@@ -35,7 +35,6 @@ export class ExitEventDialogComponent implements OnInit {
 
     await this.eventService.exitEvent(eventId, uid);
     await this.userService.deleteJoinedEventId(uid, eventId);
-    await this.userService.deleteJoinedEventId(uid, eventId);
 
     if (this.isDeleteAllImages) {
       // ここに画像削除処理実装予定

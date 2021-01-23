@@ -21,6 +21,13 @@
                 class="users__item"
                 [style.background-image]="'url(' + ownerAvatarURL + ')'"
               ></li>
+              <ng-container *ngIf="joinedUsers$ | async as users">
+                <li
+                  *ngFor="let user of users"
+                  class="users__item"
+                  [style.background-image]="'url(' + user.avatarURL + ')'"
+                ></li>
+              </ng-container>
             </ul>
           </dd>
           <div class="event__share">

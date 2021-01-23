@@ -108,6 +108,16 @@ export class EventService {
       );
   }
 
+  getEventJoinedUids(
+    eventId: string
+  ): Observable<{ eventId: string; uid: string }[]> {
+    return this.db
+      .collection<{ eventId: string; uid: string }>(
+        `events/${eventId}/joinedUids`
+      )
+      .valueChanges();
+  }
+
   judgePassword(password: string, eventId: string) {
     const func = this.fns.httpsCallable('judgementPassword');
     return func({ password, eventId }).toPromise();

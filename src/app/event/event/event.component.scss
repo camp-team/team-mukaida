@@ -159,15 +159,23 @@
   flex-wrap: wrap;
   list-style: none;
   &__item {
-    width: 32px;
-    height: 32px;
+    margin-bottom: 6px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: #ccc;
     background: center / cover no-repeat;
     box-shadow: 16px 16px 2rem -2rem hsl(200 50% 20% / 60%);
     @include pc {
-      width: 40px;
-      height: 40px;
+      margin-bottom: 10px;
+      width: 50px;
+      height: 50px;
+    }
+    &:not(:last-of-type) {
+      margin-right: 6px;
+      @include pc {
+        margin-right: 10px;
+      }
     }
   }
 }

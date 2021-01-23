@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
+import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { RouteParamsService } from 'src/app/services/route-params.service';
@@ -17,6 +19,7 @@ import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-
 export class EventComponent implements OnInit {
   uid: string;
   event$: Observable<Event>;
+  joinedUsers$: Observable<User[]>;
   eventId: string;
   eventInvitateURL = location.href.replace('event/', '');
   ownerId: string;
@@ -40,11 +43,24 @@ export class EventComponent implements OnInit {
         this.ownerId = event.ownerId;
         this.getUserAvatarURL(this.ownerId);
       });
+
+      this.joinedUsers$ = this.eventServise
+        .getEventJoinedUids(this.eventId)
+        .pipe(
+          switchMap((userIds: { eventId: string; uid: string }[]) => {
+            const user$$: Observable<
+              User
+            >[] = userIds.map((doc: { eventId: string; uid: string }) =>
+              this.userService.getUserData(doc.uid)
+            );
+            return combineLatest(user$$);
+          })
+        );
+
       this.routeService.eventIdSubject.next(
         (params && this.eventId) || undefined
       );
     });
-    console.log(this.eventInvitateURL);
   }
 
   ngOnInit(): void {}

@@ -1,6 +1,6 @@
 <div class="container--event-list">
   <div class="tile" ontouchstart>
-    <img [src]="event.thumbnailURL" />
+    <img [src]="event.thumbnailURL || 'assets/images/no-image.png'" />
     <div class="tile__text">
       <h1>{{ event.title }}</h1>
       <h2 class="tile__animate-text">

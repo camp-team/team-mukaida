@@ -20,7 +20,9 @@
               <li
                 class="users__item"
                 [style.background-image]="'url(' + ownerAvatarURL + ')'"
-              ></li>
+              >
+                <mat-icon class="owner">star</mat-icon>
+              </li>
               <ng-container *ngIf="joinedUsers$ | async as users">
                 <li
                   *ngFor="let user of users"

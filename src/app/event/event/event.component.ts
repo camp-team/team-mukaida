@@ -8,6 +8,7 @@ import { EventService } from 'src/app/services/event.service';
 import { RouteParamsService } from 'src/app/services/route-params.service';
 import { UserService } from 'src/app/services/user.service';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
+import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog.component';
 
 @Component({
   selector: 'app-event',
@@ -44,7 +45,7 @@ export class EventComponent implements OnInit {
         (params && this.eventId) || undefined
       );
     });
-    console.log(this.eventInvitateURL);
+    this.exitEventOpenDialog();
   }
 
   ngOnInit(): void {}
@@ -63,6 +64,15 @@ export class EventComponent implements OnInit {
       data: {
         eventId: this.eventId,
       },
+    });
+  }
+
+  exitEventOpenDialog() {
+    this.dialog.open(ExitEventDialogComponent, {
+      width: '800px',
+      height: '400px',
+      autoFocus: false,
+      restoreFocus: false,
     });
   }
 }

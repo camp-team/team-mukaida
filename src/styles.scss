@@ -63,8 +63,6 @@ button {
 }
 
 .mat-dialog-container {
-  width: 100vw !important;
-  height: 100vh !important;
   padding: 0 !important;
   @include pc {
     width: 80% !important;

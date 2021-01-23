@@ -73,6 +73,9 @@ export class EventComponent implements OnInit {
       height: '400px',
       autoFocus: false,
       restoreFocus: false,
+      data: {
+        eventId: this.eventId,
+      },
     });
   }
 }

@@ -5,7 +5,7 @@
     <p>本当に退会しますか？</p>
     <section class="example-section">
       <mat-checkbox
-        (change)="deleteImageAll($event.checked)"
+        (change)="isDeleteAllImages = $event.checked"
         color="primary"
         class="check-box"
       >
@@ -16,6 +16,6 @@
 
   <mat-dialog-actions align="end">
     <button mat-button matDialogClose>キャンセル</button>
-    <button color="warn" mat-raised-button>退会</button>
+    <button (click)="exitEvent()" color="warn" mat-raised-button>退会</button>
   </mat-dialog-actions>
 </div>

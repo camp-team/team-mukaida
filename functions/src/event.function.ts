@@ -68,4 +68,4 @@ export const exitEvent = functions
     } else {
       return;
     }
-  })
+  });

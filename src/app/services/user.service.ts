@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -11,8 +12,8 @@ import { User } from '../interfaces/user';
 export class UserService {
   constructor(
     private db: AngularFirestore,
-    private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private fns: AngularFireFunctions
   ) {}
 
   getUserData(uid: string): Observable<User> {
@@ -31,7 +32,15 @@ export class UserService {
     await this.db.doc<User>(`users/${user.uid}`).update({
       ...user,
     });
-    this.snackBar.open('ユーザー情報を更新しました');
     this.router.navigate(['/']);
+  }
+
+  deleteJoinedEventId(uid: string, eventId: string): Promise<void> {
+    const callable = this.fns.httpsCallable('deleteJoinedEventId');
+    const data = {
+      uid,
+      eventId,
+    };
+    return callable(data).toPromise();
   }
 }

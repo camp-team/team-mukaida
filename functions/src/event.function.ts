@@ -1,3 +1,5 @@
+import { markEventTried, shouldEventRun } from './utils/firebase.function';
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -17,4 +19,39 @@ export const judgementPassword = functions
     } catch {
       throw new Error('認証に失敗しました');
     }
+  });
+
+export const countUpJoinedUserCount = functions
+  .region('asia-northeast1')
+  .firestore.document('events/{eventId}/joinedUids/{uid}')
+  .onCreate(async (snap: any, context: any) => {
+    const eventId = context.eventId;
+    return shouldEventRun(eventId).then(async (should) => {
+      if (should) {
+        await db
+          .doc(`events/${context.params.eventId}`)
+          .update('joinedUserCount', admin.firestore.FieldValue.increment(1));
+        functions.logger.info(context.params);
+        return markEventTried(eventId);
+      } else {
+        return;
+      }
+    });
+  });
+
+export const countDownJoinedUserCount = functions
+  .region('asia-northeast1')
+  .firestore.document('events/{eventId}/joinedUids/{uid}')
+  .onDelete(async (snap: any, context: any) => {
+    const eventId = context.eventId;
+    return shouldEventRun(eventId).then(async (should) => {
+      if (should) {
+        await db
+          .doc(`events/${context.params.eventId}`)
+          .update('joinedUserCount', admin.firestore.FieldValue.increment(-1));
+        return markEventTried(eventId);
+      } else {
+        return;
+      }
+    });
   });

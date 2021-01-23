@@ -1,12 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
 import { Image } from 'src/app/interfaces/image';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
+import { LikedService } from 'src/app/services/liked.service';
 import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialog.component';
 
 @Component({
@@ -17,6 +20,11 @@ import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialo
 export class ImageCardComponent implements OnInit {
   @Input() image: Image;
   @Input() event: Event;
+  likedCount: number;
+  isLiked: boolean;
+  uid: string;
+
+  private eventId = this.route.snapshot.paramMap.get('eventId');
 
   comments: any[] = [
     {
@@ -31,15 +39,40 @@ export class ImageCardComponent implements OnInit {
   ];
 
   user$: Observable<User> = this.authService.user$;
+  image$: Observable<Image[]> = this.imageService.getImages(this.eventId);
+  imageIds = [];
 
   constructor(
     private imageService: ImageService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private likedService: LikedService,
+    private authServise: AuthService,
+    private route: ActivatedRoute
+  ) {
+    this.authServise.user$.subscribe((user) => {
+      this.uid = user.uid;
+    });
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.likedService
+      .isLiked(this.eventId)
+      .pipe(take(1))
+      .subscribe((isLiked) => {
+        this.isLiked = isLiked;
+        console.log(isLiked);
+      });
+    console.log(this.eventId);
+    this.likedService
+      .getLikedCount(this.eventId)
+      .pipe(take(1))
+      .subscribe((likedCount) => {
+        this.likedCount = likedCount.length;
+        console.log(likedCount);
+      });
+  }
 
   isEditMode() {}
 
@@ -59,5 +92,19 @@ export class ImageCardComponent implements OnInit {
           return;
         }
       });
+  }
+
+  likeImage(imageId: string) {
+    this.isLiked = true;
+    this.likedCount++;
+    this.imageIds.push(imageId);
+    this.likedService.likeItem(this.eventId, imageId, this.uid);
+  }
+
+  UnLikeImage(imageId: string) {
+    this.isLiked = false;
+    this.likedCount--;
+    console.log(this.likedCount);
+    this.likedService.unlike(this.eventId, imageId, this.uid);
   }
 }

@@ -25,6 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from './shared/shared.module';
 import { DeleteAccountDialogComponent } from './delete-account-dialog/delete-account-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog/delete-acc
     MatMenuModule,
     MatTooltipModule,
     SharedModule,
+    MatDialogModule,
   ],
   providers: [
     { provide: REGION, useValue: 'asia-northeast1' },

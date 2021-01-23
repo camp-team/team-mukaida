@@ -45,7 +45,6 @@ export class EventComponent implements OnInit {
         (params && this.eventId) || undefined
       );
     });
-    this.exitEventOpenDialog();
   }
 
   ngOnInit(): void {}

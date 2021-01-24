@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -7,16 +9,32 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss'],
 })
-export class WelcomeComponent implements OnInit {
-  constructor(public authService: AuthService, private router: Router) {}
+export class WelcomeComponent implements OnInit, OnDestroy {
+  private readonly subscription: Subscription = new Subscription();
 
-  ngOnInit(): void {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        if (user) {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   login(): void {
-    this.authService.googlelogin().then(() => {
-      setTimeout(() => {
-        this.router.navigateByUrl('/');
-      }, 600);
-    });
+    this.authService
+      .googlelogin()
+      .then(() => this.snackBar.open('ようこそInstacircleへ！'));
   }
 }

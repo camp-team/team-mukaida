@@ -23,6 +23,8 @@ import { EditComponent } from './edit/edit.component';
 import { EventDeleteDialogComponent } from './event-delete-dialog/event-delete-dialog.component';
 import { CommentHeaderComponent } from './event/image-detail/comment-header/comment-header.component';
 import { CropperModule } from '@deer-inc/ngx-croppie';
+import { ExitEventDialogComponent } from './exit-event-dialog/exit-event-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { CropperModule } from '@deer-inc/ngx-croppie';
     EditComponent,
     EventDeleteDialogComponent,
     CommentHeaderComponent,
+    ExitEventDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +56,7 @@ import { CropperModule } from '@deer-inc/ngx-croppie';
     MatTooltipModule,
     ClipboardModule,
     CropperModule,
+    MatCheckboxModule,
   ],
 })
 export class EventModule {}

@@ -1,16 +1,16 @@
 <div class="container--event-list">
   <div class="tile" ontouchstart>
-    <img [src]="event.thumbnailURL || 'assets/images/no-image.png'" />
+    <img [src]="event?.thumbnailURL || 'assets/images/no-image.png'" />
     <div class="tile__text">
-      <h1>{{ event.title }}</h1>
+      <h1>{{ event?.title }}</h1>
       <h2 class="tile__animate-text">
-        参加中メンバー : {{ event.joinedUserCount }}人
+        参加中メンバー : {{ event?.joinedUserCount }}人
       </h2>
       <p class="tile__animate-text">
-        {{ event.descliption }}
+        {{ event?.descliption }}
       </p>
       <div class="tile__date">
-        {{ event.createAt.toDate() | date: 'yyyy/MM/dd' }}
+        {{ event?.createAt.toDate() | date: 'yyyy/MM/dd' }}
       </div>
     </div>
   </div>

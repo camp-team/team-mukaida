@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { DeleteAccountDialogComponent } from 'src/app/delete-account-dialog/delete-account-dialog.component';
 import { User } from 'src/app/interfaces/user';
@@ -27,7 +28,8 @@ export class SettingsComponent implements OnInit {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -54,10 +56,12 @@ export class SettingsComponent implements OnInit {
 
   updateUser(): void {
     const formData = this.form.value;
-    this.userService.updateUser({
-      uid: this.user.uid,
-      avatarURL: this.imageFile,
-      name: formData.name,
-    });
+    this.userService
+      .updateUser({
+        uid: this.user.uid,
+        avatarURL: this.imageFile,
+        name: formData.name,
+      })
+      .then(() => this.snackBar.open('ユーザー情報を更新しました'));
   }
 }

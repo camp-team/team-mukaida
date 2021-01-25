@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
         this.openJoinEventDialog(id);
       }
     });
+
+    this.joinedEvents$.subscribe((event) => console.log(event));
   }
 
   openJoinEventDialog(id?: string) {

@@ -117,4 +117,8 @@ export class EventService {
     const func = this.fns.httpsCallable('judgementPassword');
     return func({ password, eventId }).toPromise();
   }
+
+  exitEvent(eventId: string, uid: string): Promise<void> {
+    return this.db.doc(`events/${eventId}/joinedUids/${uid}`).delete();
+  }
 }

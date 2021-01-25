@@ -1,5 +1,6 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+import { markEventTried, shouldEventRun } from './utils/firebase.function';
 import { deleteCollectionByReference } from './utils/firebase.function';
 
 const db = admin.firestore();
@@ -32,4 +33,16 @@ export const deleteUserAccount = functions
     const users = db.collection(`users`).where('uid', '==', user.uid);
     await deleteCollectionByReference(users);
     return;
+  });
+
+export const deleteJoinedEventId = functions
+  .region('asia-northeast1')
+  .https.onCall(async (data: any, _context: any) => {
+    const uid: string = data.uid;
+    const eventId: string = data.eventId;
+    const should = await shouldEventRun(eventId);
+    if (should) {
+      await db.doc(`users/${uid}/joinedEvents/${eventId}`).delete();
+      markEventTried(uid);
+    }
   });

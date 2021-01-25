@@ -65,9 +65,14 @@ export class EventService {
       });
   }
 
-  deleteEvent(eventId: string) {
-    // TODO: イベント削除機能実装
-    this.router.navigateByUrl('/');
+  async deleteEvent(eventId: string) {
+    const callable = this.fns.httpsCallable('deleteEvent');
+
+    return callable(eventId)
+      .toPromise()
+      .then(() => {
+        this.router.navigateByUrl('/');
+      });
   }
 
   getEvent(id: string): Observable<Event> {

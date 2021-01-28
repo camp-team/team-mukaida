@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Event } from 'src/app/interfaces/event';
+import { switchMap, take } from 'rxjs/operators';
+import { EventWithOwner } from 'src/app/interfaces/event';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
-import { RouteParamsService } from 'src/app/services/route-params.service';
-import { UserService } from 'src/app/services/user.service';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
 import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog.component';
 
@@ -16,44 +15,23 @@ import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog
   styleUrls: ['./event.component.scss'],
 })
 export class EventComponent implements OnInit {
-  uid: string;
-  event$: Observable<Event>;
   eventId: string;
+  event$: Observable<EventWithOwner> = this.route.paramMap.pipe(
+    switchMap((params) => {
+      this.eventId = params.get('eventId');
+      return this.eventServise.getEventWithOwner(this.eventId).pipe(take(1));
+    })
+  );
   eventInvitateURL = location.href.replace('event/', '');
-  ownerId: string;
-  ownerAvatarURL: string;
 
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private eventServise: EventService,
-    private authServise: AuthService,
-    private userService: UserService,
-    private routeService: RouteParamsService
-  ) {
-    this.authServise.user$.subscribe((user) => {
-      this.uid = user.uid;
-    });
-    this.route.paramMap.subscribe((params) => {
-      this.eventId = params.get('eventId');
-      this.event$ = this.eventServise.getEvent(this.eventId);
-      this.event$.subscribe((event) => {
-        this.ownerId = event.ownerId;
-        this.getUserAvatarURL(this.ownerId);
-      });
-      this.routeService.eventIdSubject.next(
-        (params && this.eventId) || undefined
-      );
-    });
-  }
+    public authServise: AuthService
+  ) {}
 
   ngOnInit(): void {}
-
-  getUserAvatarURL(uid: string) {
-    this.userService.getUserData(uid).subscribe((user) => {
-      this.ownerAvatarURL = user.avatarURL;
-    });
-  }
 
   openDeleteEventDialog() {
     this.dialog.open(EventDeleteDialogComponent, {

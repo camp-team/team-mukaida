@@ -19,7 +19,7 @@
             <ul class="users">
               <li
                 class="users__item"
-                [style.background-image]="'url(' + ownerAvatarURL + ')'"
+                [style.background-image]="'url(' + event.user.avatarURL + ')'"
               ></li>
             </ul>
           </dd>
@@ -42,7 +42,7 @@
             </button>
             <mat-menu #eventMenu="matMenu">
               <a
-                *ngIf="uid === event.ownerId"
+                *ngIf="authServise.uid === event.ownerId"
                 mat-menu-item
                 routerLink="/event/{{ eventId }}/edit/"
               >
@@ -50,7 +50,7 @@
                 <span>編集</span>
               </a>
               <button
-                *ngIf="uid === event.ownerId"
+                *ngIf="authServise.uid === event.ownerId"
                 mat-menu-item
                 (click)="openDeleteEventDialog()"
               >

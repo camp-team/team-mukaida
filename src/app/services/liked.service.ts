@@ -37,11 +37,13 @@ export class LikedService {
   }
 
   // 記事にいいねしているかチェックする
-  isLiked(eventId: string): Observable<boolean> {
+  isLiked(
+    eventId: string,
+    imageId: String,
+    likedUid: String
+  ): Observable<boolean> {
     return this.db
-      .collectionGroup('likedUids', (ref) =>
-        ref.where('eventId', '==', eventId)
-      )
+      .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
       .valueChanges()
       .pipe(map((doc) => !!doc));
   }

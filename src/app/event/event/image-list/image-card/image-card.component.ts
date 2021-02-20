@@ -3,11 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
+import { Comment } from 'src/app/interfaces/comment';
 import { Event } from 'src/app/interfaces/event';
 import { Image } from 'src/app/interfaces/image';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommentService } from 'src/app/services/comment.service';
 import { ImageService } from 'src/app/services/image.service';
 import { LikedService } from 'src/app/services/liked.service';
 import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialog.component';
@@ -25,22 +27,30 @@ export class ImageCardComponent implements OnInit {
   uid: string;
 
   private eventId = this.route.snapshot.paramMap.get('eventId');
-
-  comments: any[] = [
-    {
-      coment: '',
-    },
-    {
-      coment: '',
-    },
-    {
-      coment: '',
-    },
-  ];
+  comments: Comment[];
 
   user$: Observable<User> = this.authService.user$;
   image$: Observable<Image[]> = this.imageService.getImages(this.eventId);
   imageIds = [];
+
+  eventId$: Observable<string> = this.route.paramMap.pipe(
+    map((param) => {
+      return param.get('eventId');
+    })
+  );
+
+  imageList$: Observable<Image[]> = this.eventId$.pipe(
+    switchMap((eventId) => {
+      return this.imageService.getImages(eventId);
+    })
+  );
+
+  comments$: Observable<Comment[]> = this.eventId$.pipe(
+    switchMap((params) => {
+      const eventId = params;
+      return this.commentService.getComments(eventId, this.image.imageId);
+    })
+  );
 
   constructor(
     private imageService: ImageService,
@@ -49,7 +59,8 @@ export class ImageCardComponent implements OnInit {
     private authService: AuthService,
     private likedService: LikedService,
     private authServise: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private commentService: CommentService
   ) {
     this.authServise.user$.subscribe((user) => {
       this.uid = user.uid;
@@ -57,6 +68,9 @@ export class ImageCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.comments$.subscribe((comments) => {
+      this.comments = comments;
+    });
     // 自分がいいねをしたか、していないかを判定する。
     this.likedService
       .isLiked(this.eventId, this.image.imageId, this.uid)

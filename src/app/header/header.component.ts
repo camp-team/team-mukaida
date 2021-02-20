@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Event } from '../interfaces/event';
@@ -24,7 +25,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private dialog: MatDialog,
     private routeService: RouteParamsService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.subscription.add(
       this.routeService.eventIdSubject.subscribe((data) => {
@@ -34,7 +36,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        if (!user) {
+          this.router.navigateByUrl('/welcome');
+        }
+      })
+    );
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -51,10 +61,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout().then(() => {
-      setTimeout(() => {
-        this.router.navigateByUrl('/welcome');
-      }, 600);
-    });
+    this.authService
+      .logout()
+      .then(() => this.snackBar.open('ログアウトしました'));
   }
 }

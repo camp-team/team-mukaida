@@ -1,12 +1,17 @@
-<h2 mat-dialog-title class="dialog__title">
-  innsta Cricleのアカウントを削除しますか？
-</h2>
-<div mat-dialog-content>
-  <p>アカウントを削除すると、保存されたデータは全て消去されます。</p>
-</div>
-<div mat-dialog-actions class="dialog__actions">
-  <button mat-flat-button color="warn" (click)="deleteUserAccount()">
-    削除
-  </button>
-  <button mat-stroked-button mat-dialog-close>キャンセル</button>
+<div class="delete-dialog">
+  <h2 matDialogTitle class="dialog__title">アカウントを削除しますか？</h2>
+
+  <mat-dialog-content>
+    <p>
+      アカウントを削除すると、
+      投稿した写真やコメントなど、保存されたデータは全て消去されます。
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog__actions" align="end">
+    <button mat-stroked-button matDialogClose>キャンセル</button>
+    <button mat-flat-button color="warn" (click)="deleteUserAccount()">
+      削除
+    </button>
+  </mat-dialog-actions>
 </div>

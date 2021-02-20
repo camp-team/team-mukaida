@@ -5,10 +5,11 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import * as firebase from 'firebase';
-import { Event } from '../interfaces/event';
+import { Event, EventWithOwner } from '../interfaces/event';
 import { Password } from '../interfaces/password';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class EventService {
     private storage: AngularFireStorage,
     private fns: AngularFireFunctions,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {}
 
   async createEvent(
@@ -65,9 +67,14 @@ export class EventService {
       });
   }
 
-  deleteEvent(eventId: string) {
-    // TODO: イベント削除機能実装
-    this.router.navigateByUrl('/');
+  async deleteEvent(eventId: string) {
+    const callable = this.fns.httpsCallable('deleteEvent');
+
+    return callable(eventId)
+      .toPromise()
+      .then(() => {
+        this.router.navigateByUrl('/');
+      });
   }
 
   getEvent(id: string): Observable<Event> {
@@ -111,5 +118,24 @@ export class EventService {
   judgePassword(password: string, eventId: string) {
     const func = this.fns.httpsCallable('judgementPassword');
     return func({ password, eventId }).toPromise();
+  }
+
+  exitEvent(eventId: string, uid: string): Promise<void> {
+    return this.db.doc(`events/${eventId}/joinedUids/${uid}`).delete();
+  }
+
+  getEventWithOwner(eventId: string): Observable<EventWithOwner> {
+    return this.db
+      .doc<Event>(`events/${eventId}`)
+      .valueChanges()
+      .pipe(
+        switchMap((event) => {
+          const user$ = this.userService.getUserData(event.ownerId);
+          return combineLatest([of(event), user$]);
+        }),
+        map(([event, user]) => {
+          return { ...event, user };
+        })
+      );
   }
 }

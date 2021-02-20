@@ -6,21 +6,39 @@
   width: 240px;
   height: 240px;
   margin: 10px;
+  border-radius: 10px;
   background-color: $color-accent;
   background-size: cover;
   position: relative;
   cursor: pointer;
   transition: all 0.4s ease-out;
-  box-shadow: 0px 35px 56px -17px rgba(0, 0, 0, 0.44);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 16px;
   color: white;
   font-family: $font-default;
   @include pc {
     width: 320px;
     height: 320px;
   }
+  &::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: $color-accent;
+    border-radius: 10px;
+    opacity: 0.38;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    @include pc {
+      display: none;
+    }
+  }
   img {
     height: 100%;
     width: 100%;
+    border-radius: 10px;
     position: absolute;
     top: 0;
     left: 0;
@@ -29,48 +47,57 @@
   }
   &__text {
     position: absolute;
-    padding: 30px;
+    padding: 16px;
     height: calc(100% - 60px);
+    z-index: 2;
+    @include pc {
+      padding: 30px;
+    }
   }
   h1 {
     font-weight: 300;
     margin: 0;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 10px rgba($color-accent, 0.6);
+    @include pc {
+      text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.38);
+    }
   }
   h2 {
     font-weight: 100;
     margin: 20px 0 0 0;
-    transform: translateX(200px);
   }
   p {
     font-weight: 300;
     margin: 20px 0 0 0;
     line-height: 25px;
-    transform: translateX(-80px);
     transition-delay: 0.2s;
   }
   &__animate-text {
-    opacity: 0;
-    transition: all 0.6s ease-in-out;
+    @include pc {
+      opacity: 0;
+      transition: all 0.6s ease-in-out;
+    }
   }
   &:hover {
-    box-shadow: 0px 35px 48px -17px rgba(0, 0, 0, 0.64);
-    transform: scale(1.05);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 16px;
   }
   &:hover img {
-    opacity: 0.2;
+    @include pc {
+      opacity: 0.2;
+    }
   }
   &:hover .tile__animate-text {
-    transform: translateX(0);
-    opacity: 1;
+    @include pc {
+      opacity: 1;
+    }
   }
   &__date {
-    opacity: 0;
-    transition: transform 0.4s ease-out, opacity 0.5s ease;
-    transform: translate(160px, 200px);
+    @include pc {
+      opacity: 0;
+      transition: transform 0.4s ease-out, opacity 0.5s ease;
+    }
   }
   &:hover .tile__date {
     opacity: 1;
-    transform: translate(160px, 120px);
   }
 }

@@ -55,4 +55,11 @@ export class EventComponent implements OnInit {
       },
     });
   }
+
+  test() {
+    this.eventServise.deleteImagesInTheEvent(
+      this.eventId,
+      this.authServise.uid
+    );
+  }
 }

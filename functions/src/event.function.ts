@@ -1,10 +1,11 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import {
   markEventTried,
   shouldEventRun,
   deleteCollectionByReference,
 } from './utils/firebase.function';
+// import { deleteCollectionByPath, deleteCollectionByReference, } from './utils/firebase.function';
 
 export const db = admin.firestore();
 
@@ -95,13 +96,29 @@ export const exitEvent = functions
   .region('asia-northeast1')
   .firestore.document('events/{eventId}/joinedUids/{userId}')
   .onDelete(async (_snap: any, context: any) => {
+    const uid: string = context.auth?.uid as string;
     const eventId: string = context.eventId;
-    const userId: string = context.auth?.uid as string;
     const should = await shouldEventRun(eventId);
     if (should) {
-      await db.doc(`events/${eventId}/joinedUids/${userId}`).delete();
+      await db.doc(`events/${eventId}/joinedUids/${uid}`).delete();
       return markEventTried(eventId);
     } else {
       return;
+    }
+  });
+
+export const deleteImagesInTheEvent = functions
+  .region('asia-northeast1')
+  .https.onCall(async (data, context) => {
+    const uid: string = context.auth?.uid as string;
+    const eventId: string = data.eventId;
+    const should = await shouldEventRun(eventId);
+    if (should) {
+      const images = db
+        .collection(`events/${eventId}/images`)
+        .where('uid', '==', uid);
+      functions.logger.info(images);
+      // const comments = db.collection(`events/${eventId}/images/`)
+      // const deleteAllImages = deleteCollectionByReference(images);
     }
   });

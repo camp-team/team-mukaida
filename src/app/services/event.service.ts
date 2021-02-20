@@ -5,9 +5,10 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import * as firebase from 'firebase';
+import { switchMap, map, take } from 'rxjs/operators';
 import { Event, EventWithOwner } from '../interfaces/event';
+import * as firebase from 'firebase';
+import { Image } from '../interfaces/image';
 import { Password } from '../interfaces/password';
 import { UserService } from './user.service';
 
@@ -137,5 +138,22 @@ export class EventService {
           return { ...event, user };
         })
       );
+  }
+
+  async getMyPostImageIds(eventId: string, uid: string): Promise<string[]> {
+    const docs = await this.db
+      .collection(`events/${eventId}/images`, (ref) =>
+        ref.where('uid', '==', uid)
+      )
+      .valueChanges()
+      .pipe(take(1))
+      .toPromise();
+    return docs.map((doc: Image) => doc.imageId);
+  }
+
+  async deleteImagesInTheEvent(eventId: string, uid: string): Promise<void> {
+    const ImageIds = await this.getMyPostImageIds(eventId, uid);
+    const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
+    return callable(ImageIds).toPromise();
   }
 }

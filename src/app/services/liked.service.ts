@@ -22,7 +22,7 @@ export class LikedService {
         .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
         .set({ likedUid, eventId }),
       // 自分がいいねをした画像をDBの自分のユーザーIDに保持する
-      this.db.doc(`users/${likedUid}/likedEvent/${eventId}`).set({ eventId }),
+      this.db.doc(`users/${likedUid}/likedImages/${imageId}`).set({ imageId }),
     ]);
   }
 
@@ -32,7 +32,7 @@ export class LikedService {
       this.db
         .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
         .delete(),
-      this.db.doc(`users/${likedUid}/likedEvent/${eventId}`).delete(),
+      this.db.doc(`users/${likedUid}/likedImages/${imageId}`).delete(),
     ]);
   }
 
@@ -49,10 +49,13 @@ export class LikedService {
   }
 
   // 記事にいいねしている人一覧で取得する
-  getLikedCount(eventId: string): Observable<LikedImageUser[]> {
+  getLikedCount(
+    eventId: string,
+    imageId: String
+  ): Observable<LikedImageUser[]> {
     return this.db
-      .collectionGroup<LikedImageUser>('likedUids', (ref) =>
-        ref.where('eventId', '==', eventId)
+      .collection<LikedImageUser>(
+        `events/${eventId}/images/${imageId}/likedUids`
       )
       .valueChanges();
   }

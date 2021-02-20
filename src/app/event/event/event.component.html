@@ -50,6 +50,10 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #eventMenu="matMenu">
+              <button mat-menu-item (click)="openAuthoritySettingDialog()">
+                <mat-icon>people</mat-icon>
+                <span>オーナー変更</span>
+              </button>
               <a mat-menu-item routerLink="/event/{{ eventId }}/edit/">
                 <mat-icon>edit</mat-icon>
                 <span>編集</span>

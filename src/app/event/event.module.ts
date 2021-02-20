@@ -23,6 +23,7 @@ import { EditComponent } from './edit/edit.component';
 import { EventDeleteDialogComponent } from './event-delete-dialog/event-delete-dialog.component';
 import { CommentHeaderComponent } from './event/image-detail/comment-header/comment-header.component';
 import { CropperModule } from '@deer-inc/ngx-croppie';
+import { AuthoritySettingDialogComponent } from './authority-setting-dialog/authority-setting-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { CropperModule } from '@deer-inc/ngx-croppie';
     EditComponent,
     EventDeleteDialogComponent,
     CommentHeaderComponent,
+    AuthoritySettingDialogComponent,
   ],
   imports: [
     CommonModule,

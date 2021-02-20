@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { RouteParamsService } from 'src/app/services/route-params.service';
 import { UserService } from 'src/app/services/user.service';
+import { AuthoritySettingDialogComponent } from '../authority-setting-dialog/authority-setting-dialog.component';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
 
 @Component({
@@ -28,7 +29,7 @@ export class EventComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private eventServise: EventService,
+    private eventService: EventService,
     private authServise: AuthService,
     private userService: UserService,
     private routeService: RouteParamsService
@@ -38,13 +39,13 @@ export class EventComponent implements OnInit {
     });
     this.route.paramMap.subscribe((params) => {
       this.eventId = params.get('eventId');
-      this.event$ = this.eventServise.getEvent(this.eventId);
+      this.event$ = this.eventService.getEvent(this.eventId);
       this.event$.subscribe((event) => {
         this.ownerId = event.ownerId;
         this.getUserAvatarURL(this.ownerId);
       });
 
-      this.joinedUsers$ = this.eventServise
+      this.joinedUsers$ = this.eventService
         .getEventJoinedUids(this.eventId)
         .pipe(
           switchMap((userIds: { eventId: string; uid: string }[]) => {
@@ -73,6 +74,17 @@ export class EventComponent implements OnInit {
 
   openDeleteEventDialog() {
     this.dialog.open(EventDeleteDialogComponent, {
+      width: '460px',
+      autoFocus: false,
+      restoreFocus: false,
+      data: {
+        eventId: this.eventId,
+      },
+    });
+  }
+
+  openAuthoritySettingDialog() {
+    this.dialog.open(AuthoritySettingDialogComponent, {
       width: '460px',
       autoFocus: false,
       restoreFocus: false,

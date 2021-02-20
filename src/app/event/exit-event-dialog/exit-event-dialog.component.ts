@@ -37,8 +37,11 @@ export class ExitEventDialogComponent implements OnInit {
     await this.userService.deleteJoinedEventId(uid, eventId);
 
     if (this.isDeleteAllImages) {
-      // ここに画像削除処理実装予定
+      console.log('image delete');
+
+      this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
     }
+
     this.dialogRef.close();
     this.dialogRef.afterClosed().subscribe(() => {
       this.snackBar.open('イベントから退会しました');

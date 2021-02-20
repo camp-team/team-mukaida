@@ -5,7 +5,6 @@ import {
   shouldEventRun,
   deleteCollectionByReference,
 } from './utils/firebase.function';
-// import { deleteCollectionByPath, deleteCollectionByReference, } from './utils/firebase.function';
 
 export const db = admin.firestore();
 
@@ -95,7 +94,7 @@ export const countDownJoinedUserCount = functions
 export const exitEvent = functions
   .region('asia-northeast1')
   .firestore.document('events/{eventId}/joinedUids/{userId}')
-  .onDelete(async (_snap: any, context: any) => {
+  .onDelete(async (snap: any, context: any) => {
     const uid: string = context.auth?.uid as string;
     const eventId: string = context.eventId;
     const should = await shouldEventRun(eventId);
@@ -109,16 +108,29 @@ export const exitEvent = functions
 
 export const deleteImagesInTheEvent = functions
   .region('asia-northeast1')
-  .https.onCall(async (data, context) => {
-    const uid: string = context.auth?.uid as string;
-    const eventId: string = data.eventId;
-    const should = await shouldEventRun(eventId);
-    if (should) {
-      const images = db
-        .collection(`events/${eventId}/images`)
-        .where('uid', '==', uid);
-      functions.logger.info(images);
-      // const comments = db.collection(`events/${eventId}/images/`)
-      // const deleteAllImages = deleteCollectionByReference(images);
+  .runWith({ memory: '2GB', timeoutSeconds: 540 })
+  .https.onCall(
+    async (
+      data: { eventId: string; imageIds: string[]; commentIds: string[] },
+      context
+    ) => {
+      const uid: string = context.auth?.uid as string;
+      const eventId: string = data.eventId;
+      const should = await shouldEventRun(eventId);
+      if (should) {
+        const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+          .collection(`events/${eventId}/images`)
+          .where('uid', '==', uid);
+        const commentsArray: FirebaseFirestore.Query<
+          FirebaseFirestore.DocumentData
+        >[] = data.imageIds.map((id: string) => {
+          return db.collection(`events/${eventId}/images/${id}/comments`);
+        });
+        const deleteAllImages = deleteCollectionByReference(images);
+        const deleteAllComments = commentsArray.map((commentData) =>
+          deleteCollectionByReference(commentData)
+        );
+        Promise.all([deleteAllImages, ...deleteAllComments]);
+      }
     }
-  });
+  );

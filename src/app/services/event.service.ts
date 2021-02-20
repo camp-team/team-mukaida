@@ -11,6 +11,7 @@ import * as firebase from 'firebase';
 import { Image } from '../interfaces/image';
 import { Password } from '../interfaces/password';
 import { UserService } from './user.service';
+import { CommentService } from './comment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,8 @@ export class EventService {
     private fns: AngularFireFunctions,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private commentService: CommentService
   ) {}
 
   async createEvent(
@@ -151,9 +153,15 @@ export class EventService {
     return docs.map((doc: Image) => doc.imageId);
   }
 
-  async deleteImagesInTheEvent(eventId: string, uid: string): Promise<void> {
-    const ImageIds = await this.getMyPostImageIds(eventId, uid);
+  async deleteImagesAndCommentsInTheEvent(eventId: string, uid: string) {
+    const imageIds: string[] = await this.getMyPostImageIds(eventId, uid);
+    const commentIds: string[] = await this.commentService.getMyCommentIds(uid);
+    const data = {
+      eventId,
+      imageIds,
+      commentIds,
+    };
     const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
-    return callable(ImageIds).toPromise();
+    return callable(data).toPromise();
   }
 }

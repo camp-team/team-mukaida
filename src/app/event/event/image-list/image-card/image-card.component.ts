@@ -64,9 +64,9 @@ export class ImageCardComponent implements OnInit {
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
       });
-    // いいね数を取得する。
+    // 各画像のいいね数を取得する。
     this.likedService
-      .getLikedCount(this.eventId)
+      .getLikedCount(this.eventId, this.image.imageId)
       .pipe(take(1))
       .subscribe((likedCount) => {
         this.likedCount = likedCount.length;

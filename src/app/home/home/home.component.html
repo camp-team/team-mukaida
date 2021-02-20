@@ -33,7 +33,7 @@
         <app-event-list-card
           *ngFor="let event of joinedEvents$ | async as events"
           [event]="event"
-          [routerLink]="'/event/' + event.eventId"
+          [routerLink]="'/event/' + event?.eventId"
         ></app-event-list-card>
       </div>
     </mat-tab>

@@ -7,7 +7,7 @@
             [src]="
               event.thumbnailURL
                 ? event.thumbnailURL
-                : 'assets/images/image-card-sample01.jpg'
+                : 'assets/images/no-image.png'
             "
             alt=""
           />
@@ -17,10 +17,7 @@
           <dd class="event__description">{{ event.descliption }}</dd>
           <dd class="event__users">
             <ul class="users">
-              <li
-                class="users__item"
-                [style.background-image]="'url(' + ownerAvatarURL + ')'"
-              >
+              <li class="users__item">
                 <mat-icon class="owner">star</mat-icon>
               </li>
               <ng-container *ngIf="joinedUsers$ | async as users">
@@ -41,7 +38,7 @@
               招待リンクをコピー
             </button>
           </div>
-          <div class="event__actions" *ngIf="uid === event.ownerId">
+          <div class="event__actions">
             <button
               mat-icon-button
               aria-label="イベント設定"
@@ -54,13 +51,25 @@
                 <mat-icon>people</mat-icon>
                 <span>オーナー変更</span>
               </button>
-              <a mat-menu-item routerLink="/event/{{ eventId }}/edit/">
+              <a
+                *ngIf="authServise.uid === event.ownerId"
+                mat-menu-item
+                routerLink="/event/{{ eventId }}/edit/"
+              >
                 <mat-icon>edit</mat-icon>
                 <span>編集</span>
               </a>
-              <button mat-menu-item (click)="openDeleteEventDialog()">
+              <button
+                *ngIf="authServise.uid === event.ownerId"
+                mat-menu-item
+                (click)="openDeleteEventDialog()"
+              >
                 <mat-icon>delete</mat-icon>
                 <span>削除</span>
+              </button>
+              <button mat-menu-item (click)="exitEventOpenDialog()">
+                <mat-icon>person_off </mat-icon>
+                <span>イベントから退会する</span>
               </button>
             </mat-menu>
           </div>

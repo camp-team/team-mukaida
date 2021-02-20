@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export interface Event {
   eventId: string;
   title: string;
@@ -6,4 +8,8 @@ export interface Event {
   ownerId: string;
   createAt: firebase.default.firestore.Timestamp;
   joinedUserCount: number;
+}
+
+export interface EventWithOwner extends Event {
+  user: User;
 }

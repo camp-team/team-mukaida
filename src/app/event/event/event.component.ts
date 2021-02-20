@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,7 +10,9 @@ import { EventService } from 'src/app/services/event.service';
 import { RouteParamsService } from 'src/app/services/route-params.service';
 import { UserService } from 'src/app/services/user.service';
 import { AuthoritySettingDialogComponent } from '../authority-setting-dialog/authority-setting-dialog.component';
+import { EventWithOwner } from 'src/app/interfaces/event';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
+import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog.component';
 
 @Component({
   selector: 'app-event',
@@ -19,18 +21,21 @@ import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-
 })
 export class EventComponent implements OnInit {
   uid: string;
-  event$: Observable<Event>;
   joinedUsers$: Observable<User[]>;
   eventId: string;
+  event$: Observable<EventWithOwner> = this.route.paramMap.pipe(
+    switchMap((params) => {
+      this.eventId = params.get('eventId');
+      return this.eventService.getEventWithOwner(this.eventId).pipe(take(1));
+    })
+  );
   eventInvitateURL = location.href.replace('event/', '');
-  ownerId: string;
-  ownerAvatarURL: string;
 
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private eventService: EventService,
-    private authServise: AuthService,
+    public authServise: AuthService,
     private userService: UserService,
     private routeService: RouteParamsService
   ) {
@@ -39,11 +44,6 @@ export class EventComponent implements OnInit {
     });
     this.route.paramMap.subscribe((params) => {
       this.eventId = params.get('eventId');
-      this.event$ = this.eventService.getEvent(this.eventId);
-      this.event$.subscribe((event) => {
-        this.ownerId = event.ownerId;
-        this.getUserAvatarURL(this.ownerId);
-      });
 
       this.joinedUsers$ = this.eventService
         .getEventJoinedUids(this.eventId)
@@ -66,12 +66,6 @@ export class EventComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getUserAvatarURL(uid: string) {
-    this.userService.getUserData(uid).subscribe((user) => {
-      this.ownerAvatarURL = user.avatarURL;
-    });
-  }
-
   openDeleteEventDialog() {
     this.dialog.open(EventDeleteDialogComponent, {
       width: '460px',
@@ -86,6 +80,18 @@ export class EventComponent implements OnInit {
   openAuthoritySettingDialog() {
     this.dialog.open(AuthoritySettingDialogComponent, {
       width: '460px',
+      autoFocus: false,
+      restoreFocus: false,
+      data: {
+        eventId: this.eventId,
+      },
+    });
+  }
+
+  exitEventOpenDialog() {
+    this.dialog.open(ExitEventDialogComponent, {
+      width: '800px',
+      height: '400px',
       autoFocus: false,
       restoreFocus: false,
       data: {

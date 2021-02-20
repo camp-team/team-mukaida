@@ -24,6 +24,8 @@ import { EventDeleteDialogComponent } from './event-delete-dialog/event-delete-d
 import { CommentHeaderComponent } from './event/image-detail/comment-header/comment-header.component';
 import { CropperModule } from '@deer-inc/ngx-croppie';
 import { AuthoritySettingDialogComponent } from './authority-setting-dialog/authority-setting-dialog.component';
+import { ExitEventDialogComponent } from './exit-event-dialog/exit-event-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { AuthoritySettingDialogComponent } from './authority-setting-dialog/auth
     EventDeleteDialogComponent,
     CommentHeaderComponent,
     AuthoritySettingDialogComponent,
+    ExitEventDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -55,6 +58,7 @@ import { AuthoritySettingDialogComponent } from './authority-setting-dialog/auth
     MatTooltipModule,
     ClipboardModule,
     CropperModule,
+    MatCheckboxModule,
   ],
 })
 export class EventModule {}

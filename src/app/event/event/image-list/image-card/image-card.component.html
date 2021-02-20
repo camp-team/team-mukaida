@@ -30,8 +30,8 @@
       [routerLink]="'/event/' + image.eventId + '/images/' + image.imageId"
     >
       {{
-        comments.length
-          ? 'コメントを見る(' + comments.length + ')'
+        comments?.length
+          ? 'コメントを見る(' + comments?.length + ')'
           : 'コメントを投稿する'
       }}
     </a>

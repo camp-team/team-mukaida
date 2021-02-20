@@ -44,7 +44,7 @@ export class CommentService {
       });
   }
 
-  getComment(eventId: string, imageId: string): Observable<Comment[]> {
+  getComments(eventId: string, imageId: string): Observable<Comment[]> {
     return this.db
       .collection<Comment>(`events/${eventId}/images/${imageId}/comments`)
       .valueChanges();

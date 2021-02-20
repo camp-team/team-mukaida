@@ -51,7 +51,7 @@ export class EventComponent implements OnInit {
 
   getUserAvatarURL(uid: string) {
     this.userService.getUserData(uid).subscribe((user) => {
-      this.ownerAvatarURL = user.avatarURL;
+      this.ownerAvatarURL = user?.avatarURL;
     });
   }
 

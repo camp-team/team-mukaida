@@ -40,7 +40,8 @@ header {
       z-index: 10;
       bottom: 0;
       width: 100%;
-      background: radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9));
+      background: radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9)),
+        -webkit-radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9));
     }
   }
 }

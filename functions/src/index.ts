@@ -7,4 +7,5 @@ export {
   judgementPassword,
   countUpJoinedUserCount,
   countDownJoinedUserCount,
+  deleteEvent,
 } from './event.function';

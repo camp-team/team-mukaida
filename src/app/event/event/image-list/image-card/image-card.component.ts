@@ -57,20 +57,19 @@ export class ImageCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 自分がいいねをしたか、していないかを判定する。
     this.likedService
-      .isLiked(this.eventId)
+      .isLiked(this.eventId, this.image.imageId, this.uid)
       .pipe(take(1))
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
-        console.log(isLiked);
       });
-    console.log(this.eventId);
+    // いいね数を取得する。
     this.likedService
       .getLikedCount(this.eventId)
       .pipe(take(1))
       .subscribe((likedCount) => {
         this.likedCount = likedCount.length;
-        console.log(likedCount);
       });
   }
 
@@ -104,7 +103,6 @@ export class ImageCardComponent implements OnInit {
   UnLikeImage(imageId: string) {
     this.isLiked = false;
     this.likedCount--;
-    console.log(this.likedCount);
     this.likedService.unlike(this.eventId, imageId, this.uid);
   }
 }

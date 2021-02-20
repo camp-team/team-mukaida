@@ -30,17 +30,14 @@ export class ImageCardComponent implements OnInit {
   );
 
   imageList$: Observable<Image[]> = this.eventId$.pipe(
-    switchMap((id) => {
-      return this.imageService.getImages(id);
+    switchMap((eventId) => {
+      return this.imageService.getImages(eventId);
     })
   );
 
   comments$: Observable<Comment[]> = this.eventId$.pipe(
     switchMap((params) => {
       const eventId = params;
-      console.log(this.image.imageId);
-      console.log(eventId);
-
       return this.commentService.getComments(eventId, this.image.imageId);
     })
   );

@@ -25,15 +25,15 @@
   </div>
 
   <div class="image-card__body">
-    <ng-container *ngIf="isLiked">
+    <ng-container *ngIf="!isLiked">
       <button mat-icon-button (click)="likeImage(image.imageId)">
-        <mat-icon>favorite</mat-icon>
+        <mat-icon>favorite_border</mat-icon>
         <span>{{ likedCount }}</span>
       </button>
     </ng-container>
-    <ng-container *ngIf="!isLiked">
+    <ng-container *ngIf="isLiked">
       <button mat-icon-button (click)="UnLikeImage(image.imageId)">
-        <mat-icon>favorite_border</mat-icon>
+        <mat-icon>favorite</mat-icon>
         <span>{{ likedCount }}</span>
       </button>
     </ng-container>

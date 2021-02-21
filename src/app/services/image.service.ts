@@ -2,20 +2,25 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Event } from '../interfaces/event';
 import { Image } from '../interfaces/image';
 import { AuthService } from './auth.service';
+import { EventService } from './event.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImageService {
   uid: string;
+  joinedEvents$: Observable<Event[]>;
 
   constructor(
     private db: AngularFirestore,
     private storage: AngularFireStorage,
-    private authService: AuthService
+    private authService: AuthService,
+    private eventService: EventService
   ) {
     this.authService.user$.subscribe((user) => {
       this.uid = user?.uid;
@@ -45,7 +50,33 @@ export class ImageService {
   }
 
   getImages(eventId: string): Observable<Image[]> {
-    return this.db.collection<Image>(`events/${eventId}/images`).valueChanges();
+    return this.db
+      .collection<Image>(`events/${eventId}/images`, (ref) =>
+        ref.orderBy('createAt', 'desc')
+      )
+      .valueChanges();
+  }
+
+  getRecentImagesInJoinedEvents(uid: string): Observable<Image[]> {
+    return this.db
+      .collection<Event>(`users/${uid}/joinedEvents`)
+      .valueChanges()
+      .pipe(
+        switchMap((events) => {
+          if (events.length) {
+            return combineLatest(
+              events.map((event) => this.getImages(event.eventId))
+            );
+          } else {
+            return of(null);
+          }
+        }),
+        map((imagesArray) => {
+          if (imagesArray?.length) {
+            return Array.prototype.concat.apply([], imagesArray);
+          }
+        })
+      );
   }
 
   getImage(eventId: string, imageId: string): Observable<Image> {

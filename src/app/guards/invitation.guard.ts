@@ -16,10 +16,8 @@ export class InvitationGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot): Promise<boolean> {
     const eventId = next.paramMap.get('id');
-    console.log(eventId);
     const eventDoc = this.db.doc<Event>(`events/${eventId}`).get();
     return eventDoc.toPromise().then((event) => {
-      console.log(eventId);
       if (event.exists) {
         return true;
       } else {

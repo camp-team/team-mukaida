@@ -1,0 +1,16 @@
+@import 'mixins';
+@import 'variables';
+
+.tile {
+  max-width: 304px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 16px;
+  &__body {
+    padding: 8px;
+    font-size: 10px;
+    @include pc {
+      font-size: 14px;
+    }
+  }
+}

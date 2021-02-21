@@ -1,0 +1,8 @@
+<div class="tile" ontouchstart>
+  <img [src]="image.imageURL" />
+  <div class="tile__body">
+    <div class="tile__date">
+      {{ image.createAt.toDate() | date: 'yyyy/MM/dd HH:mm' }}
+    </div>
+  </div>
+</div>

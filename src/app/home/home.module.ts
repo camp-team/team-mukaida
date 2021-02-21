@@ -14,6 +14,7 @@ import { JoinEventDialogComponent } from './home/join-event-dialog/join-event-di
 import { SharedModule } from '../shared/shared.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RecentPostsComponent } from './recent-posts/recent-posts.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CreateEventDialogComponent,
     JoinEventDialogComponent,
     EventListCardComponent,
+    RecentPostsComponent,
   ],
   imports: [
     CommonModule,

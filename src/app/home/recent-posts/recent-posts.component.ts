@@ -1,8 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Image } from 'src/app/interfaces/image';
-import { User } from 'src/app/interfaces/user';
-import { AuthService } from 'src/app/services/auth.service';
+import { Image, ImageWithUser } from 'src/app/interfaces/image';
 
 @Component({
   selector: 'app-recent-posts',
@@ -10,7 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./recent-posts.component.scss'],
 })
 export class RecentPostsComponent implements OnInit {
-  @Input() image: Image;
+  @Input() image: ImageWithUser;
 
   constructor() {}
 

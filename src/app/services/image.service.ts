@@ -2,15 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
-import { combineLatest, forkJoin, merge, Observable, of, zip } from 'rxjs';
-import {
-  concatMap,
-  map,
-  mergeMap,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
 import { Image, ImageWithUser } from '../interfaces/image';
 import { User } from '../interfaces/user';
@@ -72,16 +65,16 @@ export class ImageService {
       .collection<Event>(`users/${uid}/joinedEvents`)
       .valueChanges()
       .pipe(
-        switchMap((events) => {
+        switchMap((events: Event[]) => {
           if (events.length) {
             return combineLatest(
-              events.map((event) => this.getImages(event.eventId))
+              events.map((event: Event) => this.getImages(event.eventId))
             );
           } else {
             return of(null);
           }
         }),
-        map((imagesArray) => {
+        map((imagesArray: Image[][]) => {
           if (imagesArray?.length) {
             return Array.prototype.concat.apply([], imagesArray);
           }

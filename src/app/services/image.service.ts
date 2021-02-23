@@ -74,7 +74,7 @@ export class ImageService {
             ref
               .where('eventId', 'in', ids)
               .orderBy('createAt', 'desc')
-              .limit(10)
+              .limit(20)
           )
           .valueChanges()
           .pipe(

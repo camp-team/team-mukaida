@@ -42,8 +42,21 @@
     align-items: center;
     justify-content: flex-end;
   }
+  &__like {
+    font-size: 16px;
+    @include pc {
+      font-size: 18px;
+    }
+  }
+  &__like-count {
+    font-size: 14px;
+  }
   &__comment {
     display: block;
-    padding: 16px;
+    padding: 8px;
+    font-size: 10px;
+    @include pc {
+      font-size: 14px;
+    }
   }
 }

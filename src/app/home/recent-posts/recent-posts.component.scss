@@ -1,0 +1,43 @@
+@import 'mixins';
+@import 'variables';
+
+.tile {
+  max-width: 304px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 16px;
+  &__head {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    padding: 8px;
+  }
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 40px;
+    color: rgba(#212121, 0.6);
+  }
+  &__name {
+    font-size: 12px;
+    margin: 0 8px;
+    @include pc {
+      font-size: 14px;
+    }
+  }
+  &__body {
+    padding: 8px;
+    font-size: 10px;
+    @include pc {
+      font-size: 14px;
+    }
+  }
+  &__date {
+    font-size: 10px;
+    opacity: 0.6;
+    @include pc {
+      font-size: 14px;
+    }
+  }
+}

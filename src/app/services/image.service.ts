@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
 import { Image, ImageWithUser } from '../interfaces/image';
 import { User } from '../interfaces/user';
@@ -17,6 +17,7 @@ import { UserService } from './user.service';
 export class ImageService {
   uid: string;
   joinedEvents$: Observable<Event[]>;
+  joinedEventIds: string[];
 
   constructor(
     private db: AngularFirestore,
@@ -60,53 +61,52 @@ export class ImageService {
       .valueChanges();
   }
 
-  getRecentImagesInJoinedEvents(uid: string): Observable<ImageWithUser[]> {
-    return this.db
-      .collection<Event>(`users/${uid}/joinedEvents`)
-      .valueChanges()
-      .pipe(
-        switchMap((events: Event[]) => {
-          if (events.length) {
-            return combineLatest(
-              events.map((event: Event) => this.getImages(event.eventId))
-            );
-          } else {
-            return of(null);
-          }
-        }),
-        map((imagesArray: Image[][]) => {
-          if (imagesArray?.length) {
-            return Array.prototype.concat.apply([], imagesArray);
-          }
-        }),
-        switchMap((images: Image[]) => {
-          if (images.length) {
-            const unduplicatedUids: string[] = Array.from(
-              new Set(images.map((image) => image.uid))
-            );
-            const users: Observable<User[]> = combineLatest(
-              unduplicatedUids.map((userId) =>
-                this.userService.getUserData(userId)
-              )
-            );
-            return combineLatest([of(images), users]);
-          } else {
-            return of([]);
-          }
-        }),
-        map(([images, users]) => {
-          if (images?.length) {
-            return images.map((image: Image) => {
-              return {
-                ...image,
-                user: users.find((user: User) => image.uid === user?.uid),
-              };
-            });
-          } else {
-            return [];
-          }
-        })
-      );
+  async getRecentImagesInJoinedEvents(
+    uid: string
+  ): Promise<Observable<ImageWithUser[]>> {
+    return this.userService
+      .getJoinedEventIds(uid)
+      .pipe(take(1))
+      .toPromise()
+      .then((ids) => {
+        return this.db
+          .collectionGroup<Image>('images', (ref) =>
+            ref
+              .where('eventId', 'in', ids)
+              .orderBy('createAt', 'desc')
+              .limit(10)
+          )
+          .valueChanges()
+          .pipe(
+            switchMap((images: Image[]) => {
+              if (images.length) {
+                const unduplicatedUids: string[] = Array.from(
+                  new Set(images.map((image) => image.uid))
+                );
+                const users$: Observable<User[]> = combineLatest(
+                  unduplicatedUids.map((userId) =>
+                    this.userService.getUserData(userId)
+                  )
+                );
+                return combineLatest([of(images), users$]);
+              } else {
+                return of([]);
+              }
+            }),
+            map(([images, users]) => {
+              if (images?.length) {
+                return images.map((image: Image) => {
+                  return {
+                    ...image,
+                    user: users.find((user: User) => image.uid === user?.uid),
+                  };
+                });
+              } else {
+                return [];
+              }
+            })
+          );
+      });
   }
 
   getImage(eventId: string, imageId: string): Observable<Image> {

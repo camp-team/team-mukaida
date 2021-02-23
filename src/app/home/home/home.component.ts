@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
-import { Image } from 'src/app/interfaces/image';
+import { ImageWithUser } from 'src/app/interfaces/image';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
@@ -20,7 +20,7 @@ import { JoinEventDialogComponent } from './join-event-dialog/join-event-dialog.
 export class HomeComponent implements OnInit {
   uid: string;
   user$: Observable<User> = this.authService.user$;
-  images$: Observable<Image[]>;
+  images: ImageWithUser[];
 
   eventId$: Observable<string> = this.route.paramMap.pipe(
     map((param) => {
@@ -59,7 +59,15 @@ export class HomeComponent implements OnInit {
     this.user$.subscribe((user) => {
       this.uid = user.uid;
     });
-    this.images$ = this.imageService.getRecentImagesInJoinedEvents(this.uid);
+    this.imagesInit();
+  }
+
+  async imagesInit(): Promise<void> {
+    this.images = await (
+      await this.imageService.getRecentImagesInJoinedEvents(this.uid)
+    )
+      .pipe(take(1))
+      .toPromise();
   }
 
   openJoinEventDialog(id?: string) {

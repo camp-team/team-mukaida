@@ -21,7 +21,7 @@
     <mat-tab label="新着投稿">
       <div class="mat-tab__card-layout mat-tab__card-layout--posts">
         <app-recent-posts
-          *ngFor="let image of images$ | async as images"
+          *ngFor="let image of images"
           [image]="image"
           [routerLink]="'/event/' + image.eventId"
         ></app-recent-posts>

@@ -59,7 +59,7 @@ export class SettingsComponent implements OnInit {
     this.userService
       .updateUser({
         uid: this.user.uid,
-        avatarURL: this.imageFile,
+        avatarURL: this.imageFile || this.oldImageUrl,
         name: formData.name,
       })
       .then(() => this.snackBar.open('ユーザー情報を更新しました'));

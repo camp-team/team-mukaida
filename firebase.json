@@ -13,6 +13,10 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/event/**",
+        "function": "render"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

@@ -11,19 +11,31 @@
       <button (click)="openJoinEventDialog()" class="actions__join-btn">
         イベント参加
       </button>
-      <button (click)="openCreateEventDialog()" class="actions__create-btn">
+      <button routerLink="/create-event" class="actions__create-btn">
         イベント作成
       </button>
     </div>
   </div>
 
   <mat-tab-group class="mat-tab" mat-align-tabs="center">
+    <mat-tab label="新着投稿">
+      <div class="mat-tab__card-layout mat-tab__card-layout--posts">
+        <app-recent-posts
+          *ngFor="let image of images"
+          [image]="image"
+          [routerLink]="'/event/' + image.eventId"
+          (click)="streamParams(image.eventId)"
+        ></app-recent-posts>
+      </div>
+    </mat-tab>
+
     <mat-tab label="主催イベント">
       <div class="mat-tab__card-layout">
         <app-event-list-card
           *ngFor="let event of myOwnedEvents$ | async as events"
           [event]="event"
           [routerLink]="'/event/' + event.eventId"
+          (click)="streamParams(event.eventId)"
         ></app-event-list-card>
       </div>
     </mat-tab>
@@ -34,6 +46,7 @@
           *ngFor="let event of joinedEvents$ | async as events"
           [event]="event"
           [routerLink]="'/event/' + event?.eventId"
+          (click)="streamParams(event.eventId)"
         ></app-event-list-card>
       </div>
     </mat-tab>

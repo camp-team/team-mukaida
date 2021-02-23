@@ -4,7 +4,7 @@
   padding: 24px 0;
   &__head {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
   &__photo {
     margin: 0 auto 16px;
@@ -21,9 +21,12 @@
   &__heading {
     margin-bottom: 24px;
   }
+  &__wrap {
+    margin-top: 24px;
+  }
   &__property {
     display: grid;
-    grid-template-columns: 104px 1fr;
+    grid-template-columns: 1fr;
     gap: 8px;
     margin-bottom: 24px;
     @include pc {
@@ -34,6 +37,7 @@
   &__label {
     display: flex;
     align-items: center;
+    font-weight: bold;
     mat-icon {
       margin-left: 8px;
       font-size: 16px;

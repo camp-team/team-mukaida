@@ -2,13 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
+import { ImageWithUser } from 'src/app/interfaces/image';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
+import { ImageService } from 'src/app/services/image.service';
+import { RouteParamsService } from 'src/app/services/route-params.service';
+import { JoinEventDialogComponent } from 'src/app/shared/join-event-dialog/join-event-dialog.component';
 import { CreateEventDialogComponent } from './create-event-dialog/create-event-dialog.component';
-import { JoinEventDialogComponent } from './join-event-dialog/join-event-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +19,9 @@ import { JoinEventDialogComponent } from './join-event-dialog/join-event-dialog.
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  uid: string;
   user$: Observable<User> = this.authService.user$;
+  images: ImageWithUser[];
 
   eventId$: Observable<string> = this.route.paramMap.pipe(
     map((param) => {
@@ -42,7 +47,9 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private eventService: EventService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageService: ImageService,
+    private routeService: RouteParamsService
   ) {}
 
   ngOnInit(): void {
@@ -51,11 +58,23 @@ export class HomeComponent implements OnInit {
         this.openJoinEventDialog(id);
       }
     });
+    this.user$.subscribe((user) => {
+      this.uid = user.uid;
+    });
+    this.imagesInit();
+  }
+
+  async imagesInit(): Promise<void> {
+    this.images = await (
+      await this.imageService.getRecentImagesInJoinedEvents(this.uid)
+    )
+      .pipe(take(1))
+      .toPromise();
   }
 
   openJoinEventDialog(id?: string) {
     this.dialog.open(JoinEventDialogComponent, {
-      maxWidth: '100vw',
+      panelClass: 'join-event-dialog',
       minWidth: '50%',
       autoFocus: false,
       restoreFocus: false,
@@ -70,5 +89,9 @@ export class HomeComponent implements OnInit {
       autoFocus: false,
       restoreFocus: false,
     });
+  }
+
+  streamParams(id: string): void {
+    this.routeService.eventIdSubject.next(id);
   }
 }

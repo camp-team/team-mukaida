@@ -2,24 +2,21 @@
   <ng-container *ngIf="event$ | async as event; else blank">
     <a class="post-image__back" [routerLink]="'/event/' + eventId">
       <mat-icon>west</mat-icon>
-      <mat-icon>home</mat-icon>
-      <span>{{ event.title }}</span>
     </a>
     <div class="post-image__title">
       <h2>写真をアップロード</h2>
-      <div class="action">
-        <input
-          (change)="selectAndSetImages($event)"
-          type="file"
-          #file
-          name="file"
-          multiple
-          accept=".png, .jpg, .jpeg"
-          style="display: none"
-        />
-        <button type="button" (click)="file.click()" class="action__set-btn">
-          <mat-icon>add_photo_alternate</mat-icon>
-        </button>
+      <div class="actions-wrap">
+        <div class="action action--left">
+          <div class="post-action">
+            <deer-crop-trigger
+              [options]="{
+                aspectRatio: 4 / 3
+              }"
+              (image)="onCroppedImage($event)"
+            >
+            </deer-crop-trigger>
+          </div>
+        </div>
       </div>
       <p>一度に10枚まで投稿できます</p>
     </div>
@@ -32,7 +29,7 @@
           <div class="image-list__img" *ngFor="let src of srcs; index as i">
             <deer-crop-trigger
               [options]="{
-                aspectRatio: 1 / 1,
+                aspectRatio: 4 / 3,
                 oldImageUrl: src
               }"
               (image)="onCroppedImage($event)"
@@ -44,25 +41,6 @@
               class="image-list__btn"
             >
               <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-
-          <div class="action" *ngIf="srcs.length > 0">
-            <input
-              (change)="selectAndSetImages($event)"
-              type="file"
-              #file
-              name="file"
-              multiple
-              accept=".png, .jpg, .jpeg"
-              style="display: none"
-            />
-            <button
-              type="button"
-              (click)="file.click()"
-              class="action__set-btn"
-            >
-              <mat-icon>add_photo_alternate</mat-icon>
             </button>
           </div>
         </div>

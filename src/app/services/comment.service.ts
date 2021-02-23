@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
 import { Image } from '../interfaces/image';
 import { Comment, CommentWithUser } from '../interfaces/comment';
 import { Observable, of, combineLatest } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, take } from 'rxjs/operators';
 import { User } from '../interfaces/user';
 import { UserService } from './user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -105,5 +105,16 @@ export class CommentService {
       .then(() => {
         this.snackBar.open('削除しました');
       });
+  }
+
+  async getMyCommentIds(uid: string): Promise<string[]> {
+    const comments = await this.db
+      .collectionGroup<Comment>('comments', (ref) =>
+        ref.where('uid', '==', uid)
+      )
+      .valueChanges()
+      .pipe(take(1))
+      .toPromise();
+    return comments.map((comment) => comment.commentId);
   }
 }

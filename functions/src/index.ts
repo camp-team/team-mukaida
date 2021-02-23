@@ -3,9 +3,4 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 export * from './user.function';
-export {
-  judgementPassword,
-  countUpJoinedUserCount,
-  countDownJoinedUserCount,
-  deleteEvent,
-} from './event.function';
+export * from './event.function';

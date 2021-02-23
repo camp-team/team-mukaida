@@ -1,5 +1,5 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import {
   markEventTried,
   shouldEventRun,
@@ -94,14 +94,43 @@ export const countDownJoinedUserCount = functions
 export const exitEvent = functions
   .region('asia-northeast1')
   .firestore.document('events/{eventId}/joinedUids/{userId}')
-  .onDelete(async (_snap: any, context: any) => {
+  .onDelete(async (snap: any, context: any) => {
+    const uid: string = context.auth?.uid as string;
     const eventId: string = context.eventId;
-    const userId: string = context.auth?.uid as string;
     const should = await shouldEventRun(eventId);
     if (should) {
-      await db.doc(`events/${eventId}/joinedUids/${userId}`).delete();
+      await db.doc(`events/${eventId}/joinedUids/${uid}`).delete();
       return markEventTried(eventId);
     } else {
       return;
     }
   });
+
+export const deleteImagesInTheEvent = functions
+  .region('asia-northeast1')
+  .runWith({ memory: '2GB', timeoutSeconds: 540 })
+  .https.onCall(
+    async (
+      data: { eventId: string; imageIds: string[]; commentIds: string[] },
+      context
+    ) => {
+      const uid: string = context.auth?.uid as string;
+      const eventId: string = data.eventId;
+      const should = await shouldEventRun(eventId);
+      if (should) {
+        const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+          .collection(`events/${eventId}/images`)
+          .where('uid', '==', uid);
+        const commentsArray: FirebaseFirestore.Query<
+          FirebaseFirestore.DocumentData
+        >[] = data.imageIds.map((id: string) => {
+          return db.collection(`events/${eventId}/images/${id}/comments`);
+        });
+        const deleteAllImages = deleteCollectionByReference(images);
+        const deleteAllComments = commentsArray.map((commentData) =>
+          deleteCollectionByReference(commentData)
+        );
+        Promise.all([deleteAllImages, ...deleteAllComments]);
+      }
+    }
+  );

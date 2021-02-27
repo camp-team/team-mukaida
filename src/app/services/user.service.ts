@@ -4,6 +4,8 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { Event } from '../interfaces/event';
 import { User } from '../interfaces/user';
 
 @Injectable({
@@ -25,7 +27,14 @@ export class UserService {
       eventId,
       uid,
     });
-    this.db.doc(`users/${uid}/joinedEvents/${eventId}`).set({ eventId });
+    this.db.doc(`users/${uid}/joinedEvents/${eventId}`).set({ eventId, uid });
+  }
+
+  getJoinedEventIds(uid: string): Observable<string[]> {
+    return this.db
+      .collection(`users/${uid}/joinedEvents`)
+      .valueChanges()
+      .pipe(map((evs) => evs.map((e: Event) => e.eventId)));
   }
 
   async updateUser(user: Omit<User, 'createdAt'>) {

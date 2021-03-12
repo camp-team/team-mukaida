@@ -2,8 +2,6 @@
   <ng-container *ngIf="event$ | async as event; else blank">
     <a class="post-image__back" [routerLink]="'/event/' + eventId">
       <mat-icon>west</mat-icon>
-      <mat-icon>home</mat-icon>
-      <span>{{ event.title }}</span>
     </a>
     <div class="post-image__title">
       <h2>写真をアップロード</h2>

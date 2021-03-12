@@ -5,11 +5,13 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import * as firebase from 'firebase';
+import { switchMap, map, take } from 'rxjs/operators';
 import { Event, EventWithOwner } from '../interfaces/event';
+import * as firebase from 'firebase';
+import { Image } from '../interfaces/image';
 import { Password } from '../interfaces/password';
 import { UserService } from './user.service';
+import { CommentService } from './comment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,8 @@ export class EventService {
     private fns: AngularFireFunctions,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private commentService: CommentService
   ) {}
 
   async createEvent(
@@ -155,5 +158,28 @@ export class EventService {
           });
         })
       );
+  }
+
+  async getMyPostImageIds(eventId: string, uid: string): Promise<string[]> {
+    const docs = await this.db
+      .collection(`events/${eventId}/images`, (ref) =>
+        ref.where('uid', '==', uid)
+      )
+      .valueChanges()
+      .pipe(take(1))
+      .toPromise();
+    return docs.map((doc: Image) => doc.imageId);
+  }
+
+  async deleteImagesAndCommentsInTheEvent(eventId: string, uid: string) {
+    const imageIds: string[] = await this.getMyPostImageIds(eventId, uid);
+    const commentIds: string[] = await this.commentService.getMyCommentIds(uid);
+    const data = {
+      eventId,
+      imageIds,
+      commentIds,
+    };
+    const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
+    return callable(data).toPromise();
   }
 }

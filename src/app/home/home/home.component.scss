@@ -54,7 +54,7 @@
 }
 
 .mat-tab {
-  height: 100vh;
+  height: 100%;
   &__card-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -65,6 +65,9 @@
       grid-template-columns: repeat(3, 1fr);
       place-items: center;
       padding: 24px 48px;
+    }
+    &--posts {
+      padding: 24px 0;
     }
   }
 }

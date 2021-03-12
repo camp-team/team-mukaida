@@ -25,13 +25,25 @@
   </div>
 
   <div class="image-card__body">
+    <ng-container *ngIf="!isLiked">
+      <button mat-icon-button (click)="likeImage(image.imageId)">
+        <mat-icon class="image-card__like">favorite_border</mat-icon>
+        <span class="image-card__like-count">{{ likedCount }}</span>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="isLiked">
+      <button mat-icon-button (click)="UnLikeImage(image.imageId)">
+        <mat-icon class="image-card__like">favorite</mat-icon>
+        <span class="image-card__like-count">{{ likedCount }}</span>
+      </button>
+    </ng-container>
     <a
       class="image-card__comment"
       [routerLink]="'/event/' + image.eventId + '/images/' + image.imageId"
     >
       {{
-        comments.length
-          ? 'コメントを見る(' + comments.length + ')'
+        comments?.length
+          ? 'コメントを見る(' + comments?.length + ')'
           : 'コメントを投稿する'
       }}
     </a>

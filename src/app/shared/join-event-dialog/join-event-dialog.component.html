@@ -25,6 +25,7 @@
         type="submit"
         [mat-dialog-close]="true"
         [disabled]="passwordForm.invalid || passwordForm.pristine"
+        [class.disabled]="passwordForm.invalid || passwordForm.pristine"
       >
         参加
       </button>

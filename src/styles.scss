@@ -41,6 +41,9 @@ button {
   @include pc {
     padding: 0 24px;
   }
+  &--create-event {
+    max-width: 960px;
+  }
 }
 
 .mat-tab-label {
@@ -79,4 +82,10 @@ button {
 .mat-tab .mat-tab-label {
   min-width: 0px !important;
   width: 120px;
+}
+
+.join-event-dialog {
+  .mat-dialog-container {
+    padding: 0;
+  }
 }

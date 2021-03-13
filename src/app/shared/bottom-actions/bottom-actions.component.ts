@@ -25,6 +25,7 @@ export class BottomActionsComponent implements OnInit {
 
   openJoinEventDialog() {
     this.dialog.open(JoinEventDialogComponent, {
+      panelClass: 'join-event-dialog',
       maxWidth: '100vw',
       minWidth: '50%',
       autoFocus: false,

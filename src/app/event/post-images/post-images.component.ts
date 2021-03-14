@@ -24,7 +24,7 @@ export class PostImagesComponent implements OnInit {
   images: any[] = [];
   imageFiles: (File | string)[] = [];
   isProcessing = false;
-  srcs: string[] | ArrayBuffer[] = [];
+  srcs: string[] = [];
   src: string;
   isActive = true;
 
@@ -78,12 +78,13 @@ export class PostImagesComponent implements OnInit {
 
   onCroppedImage(image: string) {
     this.imageFile = image;
+    this.srcs.push(this.imageFile);
   }
 
   uploadImages() {
     this.isProcessing = true;
     this.imageService
-      .uploadImages(this.eventId, this.images)
+      .uploadImages(this.eventId, this.srcs)
       .then(() => this.router.navigateByUrl('/event/' + this.eventId))
       .then(() => this.snackBar.open('ファイルを投稿しました✨'))
       .finally(() => (this.isProcessing = false));

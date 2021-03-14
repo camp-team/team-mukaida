@@ -32,7 +32,8 @@ export class ImageService {
   async uploadImages(eventId: string, urls: string[]): Promise<void> {
     return Promise.all(
       urls.map((url, index) => {
-        const ref = this.storage.ref(`images/${eventId}-${index}`);
+        const id = this.db.createId();
+        const ref = this.storage.ref(`images/${eventId}/${id}-${index}`);
         return ref.putString(
           url,
           firebase.default.storage.StringFormat.DATA_URL

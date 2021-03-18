@@ -25,6 +25,11 @@ a {
   }
 }
 
+p {
+  padding: 0;
+  margin: 0;
+}
+
 img {
   max-width: 100%;
   vertical-align: middle;
@@ -48,6 +53,10 @@ button {
   }
   &--create-event {
     max-width: 960px;
+  }
+  &--post-video {
+    text-align: center;
+    padding: 48px 0;
   }
 }
 
@@ -102,4 +111,14 @@ button {
       background-color: transparent !important;
     }
   }
+}
+
+.vjs-theme-fantasy {
+  --vjs-theme-fantasy--primary: #fa776d;
+  --vjs-theme-fantasy--secondary: #fff;
+}
+
+.video-js-responsive-container {
+  max-width: 100%;
+  margin: 0 auto 24px;
 }

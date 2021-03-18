@@ -15,14 +15,22 @@ export class VideoService {
     private snackBar: MatSnackBar
   ) {}
 
-  async uploadVideo(eventId: string, file: File, uid: string): Promise<void> {
-    const id = this.db.createId();
-    const result = this.storage.ref(`videos/${eventId}/${id}`).put(file);
+  async uploadVideo(
+    eventId: string,
+    file: File,
+    uid: string,
+    image: string
+  ): Promise<void> {
+    const videoId = this.db.createId();
+    const result = this.storage.ref(`videos/${eventId}/${videoId}`).put(file);
     const videoURL = await (await result).ref.getDownloadURL();
-    console.log(videoURL);
+    const thumbnailId = this.db.createId();
+    const imageResult = await this.storage
+      .ref(`videos/${eventId}/${thumbnailId}`)
+      .putString(image);
+    const thumbnailURL = await imageResult.ref.getDownloadURL();
 
     await result.then(() => {
-      const videoId = this.db.createId();
       this.db
         .doc(`events/${eventId}/videos/${videoId}`)
         .set({
@@ -30,10 +38,12 @@ export class VideoService {
           uid,
           videoURL,
           eventId,
+          thumbnailURL,
+          thumbnailId,
           createdAt: firebase.default.firestore.Timestamp.now(),
         })
-        .then(() => this.snackBar.open('ファイルをアップロードはじめました'))
-        .finally(() => this.snackBar.open('アップロードが完了しました'));
+        .then(() => this.snackBar.open('ファイルのアップロードを始めました'))
+        .finally(() => this.snackBar.open('アップロード完了！'));
     });
   }
 }

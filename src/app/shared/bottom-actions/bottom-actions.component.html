@@ -6,20 +6,20 @@
 >
   <button
     mat-ripple
-    mat-button
-    class="bottom-actions__join-event"
-    (click)="openJoinEventDialog()"
-  >
-    <mat-icon>person_add</mat-icon>
-    <p>イベント参加</p>
-  </button>
-  <button
-    mat-ripple
     class="bottom-actions__create-event"
     routerLink="/create-event"
   >
     <mat-icon>assignment_ind</mat-icon>
     <p>イベント作成</p>
+  </button>
+  <button
+    mat-ripple
+    mat-button
+    class="bottom-actions__join-event"
+    routerLink="post-video"
+  >
+    <mat-icon>person_add</mat-icon>
+    <p>動画を投稿</p>
   </button>
   <button
     mat-ripple

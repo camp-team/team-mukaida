@@ -10,7 +10,13 @@
         class="header__add-btn"
         [routerLink]="'/event/' + event.eventId + '/post-images'"
       >
-        <mat-icon>add</mat-icon> 画像を投稿する
+        <mat-icon>insert_photo</mat-icon> 画像を投稿
+      </button>
+      <button
+        class="header__add-btn"
+        [routerLink]="'/event/' + event.eventId + '/post-video'"
+      >
+        <mat-icon>videocam</mat-icon> 動画を投稿
       </button>
     </ng-container>
     <button

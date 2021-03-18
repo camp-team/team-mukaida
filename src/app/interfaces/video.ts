@@ -3,5 +3,7 @@ export interface Video {
   uid: string;
   videoURL: string;
   eventId: string;
+  thumbnailURL: string;
+  thumbnailId: string;
   createdAt: firebase.default.firestore.Timestamp;
 }

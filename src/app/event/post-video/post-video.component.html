@@ -1,0 +1,98 @@
+<div class="container container--post-video">
+  <ng-container *ngIf="user$ | async as user">
+    <form method="post" enctype="multipart/form-data">
+      <p class="video__icon">
+        <mat-icon>upload</mat-icon>
+      </p>
+      <p class="video__text">アップロードするファイルを選んでください</p>
+      <p class="video__text video__text--sub">
+        ※.mp4ファイルまたは.movファイル
+      </p>
+      <p class="video__text video__text--sub">※.movファイルはsafariのみ。</p>
+      <p class="video__text video__text--sub">
+        MP4に変換するには
+        <a
+          href="https://www.mp4compress.com/ja/mov-to-mp4-converter/"
+          class="video__text video__text--sub video__text--link"
+          target="_blank"
+        >
+          こちら
+        </a>
+      </p>
+
+      <input
+        type="file"
+        name="video"
+        accept="video/mp4, video/quickTime"
+        required
+        (change)="selectVideo($event)"
+        [formControl]="fileControl"
+        #fileInput
+        style="display: none"
+      />
+      <button
+        type="button"
+        (click)="fileInput.click()"
+        mat-button
+        class="video__select"
+      >
+        <mat-icon>add</mat-icon>ファイルを選択
+      </button>
+
+      <div class="preview">
+        <ng-container *ngIf="preview">
+          <div class="preview__heading"><p>プレビュー</p></div>
+          <div class="video-js-responsive-container">
+            <app-video-player
+              [options]="{
+                fuild: true,
+                responsive: true,
+                autoplay: false,
+                controls: true,
+                sources: [
+                  {
+                    src: preview,
+                    type: 'video/mp4'
+                  }
+                ]
+              }"
+            ></app-video-player>
+          </div>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="isloading">
+        <p>読み込み中...</p>
+      </ng-container>
+
+      <ng-container *ngIf="thumbnails.length > 0">
+        <div class="preview__heading">
+          <p>サムネイル</p>
+          <p class="video__text video__text--sub">
+            動画の内容がわかる画像を選択しましょう。
+          </p>
+        </div>
+        <div class="thumbnail-list">
+          <img
+            *ngFor="let thumbnail of thumbnails; index as i"
+            class="thumbnail"
+            [src]="thumbnail"
+            (click)="selected = i"
+            [class.active]="i === selected"
+          />
+        </div>
+        <ng-container *ngIf="eventId$ | async as eventId">
+          <button
+            type="submit"
+            mat-button
+            (click)="uploadVideo(eventId, user.uid)"
+            [disabled]="fileControl.invalid || fileControl.pristine"
+            class="video__select"
+          >
+            投稿
+          </button>
+        </ng-container>
+      </ng-container>
+    </form>
+  </ng-container>
+</div>

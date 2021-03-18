@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as firebase from 'firebase';
+import { Observable } from 'rxjs';
 import { Video } from '../interfaces/video';
 
 @Injectable({
@@ -45,5 +46,28 @@ export class VideoService {
         .then(() => this.snackBar.open('ファイルのアップロードを始めました'))
         .finally(() => this.snackBar.open('アップロード完了！'));
     });
+  }
+
+  getVideos(eventId: string): Observable<Video[]> {
+    return this.db
+      .collection<Video>(`events/${eventId}/videos`, (ref) =>
+        ref.orderBy('createAt', 'desc')
+      )
+      .valueChanges();
+  }
+
+  getVideo(eventId: string, videoId: string): Observable<Video> {
+    return this.db
+      .doc<Video>(`events/${eventId}/videos/${videoId}`)
+      .valueChanges();
+  }
+
+  deleteVideo(eventId: string, videoId: string): void {
+    const videoRef = this.storage.ref(`videos/${eventId}/${videoId}`);
+    videoRef.delete();
+    this.db
+      .doc<Video>(`events/${eventId}/images/${videoId}`)
+      .delete()
+      .then(() => this.snackBar.open('動画ファイルを削除しました'));
   }
 }

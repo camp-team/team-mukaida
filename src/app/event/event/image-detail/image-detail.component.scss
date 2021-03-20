@@ -19,14 +19,19 @@ header {
 }
 
 .conatainer {
-  background: radial-gradient(#fd796f10 30%, #fff);
+  @include sp {
+    min-height: calc(100vh - 108px);
+  }
+  min-height: calc(100vh - 170px);
+  background: radial-gradient(rgb(255, 249, 249) 30%, rgba(255, 255, 255, 0.9)),
+    -webkit-radial-gradient(rgb(255, 249, 249) 30%, rgba(255, 255, 255, 0.9));
 }
 .thumbnail {
   padding: 0 32px;
   margin-bottom: 40px;
   img {
     border-radius: 3px;
-    box-shadow: 28px 38px 48px rgba(126, 126, 126, 0.5);
+    box-shadow: 16px 16px 2rem -2rem rgb(26 60 77 / 60%);
   }
 }
 
@@ -40,7 +45,8 @@ header {
       z-index: 10;
       bottom: 0;
       width: 100%;
-      background: radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9));
+      background: radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9)),
+        -webkit-radial-gradient(rgb(255, 245, 245), rgba(255, 255, 255, 0.9));
     }
   }
 }
@@ -66,7 +72,7 @@ header {
     img {
       max-height: 600px;
       min-width: 320px;
-      box-shadow: 28px 48px 48px rgba(126, 126, 126, 0.5);
+      box-shadow: 16px 16px 2rem -2rem rgb(26 60 77 / 60%);
     }
   }
   .comment {
@@ -75,7 +81,7 @@ header {
     display: flex;
     flex-direction: column;
     &__list {
-      max-height: calc(100vh - 262px);
+      height: calc(100vh - 262px);
       overflow-y: scroll;
     }
   }

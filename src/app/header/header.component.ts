@@ -52,6 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openJoinEventDialog(id?: string): void {
     this.dialog.open(JoinEventDialogComponent, {
+      panelClass: 'join-event-dialog',
       maxWidth: '100vw',
       minWidth: '50%',
       autoFocus: false,

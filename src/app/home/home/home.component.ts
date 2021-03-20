@@ -9,8 +9,9 @@ import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { ImageService } from 'src/app/services/image.service';
+import { RouteParamsService } from 'src/app/services/route-params.service';
+import { JoinEventDialogComponent } from 'src/app/shared/join-event-dialog/join-event-dialog.component';
 import { CreateEventDialogComponent } from './create-event-dialog/create-event-dialog.component';
-import { JoinEventDialogComponent } from './join-event-dialog/join-event-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -47,7 +48,8 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EventService,
     private authService: AuthService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private routeService: RouteParamsService
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +74,7 @@ export class HomeComponent implements OnInit {
 
   openJoinEventDialog(id?: string) {
     this.dialog.open(JoinEventDialogComponent, {
-      maxWidth: '100vw',
+      panelClass: 'join-event-dialog',
       minWidth: '50%',
       autoFocus: false,
       restoreFocus: false,
@@ -87,5 +89,9 @@ export class HomeComponent implements OnInit {
       autoFocus: false,
       restoreFocus: false,
     });
+  }
+
+  streamParams(id: string): void {
+    this.routeService.eventIdSubject.next(id);
   }
 }

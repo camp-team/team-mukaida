@@ -114,7 +114,7 @@ export const deleteImagesInTheEvent = functions
       data: { eventId: string; imageIds: string[]; commentIds: string[] },
       context
     ) => {
-      const uid: string = context.auth?.uid as string;
+      const uid = context.auth?.uid;
       const eventId: string = data.eventId;
       const should = await shouldEventRun(eventId);
       if (should) {
@@ -130,7 +130,7 @@ export const deleteImagesInTheEvent = functions
         const deleteAllComments = commentsArray.map((commentData) =>
           deleteCollectionByReference(commentData)
         );
-        Promise.all([deleteAllImages, ...deleteAllComments]);
+        await Promise.all([deleteAllImages, ...deleteAllComments]);
       }
     }
   );

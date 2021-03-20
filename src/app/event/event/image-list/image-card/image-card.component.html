@@ -1,14 +1,14 @@
 <div class="image-card">
   <div class="image-card__main">
     <div class="image-card__img">
-      <img [src]="image.imageURL" alt="" />
+      <img [src]="post.imageURL || post.thumbnailURL" alt="" />
     </div>
     <ng-container *ngIf="user$ | async as user">
       <button
         class="image-card__menu"
         mat-icon-button
         [matMenuTriggerFor]="menu"
-        *ngIf="user?.uid == image.uid"
+        *ngIf="user?.uid == post.uid"
       >
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -17,7 +17,7 @@
         <button mat-menu-item (click)="isEditMode()">
           <mat-icon>edit</mat-icon>編集
         </button>
-        <button mat-menu-item (click)="openDeleteDialog(image.imageId)">
+        <button mat-menu-item (click)="openDeleteDialog(post.imageId)">
           <mat-icon>delete</mat-icon>削除
         </button>
       </mat-menu>
@@ -26,26 +26,41 @@
 
   <div class="image-card__body">
     <ng-container *ngIf="!isLiked">
-      <button mat-icon-button (click)="likeImage(image.imageId)">
+      <button mat-icon-button (click)="likeImage(post.imageId)">
         <mat-icon class="image-card__like">favorite_border</mat-icon>
         <span class="image-card__like-count">{{ likedCount }}</span>
       </button>
     </ng-container>
     <ng-container *ngIf="isLiked">
-      <button mat-icon-button (click)="UnLikeImage(image.imageId)">
+      <button mat-icon-button (click)="UnLikeImage(post.imageId)">
         <mat-icon class="image-card__like">favorite</mat-icon>
         <span class="image-card__like-count">{{ likedCount }}</span>
       </button>
     </ng-container>
-    <a
-      class="image-card__comment"
-      [routerLink]="'/event/' + image.eventId + '/images/' + image.imageId"
-    >
-      {{
-        comments?.length
-          ? 'コメントを見る(' + comments?.length + ')'
-          : 'コメントを投稿する'
-      }}
-    </a>
+
+    <ng-container *ngIf="post.imageId">
+      <a
+        class="image-card__comment"
+        [routerLink]="'/event/' + post.eventId + '/images/' + post.imageId"
+      >
+        {{
+          comments?.length
+            ? 'コメントを見る(' + comments?.length + ')'
+            : 'コメントを投稿する'
+        }}
+      </a>
+    </ng-container>
+    <ng-container *ngIf="post.imageId === undefined">
+      <a
+        class="image-card__comment"
+        [routerLink]="'/event/' + post.eventId + '/videos/' + post.videoId"
+      >
+        {{
+          comments?.length
+            ? 'コメントを見る(' + comments?.length + ')'
+            : 'コメントを投稿する'
+        }}
+      </a>
+    </ng-container>
   </div>
 </div>

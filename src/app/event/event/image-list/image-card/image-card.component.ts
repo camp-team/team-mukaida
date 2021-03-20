@@ -7,6 +7,7 @@ import { map, switchMap, take } from 'rxjs/operators';
 import { Comment } from 'src/app/interfaces/comment';
 import { Event } from 'src/app/interfaces/event';
 import { Image } from 'src/app/interfaces/image';
+import { Post } from 'src/app/interfaces/post';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
@@ -20,7 +21,7 @@ import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialo
   styleUrls: ['./image-card.component.scss'],
 })
 export class ImageCardComponent implements OnInit {
-  @Input() image: Image;
+  @Input() post: Post;
   @Input() event: Event;
   likedCount: number;
   isLiked: boolean;
@@ -48,7 +49,7 @@ export class ImageCardComponent implements OnInit {
   comments$: Observable<Comment[]> = this.eventId$.pipe(
     switchMap((params) => {
       const eventId = params;
-      return this.commentService.getComments(eventId, this.image.imageId);
+      return this.commentService.getComments(eventId, this.post.eventId);
     })
   );
 
@@ -73,14 +74,14 @@ export class ImageCardComponent implements OnInit {
     });
     // 自分がいいねをしたか、していないかを判定する。
     this.likedService
-      .isLiked(this.eventId, this.image.imageId, this.uid)
+      .isLiked(this.eventId, this.post.imageId, this.uid)
       .pipe(take(1))
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
       });
     // 各画像のいいね数を取得する。
     this.likedService
-      .getLikedCount(this.eventId, this.image.imageId)
+      .getLikedCount(this.eventId, this.post.imageId)
       .pipe(take(1))
       .subscribe((likedCount) => {
         this.likedCount = likedCount.length;

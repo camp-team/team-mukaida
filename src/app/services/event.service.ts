@@ -55,7 +55,7 @@ export class EventService {
   }
 
   async updateEvent(
-    event: Omit<Event, 'eventId' | 'ownerId' | 'createAt'>,
+    event: Omit<Event, 'eventId' | 'ownerId' | 'createdAt'>,
     eventId: string
   ): Promise<void> {
     return this.db

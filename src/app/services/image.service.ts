@@ -48,7 +48,7 @@ export class ImageService {
           uid: this.uid,
           imageURL,
           eventId,
-          createAt: firebase.default.firestore.Timestamp.now(),
+          createdAt: firebase.default.firestore.Timestamp.now(),
         });
       }
     });
@@ -57,7 +57,7 @@ export class ImageService {
   getImages(eventId: string): Observable<Image[]> {
     return this.db
       .collection<Image>(`events/${eventId}/images`, (ref) =>
-        ref.orderBy('createAt', 'desc')
+        ref.orderBy('createdAt', 'desc')
       )
       .valueChanges();
   }
@@ -74,7 +74,7 @@ export class ImageService {
           .collectionGroup<Image>('images', (ref) =>
             ref
               .where('eventId', 'in', ids)
-              .orderBy('createAt', 'desc')
+              .orderBy('createdAt', 'desc')
               .limit(20)
           )
           .valueChanges()

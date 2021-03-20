@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Meta } from '@angular/platform-browser';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs';
+import { merge, Observable } from 'rxjs';
+import { __metadata } from 'tslib';
+import { Post } from '../interfaces/post';
 import { Video } from '../interfaces/video';
+import { ImageService } from './image.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +17,8 @@ export class VideoService {
   constructor(
     private db: AngularFirestore,
     private storage: AngularFireStorage,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private imageService: ImageService
   ) {}
 
   async uploadVideo(
@@ -28,7 +33,9 @@ export class VideoService {
     const thumbnailId = this.db.createId();
     const imageResult = await this.storage
       .ref(`videos/${eventId}/${thumbnailId}`)
-      .putString(image);
+      .putString(image, 'data_url', {
+        contentType: 'image/jpeg',
+      });
     const thumbnailURL = await imageResult.ref.getDownloadURL();
 
     await result.then(() => {
@@ -51,7 +58,7 @@ export class VideoService {
   getVideos(eventId: string): Observable<Video[]> {
     return this.db
       .collection<Video>(`events/${eventId}/videos`, (ref) =>
-        ref.orderBy('createAt', 'desc')
+        ref.orderBy('createdAt', 'desc')
       )
       .valueChanges();
   }
@@ -60,6 +67,12 @@ export class VideoService {
     return this.db
       .doc<Video>(`events/${eventId}/videos/${videoId}`)
       .valueChanges();
+  }
+
+  getPosts(eventId: string): Observable<Post[]> {
+    const videos$ = this.getVideos(eventId);
+    const images$ = this.imageService.getImages(eventId);
+    return merge(videos$, images$);
   }
 
   deleteVideo(eventId: string, videoId: string): void {

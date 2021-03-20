@@ -1,0 +1,36 @@
+<header>
+  <app-comment-header
+    *ngIf="provider$ | async as provider"
+    [provider]="provider"
+  ></app-comment-header>
+</header>
+<div class="conatainer">
+  <div class="grid" *ngIf="video$ | async as video">
+    <div class="thumbnail">
+      <app-video-player
+        [options]="{
+          autoplay: false,
+          controls: true,
+          sources: [
+            {
+              src: video.videoURL,
+              type: 'video/mp4'
+            }
+          ],
+          poster: video.thumbnailURL
+        }"
+      ></app-video-player>
+    </div>
+    <div class="comment">
+      <div class="comment__list">
+        <app-comment-list
+          class="comment__inner"
+          [eventId]="eventId"
+        ></app-comment-list>
+      </div>
+      <div class="comment__form">
+        <app-comment-form></app-comment-form>
+      </div>
+    </div>
+  </div>
+</div>

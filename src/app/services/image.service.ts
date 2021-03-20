@@ -3,12 +3,11 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
 import { Image, ImageWithUser } from '../interfaces/image';
 import { User } from '../interfaces/user';
 import { AuthService } from './auth.service';
-import { EventService } from './event.service';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -23,7 +22,6 @@ export class ImageService {
     private db: AngularFirestore,
     private storage: AngularFireStorage,
     private authService: AuthService,
-    private eventService: EventService,
     private userService: UserService
   ) {
     this.authService.user$.subscribe((user) => {
@@ -31,12 +29,15 @@ export class ImageService {
     });
   }
 
-  async uploadImages(eventId: string, files: File[]): Promise<void> {
+  async uploadImages(eventId: string, urls: string[]): Promise<void> {
     return Promise.all(
-      files.map((file, index) => {
+      urls.map((url, index) => {
         const id = this.db.createId();
-        const ref = this.storage.ref(`images/${id}-${index}`);
-        return ref.put(file);
+        const ref = this.storage.ref(`images/${eventId}/${id}-${index}`);
+        return ref.putString(
+          url,
+          firebase.default.storage.StringFormat.DATA_URL
+        );
       })
     ).then(async (tasks) => {
       for (const task of tasks) {

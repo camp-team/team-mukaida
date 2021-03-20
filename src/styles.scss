@@ -12,6 +12,11 @@ body {
   font-weight: 400;
 }
 
+ul,
+ol {
+  list-style: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -41,6 +46,9 @@ button {
   @include pc {
     padding: 0 24px;
   }
+  &--create-event {
+    max-width: 960px;
+  }
 }
 
 .mat-tab-label {
@@ -62,16 +70,6 @@ button {
   }
 }
 
-.mat-dialog-container {
-  padding: 0 !important;
-  @include pc {
-    width: 80% !important;
-    height: 100% !important;
-    margin: 0 auto;
-    box-sizing: border-box !important;
-  }
-}
-
 .image {
   border-radius: 8px;
   &:before {
@@ -89,4 +87,19 @@ button {
 .mat-tab .mat-tab-label {
   min-width: 0px !important;
   width: 120px;
+}
+
+.join-event-dialog {
+  .mat-dialog-container {
+    padding: 0;
+  }
+}
+
+.post-action {
+  .image {
+    background-image: none !important;
+    &--blank {
+      background-color: transparent !important;
+    }
+  }
 }

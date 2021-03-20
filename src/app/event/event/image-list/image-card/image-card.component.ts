@@ -93,7 +93,6 @@ export class ImageCardComponent implements OnInit {
     this.dialog
       .open(DeleteDialogComponent, {
         minWidth: 300,
-        maxHeight: 320,
       })
       .afterClosed()
       .subscribe((result) => {

@@ -10,19 +10,19 @@ import { EventListCardComponent } from './event-list-card/event-list-card.compon
 import { HomeRoutingModule } from './home-routing.module';
 import { CreateEventDialogComponent } from './home/create-event-dialog/create-event-dialog.component';
 import { HomeComponent } from './home/home.component';
-import { JoinEventDialogComponent } from './home/join-event-dialog/join-event-dialog.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RecentPostsComponent } from './recent-posts/recent-posts.component';
+import { CreateEventComponent } from './home/create-event/create-event.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     CreateEventDialogComponent,
-    JoinEventDialogComponent,
     EventListCardComponent,
     RecentPostsComponent,
+    CreateEventComponent,
   ],
   imports: [
     CommonModule,

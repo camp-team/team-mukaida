@@ -11,7 +11,7 @@
       <button (click)="openJoinEventDialog()" class="actions__join-btn">
         イベント参加
       </button>
-      <button (click)="openCreateEventDialog()" class="actions__create-btn">
+      <button routerLink="/create-event" class="actions__create-btn">
         イベント作成
       </button>
     </div>
@@ -24,6 +24,7 @@
           *ngFor="let image of images"
           [image]="image"
           [routerLink]="'/event/' + image.eventId"
+          (click)="streamParams(image.eventId)"
         ></app-recent-posts>
       </div>
     </mat-tab>
@@ -34,6 +35,7 @@
           *ngFor="let event of myOwnedEvents$ | async as events"
           [event]="event"
           [routerLink]="'/event/' + event.eventId"
+          (click)="streamParams(event.eventId)"
         ></app-event-list-card>
       </div>
     </mat-tab>
@@ -44,6 +46,7 @@
           *ngFor="let event of joinedEvents$ | async as events"
           [event]="event"
           [routerLink]="'/event/' + event?.eventId"
+          (click)="streamParams(event.eventId)"
         ></app-event-list-card>
       </div>
     </mat-tab>

@@ -6,6 +6,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { EventWithOwner } from 'src/app/interfaces/event';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
+import { RouteParamsService } from 'src/app/services/route-params.service';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
 import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog.component';
 
@@ -28,10 +29,16 @@ export class EventComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private eventServise: EventService,
-    public authServise: AuthService
+    public authServise: AuthService,
+    private routeService: RouteParamsService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.eventId = params.get('eventId');
+      this.routeService.eventIdSubject.next(this.eventId);
+    });
+  }
 
   openDeleteEventDialog() {
     this.dialog.open(EventDeleteDialogComponent, {

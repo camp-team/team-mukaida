@@ -3,8 +3,12 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
+import { PostWithUser } from '../interfaces/post';
+import { User } from '../interfaces/user';
 import { Video } from '../interfaces/video';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +17,8 @@ export class VideoService {
   constructor(
     private db: AngularFirestore,
     private storage: AngularFireStorage,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {}
 
   async uploadVideo(
@@ -64,11 +69,92 @@ export class VideoService {
       .valueChanges();
   }
 
-  deleteVideo(eventId: string, videoId: string): void {
+  getVideosWithUser(eventId: string) {
+    return this.getVideos(eventId).pipe(
+      switchMap((videos) => {
+        if (videos.length) {
+          const unduplicatedUids: string[] = Array.from(
+            new Set(videos.map((video) => video.uid))
+          );
+          const users$: Observable<User[]> = combineLatest(
+            unduplicatedUids.map((userId) =>
+              this.userService.getUserData(userId)
+            )
+          );
+          return combineLatest([of(videos), users$]);
+        } else {
+          return of([]);
+        }
+      }),
+      map(([videos, users]) => {
+        if (videos?.length) {
+          return videos.map((video) => {
+            return {
+              ...video,
+              user: users.find((user) => video.uid === user?.uid),
+            };
+          });
+        } else {
+          return [];
+        }
+      })
+    );
+  }
+
+  async getRecentVideosInJoinedEvents(
+    uid: string
+  ): Promise<Observable<PostWithUser[]>> {
+    return this.userService
+      .getJoinedEventIds(uid)
+      .pipe(take(1))
+      .toPromise()
+      .then((ids) => {
+        return this.db
+          .collectionGroup<Video>('videos', (ref) =>
+            ref
+              .where('eventId', 'in', ids)
+              .orderBy('createdAt', 'desc')
+              .limit(20)
+          )
+          .valueChanges()
+          .pipe(
+            switchMap((videos: Video[]) => {
+              if (videos.length) {
+                const unduplicatedUids: string[] = Array.from(
+                  new Set(videos.map((video) => video.uid))
+                );
+                const users$: Observable<User[]> = combineLatest(
+                  unduplicatedUids.map((userId) =>
+                    this.userService.getUserData(userId)
+                  )
+                );
+                return combineLatest([of(videos), users$]);
+              } else {
+                return of([]);
+              }
+            }),
+            map(([videos, users]) => {
+              if (videos?.length) {
+                return videos.map((video: Video) => {
+                  return {
+                    ...video,
+                    user: users.find((user: User) => video.uid === user?.uid),
+                  };
+                });
+              } else {
+                return [];
+              }
+            })
+          );
+      });
+  }
+
+  deleteVideo(eventId: string, videoId: string, thumbnailId: string): void {
     const videoRef = this.storage.ref(`videos/${eventId}/${videoId}`);
+    const thumbnailRef = this.storage.ref(`video/${eventId}/${thumbnailId}`);
     videoRef.delete();
     this.db
-      .doc<Video>(`events/${eventId}/images/${videoId}`)
+      .doc<Video>(`events/${eventId}/videos/${videoId}`)
       .delete()
       .then(() => this.snackBar.open('動画ファイルを削除しました'));
   }

@@ -13,6 +13,6 @@ export interface Post {
   likedCount?: string;
 }
 
-export interface ImageWithUser extends Post {
+export interface PostWithUser extends Post {
   user: User;
 }

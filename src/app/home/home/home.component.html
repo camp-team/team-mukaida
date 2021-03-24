@@ -21,10 +21,10 @@
     <mat-tab label="新着投稿">
       <div class="mat-tab__card-layout mat-tab__card-layout--posts">
         <app-recent-posts
-          *ngFor="let image of images"
-          [image]="image"
-          [routerLink]="'/event/' + image.eventId"
-          (click)="streamParams(image.eventId)"
+          *ngFor="let post of postList$ | async"
+          [post]="post"
+          [routerLink]="'/event/' + post.eventId"
+          (click)="streamParams(post.eventId)"
         ></app-recent-posts>
       </div>
     </mat-tab>
@@ -56,6 +56,7 @@
 <app-bottom-actions
   [type]="{
     eventsStyle: true,
+    addVideoStyle: false,
     addImageStyle: false,
     sharedUrlStyle: false
   }"

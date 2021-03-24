@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Image, ImageWithUser } from 'src/app/interfaces/image';
+import { ImageWithUser } from 'src/app/interfaces/image';
+import { PostWithUser } from 'src/app/interfaces/post';
 
 @Component({
   selector: 'app-recent-posts',
@@ -7,9 +8,11 @@ import { Image, ImageWithUser } from 'src/app/interfaces/image';
   styleUrls: ['./recent-posts.component.scss'],
 })
 export class RecentPostsComponent implements OnInit {
-  @Input() image: ImageWithUser;
+  @Input() post: PostWithUser;
 
-  constructor() {}
+  constructor() {
+    console.log(this.post);
+  }
 
   ngOnInit(): void {}
 }

@@ -1,17 +1,17 @@
 <div class="tile" ontouchstart>
   <div class="tile__head">
-    <ng-container *ngIf="image.user?.avatarURL; else default">
-      <img class="tile__avatar" [src]="image.user?.avatarURL" alt="" />
+    <ng-container *ngIf="post.user?.avatarURL; else default">
+      <img class="tile__avatar" [src]="post.user?.avatarURL" alt="" />
     </ng-container>
     <ng-template #default>
       <mat-icon class="tile__avatar">account_circle</mat-icon>
     </ng-template>
-    <p class="tile__name">{{ image.user?.name }}</p>
+    <p class="tile__name">{{ post.user?.name }}</p>
   </div>
-  <img [src]="image.imageURL" />
+  <img [src]="post.imageURL || post.thumbnailURL" />
   <div class="tile__body">
     <div class="tile__date">
-      {{ image.createdAt.toDate() | date: 'yyyy/MM/dd HH:mm' }}
+      {{ post.createdAt.toDate() | date: 'yyyy/MM/dd HH:mm' }}
     </div>
   </div>
 </div>

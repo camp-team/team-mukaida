@@ -5,7 +5,7 @@ import * as firebase from 'firebase';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
-import { Image, ImageWithUser } from '../interfaces/image';
+import { Image } from '../interfaces/image';
 import { PostWithUser } from '../interfaces/post';
 import { User } from '../interfaces/user';
 import { AuthService } from './auth.service';

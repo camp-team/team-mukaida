@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
 import { ImageService } from 'src/app/services/image.service';
 import { LikedService } from 'src/app/services/liked.service';
+import { VideoService } from 'src/app/services/video.service';
 import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialog.component';
 
 @Component({
@@ -61,7 +62,8 @@ export class ImageCardComponent implements OnInit {
     private likedService: LikedService,
     private authServise: AuthService,
     private route: ActivatedRoute,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private videoService: VideoService
   ) {
     this.authServise.user$.subscribe((user) => {
       this.uid = user.uid;
@@ -90,7 +92,7 @@ export class ImageCardComponent implements OnInit {
 
   isEditMode() {}
 
-  openDeleteDialog(imageId: string) {
+  openDeleteImageDialog(imageId: string) {
     this.dialog
       .open(DeleteDialogComponent, {
         minWidth: 300,
@@ -101,6 +103,25 @@ export class ImageCardComponent implements OnInit {
           this.imageService
             .deleteImage(this.event.eventId, imageId)
             .then(() => this.snackBar.open('画像を削除しました'));
+        } else {
+          return;
+        }
+      });
+  }
+
+  openDeleteVideoDialog(videoId: string, thumbnailId: string) {
+    this.dialog
+      .open(DeleteDialogComponent, {
+        minWidth: 300,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.videoService.deleteVideo(
+            this.event.eventId,
+            videoId,
+            thumbnailId
+          );
         } else {
           return;
         }

@@ -14,7 +14,7 @@
     grid-template-columns: repeat(4, auto);
     background-color: rgba($color-accent, 0.95);
     &--home-style {
-      grid-template-columns: repeat(2, auto);
+      grid-template-columns: 1fr;
     }
     & p {
       margin: 0;

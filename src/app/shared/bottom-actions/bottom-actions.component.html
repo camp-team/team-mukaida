@@ -1,7 +1,10 @@
 <div
   class="bottom-actions"
   [class.bottom-actions--home-style]="
-    type.eventsStyle && !type.addImageStyle && !type.sharedUrlStyle
+    type.eventsStyle &&
+    !type.addVideoStyle &&
+    !type.addImageStyle &&
+    !type.sharedUrlStyle
   "
 >
   <button
@@ -16,6 +19,7 @@
     mat-ripple
     mat-button
     class="bottom-actions__join-event"
+    [class.bottom-actions-disabled]="!type.addVideoStyle"
     routerLink="post-video"
   >
     <mat-icon>person_add</mat-icon>

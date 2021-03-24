@@ -13,6 +13,7 @@ import { JoinEventDialogComponent } from '../join-event-dialog/join-event-dialog
 export class BottomActionsComponent implements OnInit {
   @Input() type: {
     eventsStyle: boolean;
+    addVideoStyle: boolean;
     addImageStyle: boolean;
     sharedUrlStyle: boolean;
   };

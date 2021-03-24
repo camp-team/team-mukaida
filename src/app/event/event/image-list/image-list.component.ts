@@ -77,7 +77,7 @@ export class ImageListComponent implements OnInit {
     this.imageService.deleteImage(imageId, this.eventId);
   }
 
-  deleteVideo(videoId: string) {
-    this.videoService.deleteVideo(this.eventId, videoId);
+  deleteVideo(videoId: string, thumbnailURL: string) {
+    this.videoService.deleteVideo(this.eventId, videoId, thumbnailURL);
   }
 }

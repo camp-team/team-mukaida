@@ -37,6 +37,17 @@
       height: 32px;
     }
   }
+  &__video-icon {
+    position: absolute;
+    top: 4px;
+    right: 40px;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    mat-icon {
+      height: 32px;
+    }
+  }
   &__body {
     display: flex;
     align-items: center;

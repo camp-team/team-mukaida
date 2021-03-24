@@ -3,6 +3,11 @@
     <div class="image-card__img">
       <img [src]="post.imageURL || post.thumbnailURL" alt="" />
     </div>
+    <ng-container *ngIf="post.videoURL">
+      <button class="image-card__video-icon" mat-icon-button>
+        <mat-icon>duo</mat-icon>
+      </button>
+    </ng-container>
     <ng-container *ngIf="user$ | async as user">
       <button
         class="image-card__menu"
@@ -17,7 +22,18 @@
         <button mat-menu-item (click)="isEditMode()">
           <mat-icon>edit</mat-icon>編集
         </button>
-        <button mat-menu-item (click)="openDeleteDialog(post.imageId)">
+        <button
+          *ngIf="post.imageId"
+          mat-menu-item
+          (click)="openDeleteImageDialog(post.imageId)"
+        >
+          <mat-icon>delete</mat-icon>削除
+        </button>
+        <button
+          *ngIf="post.videoId"
+          mat-menu-item
+          (click)="openDeleteVideoDialog(post.videoId, post.thumbnailId)"
+        >
           <mat-icon>delete</mat-icon>削除
         </button>
       </mat-menu>

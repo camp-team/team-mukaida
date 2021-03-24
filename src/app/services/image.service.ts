@@ -6,6 +6,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
 import { Image, ImageWithUser } from '../interfaces/image';
+import { PostWithUser } from '../interfaces/post';
 import { User } from '../interfaces/user';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
@@ -64,7 +65,7 @@ export class ImageService {
 
   async getRecentImagesInJoinedEvents(
     uid: string
-  ): Promise<Observable<ImageWithUser[]>> {
+  ): Promise<Observable<PostWithUser[]>> {
     return this.userService
       .getJoinedEventIds(uid)
       .pipe(take(1))

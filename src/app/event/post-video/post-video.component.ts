@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -19,6 +19,7 @@ export class PostVideoComponent implements OnInit {
   thumbnails = [];
   user$: Observable<User> = this.authService.user$;
   isloading: boolean;
+  isUploading: boolean;
   selected = 0;
   fileControl = new FormControl('', [Validators.required]);
 
@@ -83,10 +84,10 @@ export class PostVideoComponent implements OnInit {
   }
 
   uploadVideo(eventId: string, uid: string): void {
+    this.isUploading = true;
     const thumbnail = this.thumbnails[this.selected];
-    console.log(thumbnail);
-    console.log(this.video);
-
-    this.videoService.uploadVideo(eventId, this.video, uid, thumbnail);
+    this.videoService
+      .uploadVideo(eventId, this.video, uid, thumbnail)
+      .then(() => (this.isUploading = false));
   }
 }

@@ -1,6 +1,10 @@
 @import 'variables';
 
 .video {
+  position: relative;
+  min-height: 100vh;
+  padding: 48px 0;
+  transition: ease-in-out 0.3s;
   &__icon {
     font-size: 24px;
     width: 40px;
@@ -30,6 +34,9 @@
     background: $color-accent-1;
     color: #fff;
   }
+  &.loading {
+    display: none;
+  }
 }
 
 .preview {
@@ -55,5 +62,36 @@
       cursor: pointer;
       opacity: 0.5;
     }
+  }
+}
+
+.loading {
+  animation: fade 0.6s infinite;
+}
+
+.uploading {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  place-content: center;
+  &__svg {
+    width: 80px;
+  }
+  &__text {
+    font-size: 12px;
+    animation: fade 0.6s infinite;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.38;
   }
 }

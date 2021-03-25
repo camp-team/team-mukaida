@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
@@ -18,7 +19,8 @@ export class VideoService {
     private db: AngularFirestore,
     private storage: AngularFireStorage,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   async uploadVideo(
@@ -50,8 +52,8 @@ export class VideoService {
           thumbnailId,
           createdAt: firebase.default.firestore.Timestamp.now(),
         })
-        .then(() => this.snackBar.open('ファイルのアップロードを始めました'))
-        .finally(() => this.snackBar.open('アップロード完了！'));
+        .then(() => this.snackBar.open('アップロード完了！'))
+        .finally(() => this.router.navigateByUrl(`event/${eventId}`));
     });
   }
 
@@ -151,8 +153,9 @@ export class VideoService {
 
   deleteVideo(eventId: string, videoId: string, thumbnailId: string): void {
     const videoRef = this.storage.ref(`videos/${eventId}/${videoId}`);
-    const thumbnailRef = this.storage.ref(`video/${eventId}/${thumbnailId}`);
+    const thumbnailRef = this.storage.ref(`videos/${eventId}/${thumbnailId}`);
     videoRef.delete();
+    thumbnailRef.delete();
     this.db
       .doc<Video>(`events/${eventId}/videos/${videoId}`)
       .delete()

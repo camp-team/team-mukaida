@@ -62,15 +62,6 @@ export class ImageListComponent implements OnInit {
       this.eventId = id;
       this.event$ = this.eventService.getEvent(this.eventId);
     });
-    this.videoList$.subscribe((data) => {
-      console.log(data);
-    });
-    this.imageList$.subscribe((data) => {
-      console.log(data);
-    });
-    this.postList$.subscribe((data) => {
-      console.log(data);
-    });
   }
 
   deleteImage(imageId: string) {

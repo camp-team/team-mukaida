@@ -9,6 +9,7 @@ import { User } from '../interfaces/user';
 import { UserService } from './user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './auth.service';
+import { Post } from '../interfaces/post';
 
 @Injectable({
   providedIn: 'root',
@@ -22,26 +23,44 @@ export class CommentService {
   ) {}
 
   createComment(
-    image: Image,
+    post: Post,
     comment: Omit<
       Comment,
       'uid' | 'imageId' | 'createdAt' | 'imageURL' | 'commentId' | 'eventId'
     >
   ): Promise<void> {
     const commentId: string = this.db.createId();
-    return this.db
-      .doc<Comment>(
-        `events/${image.eventId}/images/${image.imageId}/comments/${commentId}`
-      )
-      .set({
-        ...comment,
-        uid: this.authService.uid,
-        imageId: image.imageId,
-        imageURL: image.imageURL,
-        commentId,
-        eventId: image.eventId,
-        createdAt: firebase.default.firestore.Timestamp.now(),
-      });
+    if (post.imageId) {
+      return this.db
+        .doc<Comment>(
+          `events/${post.eventId}/images/${post.imageId}/comments/${commentId}`
+        )
+        .set({
+          ...comment,
+          uid: this.authService.uid,
+          imageId: post.imageId,
+          imageURL: post.imageURL,
+          commentId,
+          eventId: post.eventId,
+          createdAt: firebase.default.firestore.Timestamp.now(),
+        });
+    }
+
+    if (post.videoId) {
+      return this.db
+        .doc<Comment>(
+          `events/${post.eventId}/videos/${post.videoId}/comments/${commentId}`
+        )
+        .set({
+          ...comment,
+          uid: this.authService.uid,
+          videoId: post.videoId,
+          videoURL: post.videoURL,
+          commentId,
+          eventId: post.eventId,
+          createdAt: firebase.default.firestore.Timestamp.now(),
+        });
+    }
   }
 
   getComments(eventId: string, imageId: string): Observable<Comment[]> {
@@ -52,59 +71,117 @@ export class CommentService {
 
   getCommentsWithUser(
     eventId: string,
-    imageId: string
+    imageId?: string,
+    videoId?: string
   ): Observable<CommentWithUser[]> {
-    if (imageId === undefined) {
+    if (imageId === undefined && videoId === undefined) {
       return of(null);
     } else {
-      return this.db
-        .collection<Comment>(
-          `events/${eventId}/images/${imageId}/comments`,
-          (ref) => ref.orderBy('createdAt', 'desc')
-        )
-        .valueChanges()
-        .pipe(
-          switchMap((comments: Comment[]) => {
-            if (comments.length) {
-              const unduplicatedUids: string[] = Array.from(
-                new Set(comments.map((comment) => comment.uid))
-              );
+      if (imageId) {
+        return this.db
+          .collection<Comment>(
+            `events/${eventId}/images/${imageId}/comments`,
+            (ref) => ref.orderBy('createdAt', 'desc')
+          )
+          .valueChanges()
+          .pipe(
+            switchMap((comments: Comment[]) => {
+              if (comments.length) {
+                const unduplicatedUids: string[] = Array.from(
+                  new Set(comments.map((comment) => comment.uid))
+                );
 
-              const users$: Observable<User[]> = combineLatest(
-                unduplicatedUids.map((uid) => this.userService.getUserData(uid))
-              );
-              return combineLatest([of(comments), users$]);
-            } else {
-              return of([]);
-            }
-          }),
-          map(([comments, users]) => {
-            if (comments?.length) {
-              return comments.map((comment: Comment) => {
-                return {
-                  ...comment,
-                  user: users.find((user: User) => comment.uid === user?.uid),
-                };
-              });
-            } else {
-              return [];
-            }
-          })
-        );
+                const users$: Observable<User[]> = combineLatest(
+                  unduplicatedUids.map((uid) =>
+                    this.userService.getUserData(uid)
+                  )
+                );
+                return combineLatest([of(comments), users$]);
+              } else {
+                return of([]);
+              }
+            }),
+            map(([comments, users]) => {
+              if (comments?.length) {
+                return comments.map((comment: Comment) => {
+                  return {
+                    ...comment,
+                    user: users.find((user: User) => comment.uid === user?.uid),
+                  };
+                });
+              } else {
+                return [];
+              }
+            })
+          );
+      }
+      if (videoId) {
+        return this.db
+          .collection<Comment>(
+            `events/${eventId}/videos/${videoId}/comments`,
+            (ref) => ref.orderBy('createdAt', 'desc')
+          )
+          .valueChanges()
+          .pipe(
+            switchMap((comments: Comment[]) => {
+              if (comments.length) {
+                const unduplicatedUids: string[] = Array.from(
+                  new Set(comments.map((comment) => comment.uid))
+                );
+
+                const users$: Observable<User[]> = combineLatest(
+                  unduplicatedUids.map((uid) =>
+                    this.userService.getUserData(uid)
+                  )
+                );
+                return combineLatest([of(comments), users$]);
+              } else {
+                return of([]);
+              }
+            }),
+            map(([comments, users]) => {
+              if (comments?.length) {
+                return comments.map((comment: Comment) => {
+                  return {
+                    ...comment,
+                    user: users.find((user: User) => comment.uid === user?.uid),
+                  };
+                });
+              } else {
+                return [];
+              }
+            })
+          );
+      }
     }
   }
 
-  deleteComment(
+  async deleteComment(
     eventId: string,
-    imageId: string,
-    commentId: string
+    commentId: string,
+    imageId?: string,
+    videoId?: string
   ): Promise<void> {
-    return this.db
-      .doc<Comment>(`events/${eventId}/images/${imageId}/comments/${commentId}`)
-      .delete()
-      .then(() => {
-        this.snackBar.open('削除しました');
-      });
+    if (imageId) {
+      return this.db
+        .doc<Comment>(
+          `events/${eventId}/images/${imageId}/comments/${commentId}`
+        )
+        .delete()
+        .then(() => {
+          this.snackBar.open('コメントを1件削除しました');
+        });
+    }
+    if (videoId) {
+      return this.db
+        .doc<Comment>(
+          `events/${eventId}/videos/${videoId}/comments/${commentId}`
+        )
+        .delete()
+        .then(() => {
+          this.snackBar.open('コメントを1件削除しました');
+        });
+    }
   }
 
   async getMyCommentIds(uid: string): Promise<string[]> {

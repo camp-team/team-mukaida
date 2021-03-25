@@ -5,10 +5,12 @@ export interface Comment {
   uid: string;
   createdAt: firebase.default.firestore.Timestamp;
   commentBody: string;
-  imageURL: string;
-  imageId: string;
+  imageURL?: string;
+  imageId?: string;
   commentId: string;
   eventId: string;
+  videoId?: string;
+  videoURL?: string;
 }
 
 export interface CommentWithUser extends Comment {

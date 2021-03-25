@@ -26,10 +26,11 @@
         <app-comment-list
           class="comment__inner"
           [eventId]="eventId"
+          [videoId]="video.videoId"
         ></app-comment-list>
       </div>
       <div class="comment__form">
-        <app-comment-form></app-comment-form>
+        <app-comment-form [video]="video"></app-comment-form>
       </div>
     </div>
   </div>

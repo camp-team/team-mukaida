@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ImageService } from 'src/app/services/image.service';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Image } from 'src/app/interfaces/image';
 import { User } from 'src/app/interfaces/user';
-import { switchMap, take } from 'rxjs/operators';
-import { UserService } from 'src/app/services/user.service';
-import { LikedService } from 'src/app/services/liked.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ImageService } from 'src/app/services/image.service';
+import { LikedService } from 'src/app/services/liked.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-image-detail',
@@ -15,7 +15,6 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./image-detail.component.scss'],
 })
 export class ImageDetailComponent implements OnInit {
-  @Input() image: Image;
   imageCreatedAt: any;
   uid: string;
   likedCount: number;
@@ -44,7 +43,7 @@ export class ImageDetailComponent implements OnInit {
   ngOnInit(): void {
     // 自分がいいねをしたか、していないかを判定する。
     this.likedService
-      .isLiked(this.eventId, this.imageId, this.authService.uid)
+      .isLiked(this.eventId, this.authService.uid, this.imageId)
       .pipe(take(1))
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
@@ -62,12 +61,12 @@ export class ImageDetailComponent implements OnInit {
     this.isLiked = true;
     this.likedCount++;
     this.imageIds.push(imageId);
-    this.likedService.likeItem(this.eventId, imageId, this.authService.uid);
+    this.likedService.likeItem(this.eventId, this.authService.uid, imageId);
   }
 
   UnLikeImage(imageId: string) {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, imageId, this.authService.uid);
+    this.likedService.unlike(this.eventId, this.authService.uid, imageId);
   }
 }

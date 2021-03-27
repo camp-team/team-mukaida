@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, forkJoin, merge, Observable, of, zip } from 'rxjs';
-import { map, mergeAll, mergeMap, mergeMapTo, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
 import { Image } from 'src/app/interfaces/image';
 import { Post } from 'src/app/interfaces/post';
-import { Video } from 'src/app/interfaces/video';
 import { EventService } from 'src/app/services/event.service';
 import { ImageService } from 'src/app/services/image.service';
 import { VideoService } from 'src/app/services/video.service';
@@ -19,8 +18,6 @@ export class ImageListComponent implements OnInit {
   eventId: string;
   imageList: Image[];
   eventUrl: string = location.href.replace('event/', '');
-  posts$ = of([]);
-
   event$: Observable<Event>;
 
   eventId$: Observable<string> = this.route.paramMap.pipe(

@@ -9,6 +9,7 @@ export interface Comment {
   imageId: string;
   commentId: string;
   eventId: string;
+  ownerId: string;
 }
 
 export interface CommentWithUser extends Comment {

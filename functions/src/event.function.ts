@@ -118,25 +118,33 @@ export const deleteImagesInTheEvent = functions
         .collectionGroup('images')
         .where('uid', '==', uid)
         .where('eventId', '==', eventId);
-      const comments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+      const allComments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
         .collectionGroup('comments')
-        .where('uid', '==', uid)
-        .where('eventId', '==', eventId);
+        .where('eventId', '==', eventId)
+        .where('ownerId', '==', uid);
+      const allMyComments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('comments')
+        .where('uid', '==', uid);
       const imageFavorite: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
         .collectionGroup('likedUids')
-        .where('likedUids', '==', uid)
+        .where('likedUid', '==', uid)
+        .where('eventId', '==', eventId);
+      const myFavorite: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collection(`users/${uid}/likedImages`)
         .where('eventId', '==', eventId);
 
       const deleteAllImagesPostedByMySelf = deleteCollectionByReference(images);
-      const deleteAllCommentsPostedByMySelf = deleteCollectionByReference(
-        comments
-      );
+      const deleteAllComments = deleteCollectionByReference(allComments);
+      const deleteAllMyComments = deleteCollectionByReference(allMyComments);
       const deleteAllFavorite = deleteCollectionByReference(imageFavorite);
+      const deleteAllMyFavorite = deleteCollectionByReference(myFavorite);
 
       await Promise.all([
-        deleteAllCommentsPostedByMySelf,
+        deleteAllComments,
+        deleteAllMyComments,
         deleteAllImagesPostedByMySelf,
         deleteAllFavorite,
+        deleteAllMyFavorite,
       ]);
     }
   });

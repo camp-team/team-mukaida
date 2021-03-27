@@ -53,8 +53,6 @@ export class EventComponent implements OnInit {
 
   exitEventOpenDialog() {
     this.dialog.open(ExitEventDialogComponent, {
-      width: '800px',
-      height: '400px',
       autoFocus: false,
       restoreFocus: false,
       data: {

@@ -103,3 +103,14 @@ button {
     }
   }
 }
+
+app-exit-event-dialog {
+  .mat-checkbox-inner-container {
+    margin: 4px 8px auto auto;
+  }
+  mat-checkbox {
+    span {
+      white-space: pre-wrap;
+    }
+  }
+}

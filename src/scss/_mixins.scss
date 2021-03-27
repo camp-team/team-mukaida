@@ -10,6 +10,18 @@
   }
 }
 
+@mixin tab {
+  @media screen and (min-width: 600px) and (max-width: 800px) {
+    @content;
+  }
+}
+
+@mixin pc-l {
+  @media screen and (min-width: 800px) {
+    @content;
+  }
+}
+
 @mixin pc {
   @media not all and (max-width: 600px) {
     @content;

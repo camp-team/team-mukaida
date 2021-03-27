@@ -33,8 +33,8 @@ export class ExitEventDialogComponent implements OnInit {
     const uid: string = this.authService.uid;
     const eventId: string = this.data.eventId;
 
-    // await this.eventService.exitEvent(eventId, uid);
-    // await this.userService.deleteJoinedEventId(uid, eventId);
+    await this.eventService.exitEvent(eventId, uid);
+    await this.userService.deleteJoinedEventId(uid, eventId);
 
     if (this.isDeleteAllImagesAndComments) {
       this.eventService.deleteImagesAndCommentsInTheEvent(eventId);
@@ -43,7 +43,7 @@ export class ExitEventDialogComponent implements OnInit {
     this.dialogRef.close();
     this.dialogRef.afterClosed().subscribe(() => {
       this.snackBar.open('イベントから退会しました');
-      // this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/');
     });
   }
 }

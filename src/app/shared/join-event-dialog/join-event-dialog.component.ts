@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -29,6 +29,7 @@ export class JoinEventDialogComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private router: Router,
+    private dialogRef: MatDialogRef<JoinEventDialogComponent>,
     private snackBar: MatSnackBar,
     private userService: UserService,
     private authService: AuthService,
@@ -50,6 +51,7 @@ export class JoinEventDialogComponent implements OnInit {
       this.router
         .navigateByUrl(`event/${this.data.id}`)
         .finally(() => this.snackBar.open('イベントに参加しました'));
+      this.dialogRef.close();
     } else {
       this.snackBar.open('パスワードが違います');
     }

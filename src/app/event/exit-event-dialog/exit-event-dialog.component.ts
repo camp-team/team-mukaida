@@ -37,8 +37,6 @@ export class ExitEventDialogComponent implements OnInit {
     await this.userService.deleteJoinedEventId(uid, eventId);
 
     if (this.isDeleteAllImages) {
-      console.log('image delete');
-
       this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
     }
 

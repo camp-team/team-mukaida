@@ -27,7 +27,7 @@
         <!-- 投稿時間表示 -->
         <ng-container *ngIf="image$">
           <div class="image-createAt">
-            {{ image.createAt.toDate() | date: 'yyyy年MM月dd ' }}
+            {{ image.createdAt.toDate() | date: 'yyyy年MM月dd ' }}
           </div>
         </ng-container>
       </div>

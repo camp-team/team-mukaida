@@ -1,9 +1,14 @@
+@import 'mixins';
+
 h1 {
   text-align: center;
 }
 
 mat-dialog-content {
   overflow: initial;
+  @include sp {
+    padding: 0 16px;
+  }
   p {
     text-align: center;
     font-weight: 500;

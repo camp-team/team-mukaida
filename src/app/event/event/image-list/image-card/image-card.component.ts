@@ -76,19 +76,38 @@ export class ImageCardComponent implements OnInit {
       this.comments = comments;
     });
     // 自分がいいねをしたか、していないかを判定する。
-    this.likedService
-      .isLiked(this.eventId, this.post.imageId, this.uid)
-      .pipe(take(1))
-      .subscribe((isLiked) => {
-        this.isLiked = isLiked;
-      });
+
     // 各画像のいいね数を取得する。
-    this.likedService
-      .getLikedCount(this.eventId, this.post.imageId)
-      .pipe(take(1))
-      .subscribe((likedCount) => {
-        this.likedCount = likedCount.length;
-      });
+    if (this.post.imageId) {
+      this.likedService
+        .isLiked(this.eventId, this.uid, this.post.imageId)
+        .pipe(take(1))
+        .subscribe((isLiked) => {
+          this.isLiked = isLiked;
+        });
+
+      this.likedService
+        .getLikedCount(this.eventId, this.post.imageId)
+        .pipe(take(1))
+        .subscribe((likedCount) => {
+          this.likedCount = likedCount.length;
+        });
+    }
+    if (this.post.videoId) {
+      this.likedService
+        .isLiked(this.eventId, this.uid, this.post.videoId)
+        .pipe(take(1))
+        .subscribe((isLiked) => {
+          this.isLiked = isLiked;
+        });
+
+      this.likedService
+        .getLikedCount(this.eventId, this.post.videoId)
+        .pipe(take(1))
+        .subscribe((likedCount) => {
+          this.likedCount = likedCount.length;
+        });
+    }
   }
 
   isEditMode() {}

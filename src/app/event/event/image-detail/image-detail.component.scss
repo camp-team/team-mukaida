@@ -23,11 +23,24 @@ header {
 }
 .thumbnail {
   padding: 0 32px;
-  margin-bottom: 40px;
+  margin-bottom: 12px;
   img {
     border-radius: 3px;
     box-shadow: 28px 38px 48px rgba(126, 126, 126, 0.5);
   }
+}
+
+.area {
+  padding: 0 42px;
+  margin-bottom: 12px;
+}
+
+button {
+  display: block;
+}
+
+.image-createAt {
+  padding-left: 6px;
 }
 
 @include sp {

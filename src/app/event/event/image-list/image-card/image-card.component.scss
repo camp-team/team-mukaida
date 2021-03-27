@@ -7,6 +7,10 @@
   overflow: hidden;
   &__navigate {
     cursor: pointer;
+    transition: ease-in-out 0.3s;
+    &:hover .image-card__img {
+      opacity: 0.8;
+    }
   }
   &__delete {
     background: #ffffff;
@@ -35,32 +39,31 @@
   &__video-icon {
     position: absolute;
     top: 4px;
-    right: 40px;
-    width: 32px;
-    height: 32px;
-    mat-icon {
-      width: 32px;
-      height: 32px;
-      font-size: 18px;
-      color: rgba(0, 0, 0, 0.38);
-    }
+    right: 32px;
+    padding: 1px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.38);
+    color: #fff;
+    font-size: 16px;
+    display: inline-block;
+    text-align: center;
+    line-height: 22px;
   }
-  &__menu {
+  &__menu-item {
     position: absolute;
     top: 4px;
     right: 4px;
-    mat-icon {
-      width: 32px;
-      height: 32px;
-      font-size: 18px;
-      color: #fff;
-    }
-  }
-  &__menu-item {
-    width: 32px;
-    height: 32px;
+    padding: 1px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.38);
+    cursor: pointer;
+    mat-icon {
+      color: #fff;
+      font-size: 16px;
+      display: inline-block;
+      text-align: center;
+      line-height: 22px;
+    }
   }
   &__body {
     display: flex;

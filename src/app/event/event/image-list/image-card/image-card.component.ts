@@ -142,16 +142,16 @@ export class ImageCardComponent implements OnInit {
       });
   }
 
-  likeImage(imageId: string) {
+  likePost(imageId: string, videoId: string) {
     this.isLiked = true;
     this.likedCount++;
     this.imageIds.push(imageId);
-    this.likedService.likeItem(this.eventId, imageId, this.uid);
+    this.likedService.likeItem(this.eventId, this.uid, imageId, videoId);
   }
 
-  UnLikeImage(imageId: string) {
+  UnLikePost(imageId: string, videoId: string) {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, imageId, this.uid);
+    this.likedService.unlike(this.eventId, this.uid, imageId, videoId);
   }
 }

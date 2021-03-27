@@ -1,46 +1,47 @@
 <div class="image-card">
-  <a class="image-card_navigate" (click)="navigateDetail(post)">
+  <a class="image-card__navigate" (click)="navigateDetail(post)">
     <div class="image-card__main">
       <div class="image-card__img">
         <img [src]="post.imageURL || post.thumbnailURL" alt="" />
       </div>
       <ng-container *ngIf="post.videoURL">
-        <button class="image-card__video-icon" mat-icon-button>
-          <mat-icon>duo</mat-icon>
-        </button>
+        <mat-icon class="image-card__video-icon">videocam</mat-icon>
       </ng-container>
       <ng-container *ngIf="user$ | async as user">
-        <div *ngIf="user?.uid == post.uid" class="image-card__menu">
+        <ng-container *ngIf="user?.uid == post.uid">
           <button
             *ngIf="post.imageId"
-            mat-icon-button
-            (click)="openDeleteImageDialog(post.imageId)"
+            (click)="
+              $event.stopPropagation(); openDeleteImageDialog(post.imageId)
+            "
             class="image-card__menu-item"
           >
             <mat-icon>delete</mat-icon>
           </button>
           <button
             *ngIf="post.videoId"
-            mat-icon-button
-            (click)="openDeleteVideoDialog(post.videoId, post.thumbnailId)"
+            (click)="
+              $event.stopPropagation();
+              openDeleteVideoDialog(post.videoId, post.thumbnailId)
+            "
             class="image-card__menu-item"
           >
             <mat-icon>delete</mat-icon>
           </button>
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   </a>
 
   <div class="image-card__body">
     <ng-container *ngIf="!isLiked">
-      <button mat-icon-button (click)="likeImage(post.imageId)">
+      <button mat-icon-button (click)="likePost(post.imageId, post.videoId)">
         <mat-icon class="image-card__like">favorite_border</mat-icon>
         <span class="image-card__like-count">{{ likedCount }}</span>
       </button>
     </ng-container>
     <ng-container *ngIf="isLiked">
-      <button mat-icon-button (click)="UnLikeImage(post.imageId)">
+      <button mat-icon-button (click)="UnLikePost(post.imageId, post.videoId)">
         <mat-icon class="image-card__like">favorite</mat-icon>
         <span class="image-card__like-count">{{ likedCount }}</span>
       </button>

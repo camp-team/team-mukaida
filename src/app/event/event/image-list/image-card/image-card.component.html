@@ -1,28 +1,24 @@
 <div class="image-card">
-  <div class="image-card__main">
-    <div class="image-card__img">
-      <img [src]="image.imageURL" alt="" />
-    </div>
-    <ng-container *ngIf="user$ | async as user">
+  <ng-container *ngIf="user$ | async as user">
+    <div class="image-card__delete-conteiner">
       <button
-        class="image-card__menu"
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        *ngIf="user?.uid == image.uid"
+        class="image-card__delete"
+        (click)="openDeleteDialog(image.imageId)"
       >
-        <mat-icon>more_vert</mat-icon>
+        <mat-icon>delete</mat-icon>
       </button>
-
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="isEditMode()">
-          <mat-icon>edit</mat-icon>編集
-        </button>
-        <button mat-menu-item (click)="openDeleteDialog(image.imageId)">
-          <mat-icon>delete</mat-icon>削除
-        </button>
-      </mat-menu>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
+  <a
+    class="image-card__comment"
+    [routerLink]="'/event/' + image.eventId + '/images/' + image.imageId"
+  >
+    <div class="image-card__main">
+      <div class="image-card__img">
+        <img [src]="image.imageURL" alt="" />
+      </div>
+    </div>
+  </a>
 
   <div class="image-card__body">
     <ng-container *ngIf="!isLiked">

@@ -26,6 +26,7 @@
           <div class="event__share">
             <button
               class="event__share-btn"
+              (click)="copyUrl()"
               [cdkCopyToClipboard]="eventInvitateURL"
             >
               <mat-icon>content_copy</mat-icon>

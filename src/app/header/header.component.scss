@@ -60,7 +60,10 @@
       }
       &:hover {
         background-color: $color-accent;
-        color: #fff;
+        span,
+        mat-icon {
+          color: #fff;
+        }
       }
     }
     mat-icon {
@@ -91,6 +94,9 @@
   align-items: center;
   button,
   a {
+    @include sp {
+      display: none;
+    }
     font-weight: 600;
     color: $color-font;
     margin-left: 4px;
@@ -100,6 +106,7 @@
     }
   }
   button:last-of-type {
+    display: block;
     margin-left: 16px;
   }
 }

@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "Instacircle"
+  "defaultProject": "Instacircle",
+  "cli": {
+    "analytics": false
+  }
 }

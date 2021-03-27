@@ -1,7 +1,7 @@
 <header class="header">
   <h1 class="header__logo">
     <a href="" class="header__logo-link"
-      ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
+      ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
     >
   </h1>
   <div class="actions">
@@ -10,7 +10,7 @@
       <span>イベントに参加する</span>
     </button>
     <a mat-button routerLink="/create-event">
-      <mat-icon inline="true">create</mat-icon>
+      <mat-icon inline="true">assignment_ind</mat-icon>
       <span>イベントを作る</span>
     </a>
     <ng-container *ngIf="authService.user$ | async as user; else default">

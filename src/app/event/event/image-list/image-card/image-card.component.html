@@ -1,5 +1,5 @@
 <div class="image-card">
-  <a (click)="navigateDetail(post)">
+  <a class="image-card_navigate" (click)="navigateDetail(post)">
     <div class="image-card__main">
       <div class="image-card__img">
         <img [src]="post.imageURL || post.thumbnailURL" alt="" />
@@ -10,28 +10,24 @@
         </button>
       </ng-container>
       <ng-container *ngIf="user$ | async as user">
-        <button
-          class="image-card__menu"
-          mat-icon-button
-          *ngIf="user?.uid == post.uid"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-
-        <button
-          *ngIf="post.imageId"
-          mat-menu-item
-          (click)="openDeleteImageDialog(post.imageId)"
-        >
-          <mat-icon>delete</mat-icon>削除
-        </button>
-        <button
-          *ngIf="post.videoId"
-          mat-menu-item
-          (click)="openDeleteVideoDialog(post.videoId, post.thumbnailId)"
-        >
-          <mat-icon>delete</mat-icon>削除
-        </button>
+        <div *ngIf="user?.uid == post.uid" class="image-card__menu">
+          <button
+            *ngIf="post.imageId"
+            mat-icon-button
+            (click)="openDeleteImageDialog(post.imageId)"
+            class="image-card__menu-item"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            *ngIf="post.videoId"
+            mat-icon-button
+            (click)="openDeleteVideoDialog(post.videoId, post.thumbnailId)"
+            class="image-card__menu-item"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </ng-container>
     </div>
   </a>

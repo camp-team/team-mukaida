@@ -5,14 +5,15 @@
   border-radius: 8px;
   box-shadow: 16px 16px 2rem -2rem hsl(200 50% 20% / 60%);
   overflow: hidden;
-  &__delete-conteiner {
-    text-align: end;
+  &__navigate {
+    cursor: pointer;
   }
   &__delete {
     background: #ffffff;
   }
   &__main {
     position: relative;
+    width: 100%;
     &::before {
       content: '';
       display: block;
@@ -37,10 +38,29 @@
     right: 40px;
     width: 32px;
     height: 32px;
-    color: #fff;
     mat-icon {
+      width: 32px;
       height: 32px;
+      font-size: 18px;
+      color: rgba(0, 0, 0, 0.38);
     }
+  }
+  &__menu {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    mat-icon {
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      color: #fff;
+    }
+  }
+  &__menu-item {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.38);
   }
   &__body {
     display: flex;

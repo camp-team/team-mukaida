@@ -11,28 +11,26 @@
         <img [src]="image.imageURL" [alt]="" />
         <div class="area">
           <!-- いいね -->
-          <div>
-            <ng-container *ngIf="!isLiked">
-              <button mat-icon-button (click)="likeImage(image.imageId)">
-                <mat-icon class="like">favorite_border</mat-icon>
-                <span class="like-count">{{ likedCount }}</span>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="isLiked">
-              <button mat-icon-button (click)="UnLikeImage(image.imageId)">
-                <mat-icon class="like">favorite</mat-icon>
-                <span class="like-count">{{ likedCount }}</span>
-              </button>
-            </ng-container>
-          </div>
+          <button
+            *ngIf="!isLiked"
+            mat-icon-button
+            (click)="likeImage(image.imageId)"
+          >
+            <mat-icon class="like">favorite_border</mat-icon>
+            <span class="like-count">{{ likedCount }}</span>
+          </button>
+          <button
+            *ngIf="isLiked"
+            mat-icon-button
+            (click)="UnLikeImage(image.imageId)"
+          >
+            <mat-icon class="like">favorite</mat-icon>
+            <span class="like-count">{{ likedCount }}</span>
+          </button>
           <!-- 投稿時間表示 -->
-          <div>
-            <ng-container *ngIf="image$">
-              <div class="image-createAt">
-                {{ image.createAt.toDate() | date: 'yyyy年MM月dd ' }}
-              </div>
-            </ng-container>
-          </div>
+          <span *ngIf="image$" class="image-createAt">
+            {{ image.createAt.toDate() | date: 'yyyy年MM月dd ' }}
+          </span>
         </div>
       </div>
 

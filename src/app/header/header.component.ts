@@ -60,10 +60,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
       data: { id },
     });
   }
-
-  logout(): void {
-    this.authService
-      .logout()
-      .then(() => this.snackBar.open('ログアウトしました'));
-  }
 }

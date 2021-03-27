@@ -64,6 +64,6 @@ export class EventComponent implements OnInit {
   }
 
   copyUrl(): void {
-    this.snackBar.open('招待URLをコピーしました');
+    this.snackBar.open('リンクをコピーしました🥳');
   }
 }

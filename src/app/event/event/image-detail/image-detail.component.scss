@@ -50,7 +50,6 @@ button {
 
 .image-createAt {
   margin-left: 8px;
-  margin-bottom: -3px;
 }
 
 @include sp {
@@ -149,4 +148,13 @@ button {
       overflow-y: scroll;
     }
   }
+}
+
+.like {
+  color: hotpink;
+}
+
+.like-count {
+  margin-top: 2px;
+  margin-left: 4px;
 }

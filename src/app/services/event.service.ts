@@ -142,6 +142,24 @@ export class EventService {
       );
   }
 
+  deleteNobodyEvents(): Observable<void> {
+    return this.db
+      .collectionGroup<Event>('events', (ref) =>
+        ref.where('joinedUserCount', '==', false)
+      )
+      .valueChanges()
+      .pipe(
+        map((datas) => {
+          datas.map((data) => {
+            const id = data.eventId;
+            const callable = this.fns.httpsCallable('deleteEvent');
+
+            return callable(id);
+          });
+        })
+      );
+  }
+
   async getMyPostImageIds(eventId: string, uid: string): Promise<string[]> {
     const docs = await this.db
       .collection(`events/${eventId}/images`, (ref) =>

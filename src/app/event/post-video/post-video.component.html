@@ -8,31 +8,32 @@
       <p class="video__icon">
         <mat-icon>upload</mat-icon>
       </p>
-      <p class="video__text">アップロードするファイルを選んでください</p>
-      <p class="video__text video__text--sub">
-        ※動画ファイルのタイプはmp4のみアップロードできます。
-      </p>
-      <p class="video__text video__text--sub">
-        ※アップロードできるファイルのサイズは10MBまでです。
-      </p>
-      <p class="video__text video__text--sub">
-        MP4に変換するには
-        <a
-          href="https://www.mp4compress.com/ja/mov-to-mp4-converter/"
-          class="video__text video__text--sub video__text--link"
-          target="_blank"
-        >
-          こちらのサイト
-        </a>
-        などをご利用ください。
-      </p>
+      <div class="video__text-wrap">
+        <p class="video__text">アップロードするファイルを選んでください</p>
+        <p class="video__text video__text--sub">
+          ※ファイルタイプはmp4のみアップロードできます。
+        </p>
+        <p class="video__text video__text--sub">
+          ※アップロードできるサイズは10MBまでです。
+        </p>
+        <p class="video__text video__text--sub">
+          MP4に変換するには
+          <a
+            href="https://www.mp4compress.com/ja/mov-to-mp4-converter/"
+            class="video__text video__text--sub video__text--link"
+            target="_blank"
+          >
+            こちら
+          </a>
+          などをご利用ください。
+        </p>
+      </div>
 
       <input
         type="file"
         name="video"
         accept="video/mp4"
         required
-        (change)="selectVideo($event)"
         [formControl]="fileControl"
         #fileInput
         style="display: none"
@@ -91,13 +92,24 @@
         <ng-container *ngIf="eventId$ | async as eventId">
           <button
             type="submit"
-            mat-button
+            mat-flat-button
             (click)="uploadVideo(eventId, user.uid)"
-            [disabled]="fileControl.invalid || fileControl.pristine"
+            [disabled]="
+              fileControl.invalid ||
+              fileControl.pristine ||
+              fileSizeError ||
+              fileTypeError
+            "
             class="video__select"
           >
             投稿
           </button>
+          <p *ngIf="fileTypeError" class="video__error">
+            アップロードできるファイルのタイプはmp4のみです
+          </p>
+          <p *ngIf="fileSizeError" class="video__error">
+            アップロードできるファイルのサイズは10MBまでです
+          </p>
         </ng-container>
       </ng-container>
     </form>

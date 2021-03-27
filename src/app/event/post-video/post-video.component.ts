@@ -1,19 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
-import { EventService } from 'src/app/services/event.service';
 import { VideoService } from 'src/app/services/video.service';
 
 @Component({
   selector: 'app-post-video',
   templateUrl: './post-video.component.html',
   styleUrls: ['./post-video.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: PostVideoComponent,
+      multi: true,
+    },
+  ],
 })
-export class PostVideoComponent implements OnInit {
+export class PostVideoComponent implements OnInit, ControlValueAccessor {
   preview: string | ArrayBuffer;
   video: File;
   thumbnails = [];
@@ -21,7 +32,11 @@ export class PostVideoComponent implements OnInit {
   isloading: boolean;
   isUploading: boolean;
   selected = 0;
+  private file: File | null = null;
   fileControl = new FormControl('', [Validators.required]);
+  onChange: Function;
+  fileSizeError: boolean;
+  fileTypeError: boolean;
 
   eventId$: Observable<string> = this.route.paramMap.pipe(
     map((params) => {
@@ -31,9 +46,9 @@ export class PostVideoComponent implements OnInit {
 
   constructor(
     private videoService: VideoService,
-    private eventServise: EventService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private host: ElementRef<HTMLInputElement>
   ) {}
 
   ngOnInit(): void {}
@@ -49,11 +64,41 @@ export class PostVideoComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  selectVideo(event: any) {
-    if (event.target.files.length) {
-      this.isloading = true;
-      this.video = event.target.files[0];
-      return this.convertVideo(this.video);
+  @HostListener('change', ['$event.target.files']) emitFiles(event: FileList) {
+    const file = event && event.item(0);
+    this.file = file;
+
+    this.validateFileSize(this.file?.size);
+    this.validateFileType(this.file?.type);
+
+    this.convertVideo(this.file);
+  }
+
+  writeValue(value: null) {
+    this.host.nativeElement.value = '';
+    this.file = null;
+  }
+
+  registerOnChange(fn: Function) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: Function) {}
+
+  validateFileSize(size: number) {
+    const fileSizeInMB = Math.round(size / 1024 / 1024);
+    if (fileSizeInMB >= 10) {
+      this.fileSizeError = true;
+    } else {
+      return null;
+    }
+  }
+
+  validateFileType(type: any) {
+    if (type != 'video/mp4') {
+      this.fileTypeError = true;
+    } else {
+      return null;
     }
   }
 
@@ -87,7 +132,7 @@ export class PostVideoComponent implements OnInit {
     this.isUploading = true;
     const thumbnail = this.thumbnails[this.selected];
     this.videoService
-      .uploadVideo(eventId, this.video, uid, thumbnail)
+      .uploadVideo(eventId, this.file, uid, thumbnail)
       .then(() => (this.isUploading = false));
   }
 }

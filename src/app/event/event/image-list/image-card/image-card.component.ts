@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Comment } from 'src/app/interfaces/comment';
@@ -63,7 +63,8 @@ export class ImageCardComponent implements OnInit {
     private authServise: AuthService,
     private route: ActivatedRoute,
     private commentService: CommentService,
-    private videoService: VideoService
+    private videoService: VideoService,
+    private router: Router
   ) {
     this.authServise.user$.subscribe((user) => {
       this.uid = user.uid;
@@ -91,6 +92,19 @@ export class ImageCardComponent implements OnInit {
   }
 
   isEditMode() {}
+
+  navigateDetail(post: Post) {
+    if (post.imageId) {
+      this.router.navigateByUrl(
+        `/event/${post.eventId}/images/${post.imageId}`
+      );
+    }
+    if (post.videoId) {
+      this.router.navigateByUrl(
+        `/event/${post.eventId}/videos/${post.videoId}`
+      );
+    }
+  }
 
   openDeleteImageDialog(imageId: string) {
     this.dialog

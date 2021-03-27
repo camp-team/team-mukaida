@@ -29,7 +29,7 @@ export class ImageDetailComponent implements OnInit {
   );
   imageProvider$: Observable<User> = this.image$.pipe(
     switchMap((image) => {
-      const uid: string = image.uid;
+      const uid: string = image?.uid;
       return this.userService.getUserData(uid);
     })
   );

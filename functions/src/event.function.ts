@@ -122,13 +122,21 @@ export const deleteImagesInTheEvent = functions
         .collectionGroup('comments')
         .where('uid', '==', uid)
         .where('eventId', '==', eventId);
+      const imageFavorite: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('likedUids')
+        .where('likedUids', '==', uid)
+        .where('eventId', '==', eventId);
+
       const deleteAllImagesPostedByMySelf = deleteCollectionByReference(images);
       const deleteAllCommentsPostedByMySelf = deleteCollectionByReference(
         comments
       );
+      const deleteAllFavorite = deleteCollectionByReference(imageFavorite);
+
       await Promise.all([
         deleteAllCommentsPostedByMySelf,
         deleteAllImagesPostedByMySelf,
+        deleteAllFavorite,
       ]);
     }
   });

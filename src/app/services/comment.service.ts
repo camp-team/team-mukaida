@@ -106,15 +106,4 @@ export class CommentService {
         this.snackBar.open('削除しました');
       });
   }
-
-  async getMyCommentIds(uid: string): Promise<string[]> {
-    const comments = await this.db
-      .collectionGroup<Comment>('comments', (ref) =>
-        ref.where('uid', '==', uid)
-      )
-      .valueChanges()
-      .pipe(take(1))
-      .toPromise();
-    return comments.map((comment) => comment.commentId);
-  }
 }

@@ -142,24 +142,9 @@ export class EventService {
       );
   }
 
-  async getMyPostImageIds(eventId: string, uid: string): Promise<string[]> {
-    const docs = await this.db
-      .collection(`events/${eventId}/images`, (ref) =>
-        ref.where('uid', '==', uid)
-      )
-      .valueChanges()
-      .pipe(take(1))
-      .toPromise();
-    return docs.map((doc: Image) => doc.imageId);
-  }
-
-  async deleteImagesAndCommentsInTheEvent(eventId: string, uid: string) {
-    const imageIds: string[] = await this.getMyPostImageIds(eventId, uid);
-    const commentIds: string[] = await this.commentService.getMyCommentIds(uid);
+  async deleteImagesAndCommentsInTheEvent(eventId: string) {
     const data = {
       eventId,
-      imageIds,
-      commentIds,
     };
     const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
     return callable(data).toPromise();

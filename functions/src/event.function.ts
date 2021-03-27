@@ -109,28 +109,26 @@ export const exitEvent = functions
 export const deleteImagesInTheEvent = functions
   .region('asia-northeast1')
   .runWith({ memory: '2GB', timeoutSeconds: 540 })
-  .https.onCall(
-    async (
-      data: { eventId: string; imageIds: string[]; commentIds: string[] },
-      context
-    ) => {
-      const uid = context.auth?.uid;
-      const eventId: string = data.eventId;
-      const should = await shouldEventRun(eventId);
-      if (should) {
-        const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
-          .collection(`events/${eventId}/images`)
-          .where('uid', '==', uid);
-        const commentsArray: FirebaseFirestore.Query<
-          FirebaseFirestore.DocumentData
-        >[] = data.imageIds.map((id: string) => {
-          return db.collection(`events/${eventId}/images/${id}/comments`);
-        });
-        const deleteAllImages = deleteCollectionByReference(images);
-        const deleteAllComments = commentsArray.map((commentData) =>
-          deleteCollectionByReference(commentData)
-        );
-        await Promise.all([deleteAllImages, ...deleteAllComments]);
-      }
+  .https.onCall(async (data: { eventId: string }, context) => {
+    const uid = context.auth?.uid;
+    const eventId: string = data.eventId;
+    const should = await shouldEventRun(eventId);
+    if (should) {
+      const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('images')
+        .where('uid', '==', uid)
+        .where('eventId', '==', eventId);
+      const comments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('comments')
+        .where('uid', '==', uid)
+        .where('eventId', '==', eventId);
+      const deleteAllImagesPostedByMySelf = deleteCollectionByReference(images);
+      const deleteAllCommentsPostedByMySelf = deleteCollectionByReference(
+        comments
+      );
+      await Promise.all([
+        deleteAllCommentsPostedByMySelf,
+        deleteAllImagesPostedByMySelf,
+      ]);
     }
-  );
+  });

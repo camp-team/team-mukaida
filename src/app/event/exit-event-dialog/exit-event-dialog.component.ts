@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./exit-event-dialog.component.scss'],
 })
 export class ExitEventDialogComponent implements OnInit {
-  isDeleteAllImages: false;
+  isDeleteAllImagesAndComments: false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -36,10 +36,8 @@ export class ExitEventDialogComponent implements OnInit {
     await this.eventService.exitEvent(eventId, uid);
     await this.userService.deleteJoinedEventId(uid, eventId);
 
-    if (this.isDeleteAllImages) {
-      console.log('image delete');
-
-      this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
+    if (this.isDeleteAllImagesAndComments) {
+      this.eventService.deleteImagesAndCommentsInTheEvent(eventId);
     }
 
     this.dialogRef.close();

@@ -43,7 +43,6 @@ export class ImageDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // 自分がいいねをしたか、していないかを判定する。
-    console.log();
     this.likedService
       .isLiked(this.eventId, this.imageId, this.authService.uid)
       .pipe(take(1))
@@ -55,13 +54,11 @@ export class ImageDetailComponent implements OnInit {
       .getLikedCount(this.eventId, this.imageId)
       .pipe(take(1))
       .subscribe((likedCount) => {
-        console.log(likedCount);
         this.likedCount = likedCount.length;
       });
   }
 
   likeImage(imageId: string) {
-    console.log(imageId);
     this.isLiked = true;
     this.likedCount++;
     this.imageIds.push(imageId);

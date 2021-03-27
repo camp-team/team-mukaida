@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { User } from 'src/app/interfaces/user';
@@ -25,6 +25,7 @@ export class JoinEventDialogComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private router: Router,
+    private dialogRef: MatDialogRef<JoinEventDialogComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -40,7 +41,9 @@ export class JoinEventDialogComponent implements OnInit {
       this.data.id
     );
     if (this.isPossible) {
+      this.dialogRef.close();
       this.router.navigateByUrl(`event/${this.data.id}`);
+      this.snackBar.open('パスワードに成功しました✨');
     } else {
       this.snackBar.open('パスワードが違います');
     }

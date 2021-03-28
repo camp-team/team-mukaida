@@ -36,6 +36,9 @@
     margin: 24px auto;
     background: $color-accent-1;
     color: #fff;
+    mat-icon {
+      color: #fff;
+    }
   }
   &.loading {
     display: none;

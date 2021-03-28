@@ -24,7 +24,7 @@ export class CommentFormComponent implements OnInit {
         'uid' | 'createdAt' | 'imageId' | 'imageURL' | 'commentId' | 'eventId'
       > = {
         commentBody: this.commentForm.value,
-        ownerId: image.uid,
+        ownerId: image?.uid || video?.uid,
       };
       this.commentService.createComment(image || video, comment);
       this.commentForm.reset();

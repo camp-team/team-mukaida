@@ -10,9 +10,7 @@ import { PostWithUser } from 'src/app/interfaces/post';
 export class RecentPostsComponent implements OnInit {
   @Input() post: PostWithUser;
 
-  constructor() {
-    console.log(this.post);
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 }

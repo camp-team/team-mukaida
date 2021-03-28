@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
 import { User } from '../interfaces/user';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class UserService {
     this.db.doc(`events/${eventId}/joinedUids/${uid}`).set({
       eventId,
       uid,
+      createdAt: firebase.default.firestore.Timestamp.now(),
     });
     this.db.doc(`users/${uid}/joinedEvents/${eventId}`).set({ eventId, uid });
   }

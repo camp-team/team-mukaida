@@ -35,15 +35,47 @@
     }
   }
   &__blank {
-    display: block;
-    padding: 80px 16px;
-    background-color: $color-base;
-    border-radius: 8px;
-    font-size: 18px;
+    display: flex;
     text-align: center;
-    transition: opacity 0.4s;
-    &:hover {
-      opacity: 0.6;
+
+    a {
+      display: block;
+      padding: 60px 0;
+      width: calc(50% - 8px);
+      border-radius: 8px;
+      background-color: rgba($color-accent, 0.2);
+      color: $color-accent;
+      transition: opacity 0.4s;
+      @include sp {
+        width: calc(50% - 16px);
+        padding: 40px 0;
+      }
+      &:hover {
+        opacity: 0.6;
+      }
+      &:nth-of-type(even) {
+        margin-left: 32px;
+        @include sp {
+          margin-left: 16px;
+        }
+      }
+      mat-icon {
+        font-size: 56px;
+        width: 1em;
+        height: 1em;
+        color: $color-accent;
+        @include sp {
+          font-size: 40px;
+        }
+      }
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        display: block;
+        @include sp {
+          font-size: 14px;
+        }
+      }
     }
   }
 }

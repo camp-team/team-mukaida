@@ -51,8 +51,6 @@ export class VideoDetailComponent implements OnInit {
       .getLikedCount(this.eventId, this.videoId, 'video')
       .pipe(take(1))
       .subscribe((likedCount) => {
-        console.log(likedCount);
-
         this.likedCount = likedCount.length;
       });
   }

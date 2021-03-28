@@ -16,10 +16,6 @@ export class LikedService {
     id: string,
     type: 'image' | 'video'
   ): Promise<void[]> {
-    console.log(id);
-
-    console.log(type);
-
     return Promise.all([
       this.db
         .doc(

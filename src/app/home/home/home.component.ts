@@ -77,12 +77,6 @@ export class HomeComponent implements OnInit {
     this.videos$ = await this.videoService.getRecentVideosInJoinedEvents(
       this.uid
     );
-    this.images$.subscribe((data) => {
-      console.log(data);
-    });
-    this.videos$.subscribe((data) => {
-      console.log(data);
-    });
 
     this.postList$ = combineLatest([this.images$, this.videos$]).pipe(
       map(([images, videos]) => {
@@ -91,9 +85,6 @@ export class HomeComponent implements OnInit {
         }
       })
     );
-    this.postList$.subscribe((data) => {
-      console.log(data);
-    });
   }
 
   openJoinEventDialog(id?: string) {

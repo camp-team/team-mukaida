@@ -1,43 +1,53 @@
 <header class="header">
   <h1 class="header__logo">
     <a href="" class="header__logo-link"
-      ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
+      ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
     >
   </h1>
-  <ng-container *ngIf="authService.user$ | async as user; else default">
-    <ng-container *ngIf="event$ | async as event">
+
+  <div class="actions">
+    <a mat-button routerLink="/create-event" class="header__create-btn">
+      <mat-icon inline="true">assignment_ind</mat-icon>
+      <span>イベントを作る</span>
+    </a>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="actions">
+    <ng-container *ngIf="authService.user$ | async as user; else default">
+      <ng-container *ngIf="event$ | async as event">
+        <button
+          class="header__add-btn"
+          [routerLink]="'/event/' + event.eventId + '/post-images'"
+        >
+          <mat-icon>insert_photo</mat-icon> 画像を投稿
+        </button>
+        <button
+          class="header__add-btn"
+          [routerLink]="'/event/' + event.eventId + '/post-video'"
+        >
+          <mat-icon>videocam</mat-icon> 動画を投稿
+        </button>
+      </ng-container>
       <button
-        class="header__add-btn"
-        [routerLink]="'/event/' + event.eventId + '/post-images'"
-      >
-        <mat-icon>add</mat-icon> 画像を投稿する
-      </button>
+        mat-mini-fab
+        [matMenuTriggerFor]="userMenu"
+        [style.background-image]="'url(' + user?.avatarURL + ')'"
+        class="header__icon"
+      ></button>
+      <mat-menu #userMenu="matMenu" class="header__menu">
+        <a mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          <span>設定</span>
+        </a>
+        <button mat-menu-item (click)="authService.logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>ログアウト</span>
+        </button>
+      </mat-menu>
     </ng-container>
-    <button
-      mat-mini-fab
-      [matMenuTriggerFor]="userMenu"
-      [style.background-image]="'url(' + user?.avatarURL + ')'"
-      class="header__icon"
-    ></button>
-    <mat-menu #userMenu="matMenu" class="header__menu">
-      <a mat-menu-item routerLink="/">
-        <mat-icon>create</mat-icon>
-        <span>イベントを作る</span>
-      </a>
-      <a mat-menu-item (click)="openJoinEventDialog()">
-        <mat-icon>group</mat-icon>
-        <span>イベントに参加する</span>
-      </a>
-      <a mat-menu-item routerLink="/settings">
-        <mat-icon>settings</mat-icon>
-        <span>設定</span>
-      </a>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-        <span>ログアウト</span>
-      </button>
-    </mat-menu>
-  </ng-container>
+  </div>
   <ng-template #default>
     <button
       class="header__login"

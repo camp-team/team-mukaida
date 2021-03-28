@@ -74,7 +74,7 @@ export class EditComponent implements OnInit {
   async updateEventData() {
     this.isComplete = true;
     this.processing = true;
-    let eventData: Omit<Event, 'eventId' | 'ownerId' | 'createAt'> = this.form
+    let eventData: Omit<Event, 'eventId' | 'ownerId' | 'createdAt'> = this.form
       .value;
 
     if (this.imageFile !== undefined) {

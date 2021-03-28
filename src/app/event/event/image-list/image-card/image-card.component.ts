@@ -1,17 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Comment } from 'src/app/interfaces/comment';
 import { Event } from 'src/app/interfaces/event';
 import { Image } from 'src/app/interfaces/image';
+import { Post } from 'src/app/interfaces/post';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
 import { ImageService } from 'src/app/services/image.service';
 import { LikedService } from 'src/app/services/liked.service';
+import { VideoService } from 'src/app/services/video.service';
 import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialog.component';
 
 @Component({
@@ -20,7 +22,7 @@ import { DeleteDialogComponent } from 'src/app/shared/delete-dialog/delete-dialo
   styleUrls: ['./image-card.component.scss'],
 })
 export class ImageCardComponent implements OnInit {
-  @Input() image: Image;
+  @Input() post: Post;
   @Input() event: Event;
   likedCount: number;
   isLiked: boolean;
@@ -48,7 +50,7 @@ export class ImageCardComponent implements OnInit {
   comments$: Observable<Comment[]> = this.eventId$.pipe(
     switchMap((params) => {
       const eventId = params;
-      return this.commentService.getComments(eventId, this.image.imageId);
+      return this.commentService.getComments(eventId, this.post.eventId);
     })
   );
 
@@ -60,7 +62,9 @@ export class ImageCardComponent implements OnInit {
     private likedService: LikedService,
     private authServise: AuthService,
     private route: ActivatedRoute,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private videoService: VideoService,
+    private router: Router
   ) {
     this.authServise.user$.subscribe((user) => {
       this.uid = user.uid;
@@ -72,24 +76,56 @@ export class ImageCardComponent implements OnInit {
       this.comments = comments;
     });
     // 自分がいいねをしたか、していないかを判定する。
-    this.likedService
-      .isLiked(this.eventId, this.image.imageId, this.uid)
-      .pipe(take(1))
-      .subscribe((isLiked) => {
-        this.isLiked = isLiked;
-      });
+
     // 各画像のいいね数を取得する。
-    this.likedService
-      .getLikedCount(this.eventId, this.image.imageId)
-      .pipe(take(1))
-      .subscribe((likedCount) => {
-        this.likedCount = likedCount.length;
-      });
+    if (this.post.imageId) {
+      this.likedService
+        .isLiked(this.eventId, this.uid, this.post.imageId)
+        .pipe(take(1))
+        .subscribe((isLiked) => {
+          this.isLiked = isLiked;
+        });
+
+      this.likedService
+        .getLikedCount(this.eventId, this.post.imageId)
+        .pipe(take(1))
+        .subscribe((likedCount) => {
+          this.likedCount = likedCount.length;
+        });
+    }
+    if (this.post.videoId) {
+      this.likedService
+        .isLiked(this.eventId, this.uid, this.post.videoId)
+        .pipe(take(1))
+        .subscribe((isLiked) => {
+          this.isLiked = isLiked;
+        });
+
+      this.likedService
+        .getLikedCount(this.eventId, this.post.videoId)
+        .pipe(take(1))
+        .subscribe((likedCount) => {
+          this.likedCount = likedCount.length;
+        });
+    }
   }
 
   isEditMode() {}
 
-  openDeleteDialog(imageId: string) {
+  navigateDetail(post: Post) {
+    if (post.imageId) {
+      this.router.navigateByUrl(
+        `/event/${post.eventId}/images/${post.imageId}`
+      );
+    }
+    if (post.videoId) {
+      this.router.navigateByUrl(
+        `/event/${post.eventId}/videos/${post.videoId}`
+      );
+    }
+  }
+
+  openDeleteImageDialog(imageId: string) {
     this.dialog
       .open(DeleteDialogComponent, {
         minWidth: 300,
@@ -106,16 +142,35 @@ export class ImageCardComponent implements OnInit {
       });
   }
 
-  likeImage(imageId: string) {
+  openDeleteVideoDialog(videoId: string, thumbnailId: string) {
+    this.dialog
+      .open(DeleteDialogComponent, {
+        minWidth: 300,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.videoService.deleteVideo(
+            this.event.eventId,
+            videoId,
+            thumbnailId
+          );
+        } else {
+          return;
+        }
+      });
+  }
+
+  likePost(imageId: string, videoId: string) {
     this.isLiked = true;
     this.likedCount++;
     this.imageIds.push(imageId);
-    this.likedService.likeItem(this.eventId, imageId, this.uid);
+    this.likedService.likeItem(this.eventId, this.uid, imageId, videoId);
   }
 
-  UnLikeImage(imageId: string) {
+  UnLikePost(imageId: string, videoId: string) {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, imageId, this.uid);
+    this.likedService.unlike(this.eventId, this.uid, imageId, videoId);
   }
 }

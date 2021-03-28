@@ -36,13 +36,14 @@
   }
   &__add-btn {
     display: none;
+    mat-icon {
+      height: 18px;
+    }
     @include pc {
       cursor: pointer;
       border: none;
-      color: #fff;
       align-items: center;
       outline: none;
-      margin-right: 16px;
       display: flex;
       font-weight: 700;
       font-family: $font-default;
@@ -53,17 +54,22 @@
       width: auto;
       border: 1px solid $color-accent;
       background-color: #fff;
-      color: $color-accent;
       border-radius: 35px;
       font-size: 14px;
+      span,
+      mat-icon {
+        color: $color-accent;
+      }
       &:hover {
         background-color: $color-accent;
-        color: #fff;
+        color: #fff !important;
+        span,
+        mat-icon {
+          color: #fff;
+        }
       }
     }
     mat-icon {
-      width: 16px;
-      height: 16px;
       font-size: 16px;
       margin-right: 4px;
     }
@@ -83,5 +89,27 @@
     &:hover {
       background-color: $color-main;
     }
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  button,
+  a {
+    @include sp {
+      display: none;
+    }
+    font-weight: 600;
+    color: $color-font;
+    margin-left: 8px;
+    mat-icon {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+  }
+  button:last-of-type {
+    display: block;
+    margin-left: 16px;
   }
 }

@@ -4,7 +4,9 @@ import { EditFormGuard } from '../guards/edit-form.guard';
 import { EditComponent } from './edit/edit.component';
 import { EventComponent } from './event/event.component';
 import { ImageDetailComponent } from './event/image-detail/image-detail.component';
+import { VideoDetailComponent } from './event/video-detail/video-detail.component';
 import { PostImagesComponent } from './post-images/post-images.component';
+import { PostVideoComponent } from './post-video/post-video.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,14 @@ const routes: Routes = [
   {
     path: 'images/:imageId',
     component: ImageDetailComponent,
+  },
+  {
+    path: 'post-video',
+    component: PostVideoComponent,
+  },
+  {
+    path: 'videos/:videoId',
+    component: VideoDetailComponent,
   },
 ];
 

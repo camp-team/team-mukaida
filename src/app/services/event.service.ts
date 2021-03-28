@@ -56,7 +56,7 @@ export class EventService {
   }
 
   async updateEvent(
-    event: Omit<Event, 'eventId' | 'ownerId' | 'createAt'>,
+    event: Omit<Event, 'eventId' | 'ownerId' | 'createdAt'>,
     eventId: string
   ): Promise<void> {
     return this.db
@@ -167,6 +167,24 @@ export class EventService {
       );
   }
 
+  deleteNobodyEvents(): Observable<void> {
+    return this.db
+      .collectionGroup<Event>('events', (ref) =>
+        ref.where('joinedUserCount', '==', false)
+      )
+      .valueChanges()
+      .pipe(
+        map((datas) => {
+          datas.map((data) => {
+            const id = data.eventId;
+            const callable = this.fns.httpsCallable('deleteEvent');
+
+            return callable(id);
+          });
+        })
+      );
+  }
+
   async getMyPostImageIds(eventId: string, uid: string): Promise<string[]> {
     const docs = await this.db
       .collection(`events/${eventId}/images`, (ref) =>
@@ -178,13 +196,9 @@ export class EventService {
     return docs.map((doc: Image) => doc.imageId);
   }
 
-  async deleteImagesAndCommentsInTheEvent(eventId: string, uid: string) {
-    const imageIds: string[] = await this.getMyPostImageIds(eventId, uid);
-    const commentIds: string[] = await this.commentService.getMyCommentIds(uid);
+  async deleteImagesAndCommentsInTheEvent(eventId: string) {
     const data = {
       eventId,
-      imageIds,
-      commentIds,
     };
     const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
     return callable(data).toPromise();

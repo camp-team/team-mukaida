@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class CommentListComponent implements OnInit {
   @Input() eventId: string;
   @Input() imageId: string;
+  @Input() videoId: string;
 
   comments$: Observable<CommentWithUser[]>;
 
@@ -19,15 +20,17 @@ export class CommentListComponent implements OnInit {
   ngOnInit(): void {
     this.comments$ = this.commentService.getCommentsWithUser(
       this.eventId,
-      this.imageId
+      this.imageId,
+      this.videoId
     );
   }
 
   deleteComment(commentId: string): Promise<void> {
     return this.commentService.deleteComment(
       this.eventId,
+      commentId,
       this.imageId,
-      commentId
+      this.videoId
     );
   }
 }

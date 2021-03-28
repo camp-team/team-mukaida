@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -30,7 +31,8 @@ export class EventComponent implements OnInit {
     private dialog: MatDialog,
     private eventServise: EventService,
     public authServise: AuthService,
-    private routeService: RouteParamsService
+    private routeService: RouteParamsService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -53,8 +55,6 @@ export class EventComponent implements OnInit {
 
   exitEventOpenDialog(id) {
     this.dialog.open(ExitEventDialogComponent, {
-      width: '800px',
-      height: '400px',
       autoFocus: false,
       restoreFocus: false,
       data: {
@@ -62,5 +62,9 @@ export class EventComponent implements OnInit {
         eventId: this.eventId,
       },
     });
+  }
+
+  copyUrl(): void {
+    this.snackBar.open('リンクをコピーしました🥳');
   }
 }

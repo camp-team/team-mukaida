@@ -26,6 +26,9 @@ import { CropperModule } from '@deer-inc/ngx-croppie';
 import { ExitEventDialogComponent } from './exit-event-dialog/exit-event-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { VideoPlayerComponent } from './event/image-detail/video-player/video-player.component';
+import { PostVideoComponent } from './post-video/post-video.component';
+import { VideoDetailComponent } from './event/video-detail/video-detail.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { MatSelectModule } from '@angular/material/select';
     EventDeleteDialogComponent,
     CommentHeaderComponent,
     ExitEventDialogComponent,
+    VideoPlayerComponent,
+    PostVideoComponent,
+    VideoDetailComponent,
   ],
   imports: [
     CommonModule,

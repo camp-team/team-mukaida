@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./exit-event-dialog.component.scss'],
 })
 export class ExitEventDialogComponent implements OnInit {
-  isDeleteAllImages: false;
+  isDeleteAllImagesAndComments: false;
   joinedUsers: Observable<User[]> = this.eventService.getJoinedEventUsers(
     this.data.eventId
   );
@@ -53,12 +53,9 @@ export class ExitEventDialogComponent implements OnInit {
       console.log('false');
     }
 
-    // await this.eventService.exitEvent(eventId, uid);
-    // await this.userService.deleteJoinedEventId(uid, eventId);
-
-    // if (this.isDeleteAllImages) {
-    //   this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
-    // }
+    if (this.isDeleteAllImagesAndComments) {
+      this.eventService.deleteImagesAndCommentsInTheEvent(eventId);
+    }
 
     // this.dialogRef.close();
     // this.dialogRef.afterClosed().subscribe(() => {

@@ -1,14 +1,38 @@
-<header>
+<div class="header-wrap">
   <app-comment-header
     *ngIf="imageProvider$ | async as provider"
     [provider]="provider"
   ></app-comment-header>
-</header>
+</div>
 <div class="conatainer">
   <div class="grid" *ngIf="image$ | async as image">
     <div class="thumbnail">
       <img [src]="image.imageURL" [alt]="" />
+      <div class="area">
+        <!-- いいね -->
+        <button
+          *ngIf="!isLiked"
+          mat-icon-button
+          (click)="likeImage(image.imageId)"
+        >
+          <mat-icon class="like">favorite_border</mat-icon>
+          <span class="like-count">{{ likedCount }}</span>
+        </button>
+        <button
+          *ngIf="isLiked"
+          mat-icon-button
+          (click)="UnLikeImage(image.imageId)"
+        >
+          <mat-icon class="like">favorite</mat-icon>
+          <span class="like-count">{{ likedCount }}</span>
+        </button>
+        <!-- 投稿時間表示 -->
+        <span *ngIf="image$" class="image-createAt">
+          {{ image.createdAt.toDate() | date: 'yyyy年MM月dd ' }}
+        </span>
+      </div>
     </div>
+
     <div class="comment">
       <div class="comment__list">
         <app-comment-list

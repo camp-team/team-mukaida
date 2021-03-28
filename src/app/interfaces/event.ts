@@ -6,7 +6,7 @@ export interface Event {
   descliption: string;
   thumbnailURL: string;
   ownerId: string;
-  createAt: firebase.default.firestore.Timestamp;
+  createdAt: firebase.default.firestore.Timestamp;
   joinedUserCount: number;
 }
 

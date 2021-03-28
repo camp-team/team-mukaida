@@ -34,6 +34,9 @@
   </a>
 
   <div class="image-card__body">
+    <p class="image-card__date">
+      {{ post.createdAt?.toDate() | date: 'yyyy/MM/dd' }}
+    </p>
     <ng-container *ngIf="!isLiked">
       <button mat-icon-button (click)="likePost(post.imageId, post.videoId)">
         <mat-icon class="image-card__like">favorite_border</mat-icon>

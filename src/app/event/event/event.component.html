@@ -57,7 +57,10 @@
                 <mat-icon>delete</mat-icon>
                 <span>削除</span>
               </button>
-              <button mat-menu-item (click)="exitEventOpenDialog()">
+              <button
+                mat-menu-item
+                (click)="exitEventOpenDialog(event.ownerId)"
+              >
                 <mat-icon>person_off </mat-icon>
                 <span>イベントから退会する</span>
               </button>

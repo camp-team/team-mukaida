@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { UserService } from 'src/app/services/user.service';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/interfaces/user';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-exit-event-dialog',
@@ -13,16 +16,23 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ExitEventDialogComponent implements OnInit {
   isDeleteAllImages: false;
+  joinedUsers: Observable<User[]> = this.eventService.getJoinedEventUsers(
+    this.data.eventId
+  );
+
+  transfarForm = new FormControl();
+  selected = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      ownerId: string;
       eventId: string;
     },
     private dialogRef: MatDialogRef<ExitEventDialogComponent>,
     private eventService: EventService,
     private userService: UserService,
-    private authService: AuthService,
+    public authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -32,20 +42,28 @@ export class ExitEventDialogComponent implements OnInit {
   async exitEvent() {
     const uid: string = this.authService.uid;
     const eventId: string = this.data.eventId;
+    const targetId = this.transfarForm.value.userId;
 
-    await this.eventService.exitEvent(eventId, uid);
-    await this.userService.deleteJoinedEventId(uid, eventId);
-
-    if (this.isDeleteAllImages) {
-      console.log('image delete');
-
-      this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
+    if (this.transfarForm.value !== null) {
+      const eventData = {
+        ownerId: targetId,
+      };
+      this.eventService.transferEvenOwner(eventData, eventId);
+    } else {
+      console.log('false');
     }
 
-    this.dialogRef.close();
-    this.dialogRef.afterClosed().subscribe(() => {
-      this.snackBar.open('イベントから退会しました');
-      this.router.navigateByUrl('/');
-    });
+    // await this.eventService.exitEvent(eventId, uid);
+    // await this.userService.deleteJoinedEventId(uid, eventId);
+
+    // if (this.isDeleteAllImages) {
+    //   this.eventService.deleteImagesAndCommentsInTheEvent(eventId, uid);
+    // }
+
+    // this.dialogRef.close();
+    // this.dialogRef.afterClosed().subscribe(() => {
+    //   this.snackBar.open('イベントから退会しました');
+    //   this.router.navigateByUrl('/');
+    // });
   }
 }

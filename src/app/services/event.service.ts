@@ -12,6 +12,7 @@ import { Image } from '../interfaces/image';
 import { Password } from '../interfaces/password';
 import { UserService } from './user.service';
 import { CommentService } from './comment.service';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root',
@@ -118,6 +119,30 @@ export class EventService {
       );
   }
 
+  getJoinedEventUsers(eventId: string): Observable<User[]> {
+    return this.db
+      .collection(`events/${eventId}/joinedUids`)
+      .valueChanges()
+      .pipe(
+        switchMap((joinedUids: any) => {
+          if (joinedUids.length) {
+            return combineLatest(
+              joinedUids.map((ids) => this.userService.getUserData(ids.uid))
+            );
+          } else {
+            return of(null);
+          }
+        })
+      );
+  }
+
+  getOldJoinedEventUser(eventId: string) {
+    // return this.db
+    //   .collection(`events/${eventId}/joinedUids`, (ref) => {
+    //     ref.orderBy('updatedAt', 'esc').limit(1)
+    //   })
+  }
+
   judgePassword(password: string, eventId: string) {
     const func = this.fns.httpsCallable('judgementPassword');
     return func({ password, eventId }).toPromise();
@@ -163,5 +188,24 @@ export class EventService {
     };
     const callable = this.fns.httpsCallable('deleteImagesInTheEvent');
     return callable(data).toPromise();
+  }
+
+  async transferEvenOwner(
+    event: Omit<
+      Event,
+      | 'eventId'
+      | 'title'
+      | 'descliption'
+      | 'thumbnailURL'
+      | 'joinedUserCount'
+      | 'createAt'
+    >,
+    eventId: string
+  ): Promise<void> {
+    return this.db.doc(`events/${eventId}`).set(event, { merge: true });
+  }
+
+  async deleteJoinedEvent(eventId, userId): Promise<void> {
+    return this.db.doc(`events/${eventId}/joinedUids/${userId}`).delete();
   }
 }

@@ -25,6 +25,7 @@ import { CommentHeaderComponent } from './event/image-detail/comment-header/comm
 import { CropperModule } from '@deer-inc/ngx-croppie';
 import { ExitEventDialogComponent } from './exit-event-dialog/exit-event-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ClipboardModule,
     CropperModule,
     MatCheckboxModule,
+    MatSelectModule,
   ],
 })
 export class EventModule {}

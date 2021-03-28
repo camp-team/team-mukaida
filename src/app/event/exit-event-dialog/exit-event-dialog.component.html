@@ -2,8 +2,8 @@
   <h1 matDialogTitle>イベント退会</h1>
 
   <mat-dialog-content>
-    <p>本当にイベントから退会しますか？</p>
-    <section class="example-section">
+    <p class="heading">本当にイベントから退会しますか？</p>
+    <section class="check">
       <mat-checkbox
         (change)="isDeleteAllImages = $event.checked"
         color="primary"
@@ -12,6 +12,23 @@
         このイベントで投稿した写真とコメントを全て削除する
       </mat-checkbox>
     </section>
+
+    <div class="transfar" *ngIf="authService.uid === data.ownerId">
+      <p class="transfar__title">新しいオーナーを選んで下さい</p>
+      <mat-form-field appearance="fill">
+        <mat-select [(value)]="selected" [formControl]="transfarForm">
+          <mat-option *ngFor="let user of joinedUsers | async" [value]="user">
+            <div class="user">
+              <div
+                class="user__avatar"
+                [style.background-image]="'url(' + user?.avatarURL + ')'"
+              ></div>
+              <div class="user__name">{{ user?.name }}</div>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

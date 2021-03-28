@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
 import { PostWithUser } from 'src/app/interfaces/post';
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
       }
     });
     this.user$.subscribe((user) => {
-      this.uid = user.uid;
+      this.uid = user?.uid;
     });
     this.postsInit();
   }

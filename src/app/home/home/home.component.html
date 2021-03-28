@@ -31,12 +31,15 @@
 
     <mat-tab label="主催イベント">
       <div class="mat-tab__card-layout">
-        <app-event-list-card
-          *ngFor="let event of myOwnedEvents$ | async as events"
-          [event]="event"
-          [routerLink]="'/event/' + event.eventId"
-          (click)="streamParams(event.eventId)"
-        ></app-event-list-card>
+        <ng-container *ngIf="myOwnedEvents$ | async as events">
+          <app-event-list-card
+            *ngFor="let event of events"
+            [event]="event"
+            [routerLink]="'/event/' + event.eventId"
+            (click)="streamParams(event.eventId)"
+          ></app-event-list-card>
+        </ng-container>
+        <app-default-event></app-default-event>
       </div>
     </mat-tab>
 

@@ -5,6 +5,7 @@
 .bottom-actions {
   display: none;
   transition: background-color 0.4s, color 0.4s;
+  padding: 4px 0;
   @include sp {
     position: fixed;
     z-index: 10;

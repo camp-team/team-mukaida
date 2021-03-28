@@ -9,6 +9,14 @@
 >
   <button
     mat-ripple
+    class="bottom-actions__join-event"
+    (click)="openJoinEventDialog()"
+  >
+    <mat-icon>person_add</mat-icon>
+    <p>イベント参加</p>
+  </button>
+  <button
+    mat-ripple
     class="bottom-actions__create-event"
     routerLink="/create-event"
   >

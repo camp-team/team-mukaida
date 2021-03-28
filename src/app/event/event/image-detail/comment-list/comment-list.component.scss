@@ -2,10 +2,11 @@ figure {
   margin: 0;
   padding: 0;
 }
+
 .comment {
   padding: 8px 0;
   display: grid;
-  gap: 8px;
+  gap: 12px;
   grid-template-columns: 40px 1fr 40px;
   &__avatar {
     width: 40px;
@@ -16,5 +17,10 @@ figure {
   &__name {
     line-height: 1;
     margin-right: 8px;
+  }
+  &__body {
+    margin: 0;
+    white-space: pre-line;
+    word-break: break-all;
   }
 }

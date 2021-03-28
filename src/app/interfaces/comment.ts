@@ -11,6 +11,7 @@ export interface Comment {
   eventId: string;
   videoId?: string;
   videoURL?: string;
+  ownerId: string;
 }
 
 export interface CommentWithUser extends Comment {

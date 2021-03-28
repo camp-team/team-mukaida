@@ -26,6 +26,7 @@
           <div class="event__share">
             <button
               class="event__share-btn"
+              (click)="copyUrl()"
               [cdkCopyToClipboard]="eventInvitateURL"
             >
               <mat-icon>content_copy</mat-icon>
@@ -38,7 +39,7 @@
               aria-label="イベント設定"
               [matMenuTriggerFor]="eventMenu"
             >
-              <mat-icon>more_vert</mat-icon>
+              <mat-icon class="event__more">more_vert</mat-icon>
             </button>
             <mat-menu #eventMenu="matMenu">
               <a

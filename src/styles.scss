@@ -122,3 +122,22 @@ button {
   max-width: 100%;
   margin: 0 auto 24px;
 }
+
+app-exit-event-dialog {
+  .mat-checkbox-inner-container {
+    margin: 4px 8px auto auto;
+  }
+  mat-checkbox {
+    span {
+      white-space: pre-wrap;
+    }
+  }
+}
+
+mat-icon {
+  color: $color-font;
+}
+
+.spacer {
+  flex: 1;
+}

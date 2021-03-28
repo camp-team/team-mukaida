@@ -1,15 +1,39 @@
-<header>
+<header *ngIf="authService.user$ | async as user">
   <button class="back-bottun">
     <mat-icon (click)="back()">keyboard_arrow_left</mat-icon>
   </button>
+
   <div class="provider">
-    <div class="provider__header">
-      Photo by
-      <span class="provider__name">{{ provider.name }}</span>
-    </div>
-    <figure
-      class="provider__avatar"
-      [style.background-image]="'url(' + provider.avatarURL + ')'"
-    ></figure>
+    <ng-container *ngIf="user.uid === provider.uid">
+      <label class="provider__label">Photo of</label>
+      <h2 class="provider__name--myself">myself</h2>
+    </ng-container>
+
+    <ng-container *ngIf="user.uid !== provider.uid"
+      ><label class="provider__label">Photo by</label>
+      <h2 class="provider__name">{{ provider.name }}</h2>
+      <figure
+        class="provider__avatar"
+        [style.background-image]="'url(' + provider.avatarURL + ')'"
+      ></figure>
+    </ng-container>
   </div>
+
+  <button
+    *ngIf="authService.user$ | async as user"
+    mat-mini-fab
+    [matMenuTriggerFor]="userMenu"
+    [style.background-image]="'url(' + user?.avatarURL + ')'"
+    class="user-btn"
+  ></button>
+  <mat-menu #userMenu="matMenu">
+    <a mat-menu-item routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>設定</span>
+    </a>
+    <button mat-menu-item (click)="authService.logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>ログアウト</span>
+    </button>
+  </mat-menu>
 </header>

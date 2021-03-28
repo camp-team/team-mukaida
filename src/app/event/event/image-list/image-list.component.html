@@ -1,7 +1,7 @@
 <div class="image-list" *ngIf="event$ | async as event">
   <div class="container">
     <ng-container *ngIf="postList$ | async as posts; else blank">
-      <div class="image-list__list">
+      <div class="image-list__list" *ngIf="posts.length > 0; else blank">
         <app-image-card
           class="image-list__item"
           *ngFor="let post of posts"
@@ -11,20 +11,16 @@
         </app-image-card>
       </div>
     </ng-container>
-    <ng-template #blank>
-      <a
-        [routerLink]="'/event/' + eventId + '/post-images'"
-        class="image-list__blank"
-      >
-        + 画像を投稿する
+    <div class="image-list__blank" #blank>
+      <a [routerLink]="'/event/' + eventId + '/post-images'">
+        <mat-icon>insert_photo</mat-icon>
+        <span>+ 画像を投稿する</span>
       </a>
-      <a
-        [routerLink]="'/event/' + eventId + '/post-video'"
-        class="image-list__blank"
-      >
-        + 動画を投稿する
+      <a [routerLink]="'/event/' + eventId + '/post-video'">
+        <mat-icon>videocam</mat-icon>
+        <span>+ 動画を投稿する</span>
       </a>
-    </ng-template>
+    </div>
   </div>
 </div>
 

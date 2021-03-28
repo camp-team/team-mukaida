@@ -1,7 +1,11 @@
 @import 'variables';
+@import 'mixins';
 
 .default {
-  padding: 24px 120px;
+  padding: 16px;
+  @include pc {
+    padding: 24px 120px;
+  }
   &__header {
     width: 100%;
     font-size: 18px;
@@ -20,13 +24,17 @@
   }
   &__block {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     margin-bottom: 24px;
     place-items: center;
+    @include pc {
+      grid-template-columns: 1fr 1fr;
+    }
   }
   &__text-wrap {
     width: 50%;
     opacity: 0.8;
+    margin-bottom: 24px;
   }
   &__btn {
     margin-top: 24px;

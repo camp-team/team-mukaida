@@ -14,7 +14,7 @@
   <div class="transfar" *ngIf="authService.uid === data.ownerId">
     <p class="transfar__title">新しいオーナーを選んで下さい</p>
     <mat-form-field appearance="fill">
-      <mat-select [(value)]="selected" [formControl]="transfarForm">
+      <mat-select [value]="null" [formControl]="transfarForm">
         <mat-option *ngFor="let user of joinedUsers | async" [value]="user">
           <div class="user">
             <div

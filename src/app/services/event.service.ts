@@ -122,12 +122,11 @@ export class EventService {
   getJoinedEventUsers(eventId: string): Observable<User[]> {
     return this.db
       .collection(`events/${eventId}/joinedUids`, (ref) =>
-        ref.orderBy('updatedAt', 'asc')
+        ref.orderBy('createdAt', 'asc')
       )
       .valueChanges()
       .pipe(
         switchMap((joinedUids: any) => {
-          console.log(joinedUids);
           if (joinedUids.length) {
             return combineLatest(
               joinedUids.map((ids) => this.userService.getUserData(ids.uid))
@@ -139,10 +138,12 @@ export class EventService {
       );
   }
 
-  getOldJoinedEventUser(eventId: string) {
-    return this.db.collection(`events/${eventId}/joinedUids`, (ref) =>
-      ref.orderBy('updatedAt', 'asc').limit(1)
-    );
+  getOldestJoinedEventUser(eventId: string) {
+    return this.db
+      .collection(`events/${eventId}/joinedUids`, (ref) =>
+        ref.orderBy('createdAt', 'asc').limit(1)
+      )
+      .valueChanges();
   }
 
   judgePassword(password: string, eventId: string) {
@@ -206,19 +207,12 @@ export class EventService {
     return callable(data).toPromise();
   }
 
-  async transferEvenOwner(
-    event: Omit<
-      Event,
-      | 'eventId'
-      | 'title'
-      | 'descliption'
-      | 'thumbnailURL'
-      | 'joinedUserCount'
-      | 'createdAt'
-    >,
-    eventId: string
-  ): Promise<void> {
-    return this.db.doc(`events/${eventId}`).set(event, { merge: true });
+  async transferEventOwner(targetId: string, eventId: string): Promise<void> {
+    const event = {
+      ownerId: targetId,
+    };
+    this.db.doc(`events/${eventId}`).set(event, { merge: true });
+    return this.db.doc(`events/${eventId}/joinedUids/${targetId}`).delete();
   }
 
   async deleteJoinedEvent(eventId, userId): Promise<void> {

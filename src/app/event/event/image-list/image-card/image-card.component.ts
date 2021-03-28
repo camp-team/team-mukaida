@@ -33,7 +33,6 @@ export class ImageCardComponent implements OnInit {
 
   user$: Observable<User> = this.authService.user$;
   image$: Observable<Image[]> = this.imageService.getImages(this.eventId);
-  imageIds = [];
 
   eventId$: Observable<string> = this.route.paramMap.pipe(
     map((param) => {
@@ -80,29 +79,30 @@ export class ImageCardComponent implements OnInit {
     // 各画像のいいね数を取得する。
     if (this.post.imageId) {
       this.likedService
-        .isLiked(this.eventId, this.uid, this.post.imageId)
+        .isLiked(this.eventId, this.uid, this.post.imageId, 'image')
         .pipe(take(1))
         .subscribe((isLiked) => {
           this.isLiked = isLiked;
         });
 
       this.likedService
-        .getLikedCount(this.eventId, this.post.imageId)
+        .getLikedCount(this.eventId, this.post.imageId, 'image')
         .pipe(take(1))
         .subscribe((likedCount) => {
           this.likedCount = likedCount.length;
         });
     }
+
     if (this.post.videoId) {
       this.likedService
-        .isLiked(this.eventId, this.uid, this.post.videoId)
+        .isLiked(this.eventId, this.uid, this.post.videoId, 'video')
         .pipe(take(1))
         .subscribe((isLiked) => {
           this.isLiked = isLiked;
         });
 
       this.likedService
-        .getLikedCount(this.eventId, this.post.videoId)
+        .getLikedCount(this.eventId, this.post.videoId, 'video')
         .pipe(take(1))
         .subscribe((likedCount) => {
           this.likedCount = likedCount.length;
@@ -161,16 +161,25 @@ export class ImageCardComponent implements OnInit {
       });
   }
 
-  likePost(imageId: string, videoId: string) {
+  likePost(post: Post, type: 'image' | 'video') {
     this.isLiked = true;
     this.likedCount++;
-    this.imageIds.push(imageId);
-    this.likedService.likeItem(this.eventId, this.uid, imageId, videoId);
+    this.likedService.likeItem(
+      this.eventId,
+      this.uid,
+      type === 'image' ? post.imageId : post.videoId,
+      type
+    );
   }
 
-  UnLikePost(imageId: string, videoId: string) {
+  UnLikePost(post: Post, type: 'image' | 'video') {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, this.uid, imageId, videoId);
+    this.likedService.unlike(
+      this.eventId,
+      this.uid,
+      type === 'image' ? post.imageId : post.videoId,
+      type
+    );
   }
 }

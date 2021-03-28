@@ -19,7 +19,6 @@ export class ImageDetailComponent implements OnInit {
   uid: string;
   likedCount: number;
   isLiked: boolean;
-  imageIds = [];
   eventId: string = this.route.snapshot.paramMap.get('eventId');
   imageId: string = this.route.snapshot.paramMap.get('imageId');
   image$: Observable<Image> = this.imageService.getImage(
@@ -44,14 +43,14 @@ export class ImageDetailComponent implements OnInit {
   ngOnInit(): void {
     // 自分がいいねをしたか、していないかを判定する。
     this.likedService
-      .isLiked(this.eventId, this.authService.uid, this.imageId)
+      .isLiked(this.eventId, this.authService.uid, this.imageId, 'image')
       .pipe(take(1))
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
       });
     // 各画像のいいね数を取得する。
     this.likedService
-      .getLikedCount(this.eventId, this.imageId)
+      .getLikedCount(this.eventId, this.imageId, 'image')
       .pipe(take(1))
       .subscribe((likedCount) => {
         this.likedCount = likedCount.length;
@@ -61,13 +60,22 @@ export class ImageDetailComponent implements OnInit {
   likeImage(imageId: string) {
     this.isLiked = true;
     this.likedCount++;
-    this.imageIds.push(imageId);
-    this.likedService.likeItem(this.eventId, this.authService.uid, imageId);
+    this.likedService.likeItem(
+      this.eventId,
+      this.authService.uid,
+      imageId,
+      'image'
+    );
   }
 
   UnLikeImage(imageId: string) {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, this.authService.uid, imageId);
+    this.likedService.unlike(
+      this.eventId,
+      this.authService.uid,
+      imageId,
+      'image'
+    );
   }
 }

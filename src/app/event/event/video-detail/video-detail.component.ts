@@ -19,7 +19,6 @@ export class VideoDetailComponent implements OnInit {
   uid: string;
   likedCount: number;
   isLiked: boolean;
-  imageIds = [];
   eventId: string = this.route.snapshot.paramMap.get('eventId');
   videoId: string = this.route.snapshot.paramMap.get('videoId');
   video$: Observable<Video> = this.videoService.getVideo(
@@ -43,15 +42,17 @@ export class VideoDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.likedService
-      .isLiked(this.eventId, this.authService.uid, this.videoId)
+      .isLiked(this.eventId, this.authService.uid, this.videoId, 'video')
       .pipe(take(1))
       .subscribe((isLiked) => {
         this.isLiked = isLiked;
       });
     this.likedService
-      .getLikedCount(this.eventId, this.videoId)
+      .getLikedCount(this.eventId, this.videoId, 'video')
       .pipe(take(1))
       .subscribe((likedCount) => {
+        console.log(likedCount);
+
         this.likedCount = likedCount.length;
       });
   }
@@ -59,13 +60,22 @@ export class VideoDetailComponent implements OnInit {
   likeVideo(videoId: string) {
     this.isLiked = true;
     this.likedCount++;
-    this.imageIds.push(videoId);
-    this.likedService.likeItem(this.eventId, this.authService.uid, videoId);
+    this.likedService.likeItem(
+      this.eventId,
+      this.authService.uid,
+      videoId,
+      'video'
+    );
   }
 
   UnLikeVideo(videoId: string) {
     this.isLiked = false;
     this.likedCount--;
-    this.likedService.unlike(this.eventId, this.authService.uid, videoId);
+    this.likedService.unlike(
+      this.eventId,
+      this.authService.uid,
+      videoId,
+      'video'
+    );
   }
 }

@@ -13,93 +13,82 @@ export class LikedService {
   likeItem(
     eventId: string,
     likedUid: string,
-    imageId?: string,
-    videoId?: string
+    id: string,
+    type: 'image' | 'video'
   ): Promise<void[]> {
-    if (imageId) {
-      return Promise.all([
-        this.db
-          .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-          .set({ likedUid, eventId }),
-        this.db
-          .doc(`users/${likedUid}/likedImages/${imageId}`)
-          .set({ imageId }),
-      ]);
-    }
-    if (videoId) {
-      return Promise.all([
-        this.db
-          .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
-          .set({ likedUid, eventId }),
-        this.db
-          .doc(`users/${likedUid}/likedVideos/${videoId}`)
-          .set({ videoId }),
-      ]);
-    }
+    console.log(id);
+
+    console.log(type);
+
+    return Promise.all([
+      this.db
+        .doc(
+          `events/${eventId}/${
+            type === 'image' ? 'images' : 'videos'
+          }/${id}/likedUids/${likedUid}`
+        )
+        .set({ likedUid, eventId }),
+      this.db
+        .doc(
+          `users/${likedUid}/${
+            type === 'image' ? 'likedImages' : 'likedVideos'
+          }/${id}`
+        )
+        .set({ id }),
+    ]);
   }
 
   unlike(
     eventId: string,
     likedUid: string,
-    imageId?: string,
-    videoId?: string
+    id: string,
+    type: 'image' | 'video'
   ): Promise<void[]> {
-    if (imageId) {
-      return Promise.all([
-        this.db
-          .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-          .delete(),
-        this.db.doc(`users/${likedUid}/likedImages/${imageId}`).delete(),
-      ]);
-    }
-    if (videoId) {
-      return Promise.all([
-        this.db
-          .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
-          .delete(),
-        this.db.doc(`users/${likedUid}/likedVideos/${videoId}`).delete(),
-      ]);
-    }
+    return Promise.all([
+      this.db
+        .doc(
+          `events/${eventId}/${
+            type === 'image' ? 'images' : 'videos'
+          }/${id}/likedUids/${likedUid}`
+        )
+        .delete(),
+      this.db
+        .doc(
+          `users/${likedUid}/${
+            type === 'image' ? 'likedImages' : 'likedVideos'
+          }/${id}`
+        )
+        .delete(),
+    ]);
   }
 
   isLiked(
     eventId: string,
-    likedUid: String,
-    imageId?: String,
-    videoId?: String
+    likedUid: string,
+    id: string,
+    type: 'image' | 'video'
   ): Observable<boolean> {
-    if (imageId) {
-      return this.db
-        .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-        .valueChanges()
-        .pipe(map((doc) => !!doc));
-    }
-    if (videoId) {
-      return this.db
-        .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
-        .valueChanges()
-        .pipe(map((doc) => !!doc));
-    }
+    return this.db
+      .doc(
+        `events/${eventId}/${
+          type === 'image' ? 'images' : 'videos'
+        }/${id}/likedUids/${likedUid}`
+      )
+      .valueChanges()
+      .pipe(map((doc) => !!doc));
   }
 
   getLikedCount(
     eventId: string,
-    imageId?: String,
-    videoId?: string
+    id: string,
+    type: 'image' | 'video'
   ): Observable<LikedImageUser[]> {
-    if (imageId) {
-      return this.db
-        .collection<LikedImageUser>(
-          `events/${eventId}/images/${imageId}/likedUids`
-        )
-        .valueChanges();
-    }
-    if (videoId) {
-      return this.db
-        .collection<LikedImageUser>(
-          `events/${eventId}/videos/${videoId}/likedUids`
-        )
-        .valueChanges();
-    }
+    return this.db
+      .collection<LikedImageUser>(
+        `events/${eventId}/${
+          type === 'image' ? 'images' : 'videos'
+        }/${id}/likedUids`
+      )
+      .valueChanges();
   }
 }

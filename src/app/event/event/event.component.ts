@@ -53,11 +53,12 @@ export class EventComponent implements OnInit {
     });
   }
 
-  exitEventOpenDialog() {
+  exitEventOpenDialog(id) {
     this.dialog.open(ExitEventDialogComponent, {
       autoFocus: false,
       restoreFocus: false,
       data: {
+        ownerId: id,
         eventId: this.eventId,
       },
     });

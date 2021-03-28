@@ -1,21 +1,19 @@
-<div class="container">
-  <div class="inner">
-    <mat-form-field appearance="fill">
-      <textarea
-        placeholder="コメントを追加"
-        [formControl]="commentForm"
-        matTextareaAutosize
-        matInput
-      ></textarea>
-      <button
-        (click)="createComment(image, video)"
-        mat-icon-button
-        matSuffix
-        [disabled]="!commentForm.dirty"
-      >
-        <mat-icon>send</mat-icon>
-      </button>
-      <mat-error *ngIf="commentForm.hasError('maxLength')"></mat-error>
-    </mat-form-field>
-  </div>
+<div class="inner">
+  <mat-form-field appearance="fill">
+    <textarea
+      placeholder="コメントを追加"
+      [formControl]="commentForm"
+      matTextareaAutosize
+      matInput
+    ></textarea>
+    <button
+      (click)="createComment(image, video)"
+      mat-icon-button
+      matSuffix
+      [disabled]="!commentForm.dirty"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+    <mat-error *ngIf="commentForm.hasError('maxLength')"></mat-error>
+  </mat-form-field>
 </div>

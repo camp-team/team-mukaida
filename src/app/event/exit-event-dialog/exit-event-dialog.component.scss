@@ -9,8 +9,53 @@ mat-dialog-content {
   @include sp {
     padding: 0 16px;
   }
-  p {
-    text-align: center;
-    font-weight: 500;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.heading {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  opacity: 0.8;
+}
+
+.transfar {
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  &__hint {
+    font-size: 13px;
+    opacity: 0.5;
+    margin: 8px 0 32px;
+  }
+}
+
+.check {
+  margin-bottom: 32px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    border-radius: 50%;
+    background: center/cover rgba(0, 0, 0, 0.5);
+  }
+  &__name {
+    margin-left: 8px;
+    font-size: 16px;
+    font-weight: 300;
+    color: #888888;
   }
 }

@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { UserService } from 'src/app/services/user.service';
+import { Observable, range } from 'rxjs';
+import { User } from 'src/app/interfaces/user';
+import { FormControl } from '@angular/forms';
+import { tap, take, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exit-event-dialog',
@@ -13,16 +17,22 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ExitEventDialogComponent implements OnInit {
   isDeleteAllImagesAndComments: false;
+  joinedUsers: Observable<User[]> = this.eventService.getJoinedEventUsers(
+    this.data.eventId
+  );
+
+  transfarForm = new FormControl();
+  selected = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      ownerId: string;
       eventId: string;
     },
     private dialogRef: MatDialogRef<ExitEventDialogComponent>,
     private eventService: EventService,
-    private userService: UserService,
-    private authService: AuthService,
+    public authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -30,11 +40,20 @@ export class ExitEventDialogComponent implements OnInit {
   ngOnInit(): void {}
 
   async exitEvent() {
-    const uid: string = this.authService.uid;
     const eventId: string = this.data.eventId;
 
-    await this.eventService.exitEvent(eventId, uid);
-    await this.userService.deleteJoinedEventId(uid, eventId);
+    if (this.transfarForm.value !== null) {
+      const targetId = this.transfarForm.value.uid;
+      this.eventService.transferEventOwner(targetId, eventId);
+    } else {
+      this.eventService
+        .getOldestJoinedEventUser(eventId)
+        .pipe()
+        .subscribe((ids: any) => {
+          const id = ids[0].uid;
+          this.eventService.transferEventOwner(id, eventId);
+        });
+    }
 
     if (this.isDeleteAllImagesAndComments) {
       this.eventService.deleteImagesAndCommentsInTheEvent(eventId);

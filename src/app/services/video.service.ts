@@ -111,43 +111,47 @@ export class VideoService {
       .pipe(take(1))
       .toPromise()
       .then((ids) => {
-        return this.db
-          .collectionGroup<Video>('videos', (ref) =>
-            ref
-              .where('eventId', 'in', ids)
-              .orderBy('createdAt', 'desc')
-              .limit(20)
-          )
-          .valueChanges()
-          .pipe(
-            switchMap((videos: Video[]) => {
-              if (videos.length) {
-                const unduplicatedUids: string[] = Array.from(
-                  new Set(videos.map((video) => video.uid))
-                );
-                const users$: Observable<User[]> = combineLatest(
-                  unduplicatedUids.map((userId) =>
-                    this.userService.getUserData(userId)
-                  )
-                );
-                return combineLatest([of(videos), users$]);
-              } else {
-                return of([]);
-              }
-            }),
-            map(([videos, users]) => {
-              if (videos?.length) {
-                return videos.map((video: Video) => {
-                  return {
-                    ...video,
-                    user: users.find((user: User) => video.uid === user?.uid),
-                  };
-                });
-              } else {
-                return [];
-              }
-            })
-          );
+        if (ids.length) {
+          return this.db
+            .collectionGroup<Video>('videos', (ref) =>
+              ref
+                .where('eventId', 'in', ids)
+                .orderBy('createdAt', 'desc')
+                .limit(20)
+            )
+            .valueChanges()
+            .pipe(
+              switchMap((videos: Video[]) => {
+                if (videos.length) {
+                  const unduplicatedUids: string[] = Array.from(
+                    new Set(videos.map((video) => video.uid))
+                  );
+                  const users$: Observable<User[]> = combineLatest(
+                    unduplicatedUids.map((userId) =>
+                      this.userService.getUserData(userId)
+                    )
+                  );
+                  return combineLatest([of(videos), users$]);
+                } else {
+                  return of([]);
+                }
+              }),
+              map(([videos, users]) => {
+                if (videos?.length) {
+                  return videos.map((video: Video) => {
+                    return {
+                      ...video,
+                      user: users.find((user: User) => video.uid === user?.uid),
+                    };
+                  });
+                } else {
+                  return [];
+                }
+              })
+            );
+        } else {
+          return of(null);
+        }
       });
   }
 

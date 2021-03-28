@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
-import { Image, ImageWithUser } from 'src/app/interfaces/image';
-import { Post, PostWithUser } from 'src/app/interfaces/post';
+import { PostWithUser } from 'src/app/interfaces/post';
 import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
@@ -81,12 +80,11 @@ export class HomeComponent implements OnInit {
 
     this.postList$ = combineLatest([this.images$, this.videos$]).pipe(
       map(([images, videos]) => {
-        return images.concat(videos);
+        if (images?.length) {
+          return images.concat(videos);
+        }
       })
     );
-    this.postList$.subscribe((data) => {
-      console.log(data);
-    });
   }
 
   openJoinEventDialog(id?: string) {

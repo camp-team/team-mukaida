@@ -2,18 +2,10 @@
 
 <mat-dialog-content>
   <p class="heading">本当にイベントから退会しますか？</p>
-  <section class="check">
-    <mat-checkbox
-      (change)="isDeleteAllImagesAndComments = $event.checked"
-      color="primary"
-      class="check-box"
-      >このイベントで投稿した写真とコメントを全て削除する
-    </mat-checkbox>
-  </section>
 
   <div class="transfar" *ngIf="authService.uid === data.ownerId">
-    <p class="transfar__title">新しいオーナーを選んで下さい</p>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
+      <mat-label>譲渡する人を選択</mat-label>
       <mat-select [value]="null" [formControl]="transfarForm">
         <mat-option *ngFor="let user of joinedUsers | async" [value]="user">
           <div class="user">
@@ -25,8 +17,23 @@
           </div>
         </mat-option>
       </mat-select>
+      <mat-hint class="transfar__title"
+        >権限の譲渡したい人を選択できます。</mat-hint
+      >
     </mat-form-field>
+    <p class="transfar__hint">
+      ＊選択されない場合は、参加日が１番古い人に譲渡されます
+    </p>
   </div>
+
+  <section class="check">
+    <mat-checkbox
+      (change)="isDeleteAllImagesAndComments = $event.checked"
+      color="primary"
+      class="check-box"
+      >このイベントで投稿した写真とコメントを全て削除する
+    </mat-checkbox>
+  </section>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

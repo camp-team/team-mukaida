@@ -108,9 +108,9 @@ export class EventService {
       .valueChanges()
       .pipe(
         switchMap((joinedEvents) => {
-          if (joinedEvents.length) {
+          if (joinedEvents?.length) {
             return combineLatest(
-              joinedEvents.map((event) => this.getEvent(event.eventId))
+              joinedEvents?.map((event) => this.getEvent(event.eventId))
             );
           } else {
             return of(null);

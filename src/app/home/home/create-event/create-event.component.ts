@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./create-event.component.scss'],
 })
 export class CreateEventComponent implements OnInit {
+  scrWidth: any;
   form = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(40)]],
     password: ['', [Validators.required, Validators.maxLength(40)]],
@@ -35,7 +36,13 @@ export class CreateEventComponent implements OnInit {
     private location: Location
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getScreenSize();
+  }
+
+  getScreenSize() {
+    this.scrWidth = window.innerWidth;
+  }
 
   submit() {
     const formData = this.form.value;

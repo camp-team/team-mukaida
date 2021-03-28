@@ -4,26 +4,32 @@
       ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
     >
   </h1>
+
   <div class="actions">
-    <button mat-ripple mat-button (click)="openJoinEventDialog()">
-      <mat-icon inline="true">group</mat-icon>
-      <span>イベントに参加する</span>
-    </button>
-    <a mat-button routerLink="/create-event">
+    <a mat-button routerLink="/create-event" class="header__create-btn">
       <mat-icon inline="true">assignment_ind</mat-icon>
       <span>イベントを作る</span>
     </a>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="actions">
     <ng-container *ngIf="authService.user$ | async as user; else default">
       <ng-container *ngIf="event$ | async as event">
         <button
           class="header__add-btn"
           [routerLink]="'/event/' + event.eventId + '/post-images'"
         >
-          <mat-icon inline="true">add</mat-icon>
-          <span>画像を投稿する</span>
+          <mat-icon>insert_photo</mat-icon> 画像を投稿
+        </button>
+        <button
+          class="header__add-btn"
+          [routerLink]="'/event/' + event.eventId + '/post-video'"
+        >
+          <mat-icon>videocam</mat-icon> 動画を投稿
         </button>
       </ng-container>
-
       <button
         mat-mini-fab
         [matMenuTriggerFor]="userMenu"

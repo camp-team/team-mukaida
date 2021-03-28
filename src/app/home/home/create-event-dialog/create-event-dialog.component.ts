@@ -42,7 +42,7 @@ export class CreateEventDialogComponent implements OnInit {
       descliption: formData.descliption,
       thumbnailURL: 'assets/images/image-card-sample01.jpg',
       ownerId: this.authService.uid,
-      createAt: firebase.default.firestore.Timestamp.now(),
+      createdAt: firebase.default.firestore.Timestamp.now(),
       joinedUserCount: 1,
     };
     this.eventService.createEvent(eventValue, formData.password);

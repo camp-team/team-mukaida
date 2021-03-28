@@ -5,14 +5,19 @@
   border-radius: 8px;
   box-shadow: 16px 16px 2rem -2rem hsl(200 50% 20% / 60%);
   overflow: hidden;
-  &__delete-conteiner {
-    text-align: end;
+  &__navigate {
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    &:hover .image-card__img {
+      opacity: 0.8;
+    }
   }
   &__delete {
     background: #ffffff;
   }
   &__main {
     position: relative;
+    width: 100%;
     &::before {
       content: '';
       display: block;
@@ -29,6 +34,35 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+  }
+  &__video-icon {
+    position: absolute;
+    top: 4px;
+    right: 32px;
+    padding: 1px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.38);
+    color: #fff;
+    font-size: 16px;
+    display: inline-block;
+    text-align: center;
+    line-height: 22px;
+  }
+  &__menu-item {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    padding: 1px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.38);
+    cursor: pointer;
+    mat-icon {
+      color: #fff;
+      font-size: 16px;
+      display: inline-block;
+      text-align: center;
+      line-height: 22px;
     }
   }
   &__body {

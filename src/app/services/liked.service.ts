@@ -10,55 +10,96 @@ import { LikedImageUser } from '../interfaces/liked-image-user';
 export class LikedService {
   constructor(private db: AngularFirestore) {}
 
-  // いいねが押された
   likeItem(
     eventId: string,
-    imageId: string,
-    likedUid: string
+    likedUid: string,
+    imageId?: string,
+    videoId?: string
   ): Promise<void[]> {
-    return Promise.all([
-      // 投稿された画像にいいねをしたユーザーIDをDBに登録
-      this.db
-        .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-        .set({ likedUid, eventId }),
-      // 自分がいいねをした画像をDBの自分のユーザーIDに保持する
-      this.db
-        .doc(`users/${likedUid}/likedImages/${imageId}`)
-        .set({ imageId, eventId }),
-    ]);
+    if (imageId) {
+      return Promise.all([
+        this.db
+          .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
+          .set({ likedUid, eventId }),
+        this.db
+          .doc(`users/${likedUid}/likedImages/${imageId}`)
+          .set({ imageId }),
+      ]);
+    }
+    if (videoId) {
+      return Promise.all([
+        this.db
+          .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
+          .set({ likedUid, eventId }),
+        this.db
+          .doc(`users/${likedUid}/likedVideos/${videoId}`)
+          .set({ videoId }),
+      ]);
+    }
   }
 
-  // いいねが解除された
-  unlike(eventId: string, imageId: string, likedUid: string): Promise<void[]> {
-    return Promise.all([
-      this.db
-        .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-        .delete(),
-      this.db.doc(`users/${likedUid}/likedImages/${imageId}`).delete(),
-    ]);
+  unlike(
+    eventId: string,
+    likedUid: string,
+    imageId?: string,
+    videoId?: string
+  ): Promise<void[]> {
+    if (imageId) {
+      return Promise.all([
+        this.db
+          .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
+          .delete(),
+        this.db.doc(`users/${likedUid}/likedImages/${imageId}`).delete(),
+      ]);
+    }
+    if (videoId) {
+      return Promise.all([
+        this.db
+          .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
+          .delete(),
+        this.db.doc(`users/${likedUid}/likedVideos/${videoId}`).delete(),
+      ]);
+    }
   }
 
-  // 記事にいいねしているかチェックする
   isLiked(
     eventId: string,
-    imageId: string,
-    likedUid: string
+    likedUid: String,
+    imageId?: String,
+    videoId?: String
   ): Observable<boolean> {
-    return this.db
-      .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
-      .valueChanges()
-      .pipe(map((doc) => !!doc));
+    if (imageId) {
+      return this.db
+        .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
+        .valueChanges()
+        .pipe(map((doc) => !!doc));
+    }
+    if (videoId) {
+      return this.db
+        .doc(`events/${eventId}/videos/${videoId}/likedUids/${likedUid}`)
+        .valueChanges()
+        .pipe(map((doc) => !!doc));
+    }
   }
 
-  // 記事にいいねしている人一覧で取得する
   getLikedCount(
     eventId: string,
-    imageId: string
+    imageId?: String,
+    videoId?: string
   ): Observable<LikedImageUser[]> {
-    return this.db
-      .collection<LikedImageUser>(
-        `events/${eventId}/images/${imageId}/likedUids`
-      )
-      .valueChanges();
+    if (imageId) {
+      return this.db
+        .collection<LikedImageUser>(
+          `events/${eventId}/images/${imageId}/likedUids`
+        )
+        .valueChanges();
+    }
+    if (videoId) {
+      return this.db
+        .collection<LikedImageUser>(
+          `events/${eventId}/videos/${videoId}/likedUids`
+        )
+        .valueChanges();
+    }
   }
 }

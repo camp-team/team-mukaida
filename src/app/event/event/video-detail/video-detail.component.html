@@ -1,0 +1,62 @@
+<header>
+  <app-comment-header
+    *ngIf="provider$ | async as provider"
+    [provider]="provider"
+  ></app-comment-header>
+</header>
+<div class="conatainer">
+  <div class="grid" *ngIf="video$ | async as video">
+    <div class="thumbnail">
+      <app-video-player
+        [options]="{
+          autoplay: false,
+          controls: true,
+          sources: [
+            {
+              src: video.videoURL,
+              type: 'video/mp4'
+            }
+          ],
+          poster: video.thumbnailURL
+        }"
+      ></app-video-player>
+      <div class="area">
+        <!-- いいね -->
+        <div>
+          <ng-container *ngIf="!isLiked">
+            <button mat-icon-button (click)="likeVideo(video.videoId)">
+              <mat-icon class="like">favorite_border</mat-icon>
+              <span class="like-count">{{ likedCount }}</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="isLiked">
+            <button mat-icon-button (click)="UnLikeVideo(video.videoId)">
+              <mat-icon class="like">favorite</mat-icon>
+              <span class="like-count">{{ likedCount }}</span>
+            </button>
+          </ng-container>
+        </div>
+        <!-- 投稿時間表示 -->
+        <div>
+          <ng-container *ngIf="video$">
+            <div class="image-createAt">
+              {{ video.createdAt.toDate() | date: 'yyyy年MM月dd ' }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="comment">
+      <div class="comment__list">
+        <app-comment-list
+          class="comment__inner"
+          [eventId]="eventId"
+          [videoId]="video.videoId"
+        ></app-comment-list>
+      </div>
+      <div class="comment__form">
+        <app-comment-form [video]="video"></app-comment-form>
+      </div>
+    </div>
+  </div>
+</div>

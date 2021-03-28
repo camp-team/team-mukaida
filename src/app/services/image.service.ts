@@ -5,7 +5,8 @@ import * as firebase from 'firebase';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Event } from '../interfaces/event';
-import { Image, ImageWithUser } from '../interfaces/image';
+import { Image } from '../interfaces/image';
+import { PostWithUser } from '../interfaces/post';
 import { User } from '../interfaces/user';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
@@ -48,7 +49,7 @@ export class ImageService {
           uid: this.uid,
           imageURL,
           eventId,
-          createAt: firebase.default.firestore.Timestamp.now(),
+          createdAt: firebase.default.firestore.Timestamp.now(),
         });
       }
     });
@@ -57,14 +58,14 @@ export class ImageService {
   getImages(eventId: string): Observable<Image[]> {
     return this.db
       .collection<Image>(`events/${eventId}/images`, (ref) =>
-        ref.orderBy('createAt', 'desc')
+        ref.orderBy('createdAt', 'desc')
       )
       .valueChanges();
   }
 
   async getRecentImagesInJoinedEvents(
     uid: string
-  ): Promise<Observable<ImageWithUser[]>> {
+  ): Promise<Observable<PostWithUser[]>> {
     return this.userService
       .getJoinedEventIds(uid)
       .pipe(take(1))
@@ -74,7 +75,7 @@ export class ImageService {
           .collectionGroup<Image>('images', (ref) =>
             ref
               .where('eventId', 'in', ids)
-              .orderBy('createAt', 'desc')
+              .orderBy('createdAt', 'desc')
               .limit(20)
           )
           .valueChanges()

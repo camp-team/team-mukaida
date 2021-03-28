@@ -4,15 +4,17 @@
       ><img src="./assets/images/favicon.svg" alt="" />Instacircle</a
     >
   </h1>
+
   <div class="actions">
-    <button mat-ripple mat-button (click)="openJoinEventDialog()">
-      <mat-icon inline="true">group</mat-icon>
-      <span>イベントに参加する</span>
-    </button>
-    <a mat-button routerLink="/create-event">
+    <a mat-button routerLink="/create-event" class="header__create-btn">
       <mat-icon inline="true">assignment_ind</mat-icon>
       <span>イベントを作る</span>
     </a>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="actions">
     <ng-container *ngIf="authService.user$ | async as user; else default">
       <ng-container *ngIf="event$ | async as event">
         <button

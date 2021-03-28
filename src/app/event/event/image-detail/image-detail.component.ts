@@ -33,6 +33,7 @@ export class ImageDetailComponent implements OnInit {
       return this.userService.getUserData(uid);
     })
   );
+  isImageDetailPage = true;
   constructor(
     private imageService: ImageService,
     private route: ActivatedRoute,

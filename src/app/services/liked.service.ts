@@ -22,7 +22,9 @@ export class LikedService {
         .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
         .set({ likedUid, eventId }),
       // 自分がいいねをした画像をDBの自分のユーザーIDに保持する
-      this.db.doc(`users/${likedUid}/likedImages/${imageId}`).set({ imageId }),
+      this.db
+        .doc(`users/${likedUid}/likedImages/${imageId}`)
+        .set({ imageId, eventId }),
     ]);
   }
 
@@ -39,8 +41,8 @@ export class LikedService {
   // 記事にいいねしているかチェックする
   isLiked(
     eventId: string,
-    imageId: String,
-    likedUid: String
+    imageId: string,
+    likedUid: string
   ): Observable<boolean> {
     return this.db
       .doc(`events/${eventId}/images/${imageId}/likedUids/${likedUid}`)
@@ -51,7 +53,7 @@ export class LikedService {
   // 記事にいいねしている人一覧で取得する
   getLikedCount(
     eventId: string,
-    imageId: String
+    imageId: string
   ): Observable<LikedImageUser[]> {
     return this.db
       .collection<LikedImageUser>(

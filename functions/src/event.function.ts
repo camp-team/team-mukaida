@@ -109,28 +109,42 @@ export const exitEvent = functions
 export const deleteImagesInTheEvent = functions
   .region('asia-northeast1')
   .runWith({ memory: '2GB', timeoutSeconds: 540 })
-  .https.onCall(
-    async (
-      data: { eventId: string; imageIds: string[]; commentIds: string[] },
-      context
-    ) => {
-      const uid = context.auth?.uid;
-      const eventId: string = data.eventId;
-      const should = await shouldEventRun(eventId);
-      if (should) {
-        const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
-          .collection(`events/${eventId}/images`)
-          .where('uid', '==', uid);
-        const commentsArray: FirebaseFirestore.Query<
-          FirebaseFirestore.DocumentData
-        >[] = data.imageIds.map((id: string) => {
-          return db.collection(`events/${eventId}/images/${id}/comments`);
-        });
-        const deleteAllImages = deleteCollectionByReference(images);
-        const deleteAllComments = commentsArray.map((commentData) =>
-          deleteCollectionByReference(commentData)
-        );
-        await Promise.all([deleteAllImages, ...deleteAllComments]);
-      }
+  .https.onCall(async (data: { eventId: string }, context) => {
+    const uid = context.auth?.uid;
+    const eventId: string = data.eventId;
+    const should = await shouldEventRun(eventId);
+    if (should) {
+      const images: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('images')
+        .where('uid', '==', uid)
+        .where('eventId', '==', eventId);
+      const allComments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('comments')
+        .where('eventId', '==', eventId)
+        .where('ownerId', '==', uid);
+      const allMyComments: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('comments')
+        .where('uid', '==', uid);
+      const imageFavorite: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collectionGroup('likedUids')
+        .where('likedUid', '==', uid)
+        .where('eventId', '==', eventId);
+      const myFavorite: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db
+        .collection(`users/${uid}/likedImages`)
+        .where('eventId', '==', eventId);
+
+      const deleteAllImagesPostedByMySelf = deleteCollectionByReference(images);
+      const deleteAllComments = deleteCollectionByReference(allComments);
+      const deleteAllMyComments = deleteCollectionByReference(allMyComments);
+      const deleteAllFavorite = deleteCollectionByReference(imageFavorite);
+      const deleteAllMyFavorite = deleteCollectionByReference(myFavorite);
+
+      await Promise.all([
+        deleteAllComments,
+        deleteAllMyComments,
+        deleteAllImagesPostedByMySelf,
+        deleteAllFavorite,
+        deleteAllMyFavorite,
+      ]);
     }
-  );
+  });

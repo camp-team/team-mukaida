@@ -3,6 +3,7 @@ import { ImageService } from 'src/app/services/image.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/interfaces/user';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-comment-header',
@@ -12,7 +13,7 @@ import { User } from 'src/app/interfaces/user';
 export class CommentHeaderComponent implements OnInit {
   @Input() provider: User;
 
-  constructor() {}
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {}
 

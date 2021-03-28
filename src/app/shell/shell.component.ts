@@ -6,7 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shell.component.scss'],
 })
 export class ShellComponent implements OnInit {
+  isImageDetailPage: boolean;
   constructor() {}
 
   ngOnInit(): void {}
+
+  checkInner(event: any) {
+    this.isImageDetailPage = event.isImageDetailPage;
+  }
 }

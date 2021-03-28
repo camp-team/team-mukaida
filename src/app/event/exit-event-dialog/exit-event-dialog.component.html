@@ -1,21 +1,18 @@
-<div class="container">
-  <h1 matDialogTitle>イベント退会</h1>
+<h1 matDialogTitle>イベント退会</h1>
 
-  <mat-dialog-content>
-    <p>本当にイベントから退会しますか？</p>
-    <section class="example-section">
-      <mat-checkbox
-        (change)="isDeleteAllImages = $event.checked"
-        color="primary"
-        class="check-box"
-      >
-        このイベントで投稿した写真とコメントを全て削除する
-      </mat-checkbox>
-    </section>
-  </mat-dialog-content>
+<mat-dialog-content>
+  <p>本当にイベントから退会しますか？</p>
+  <section class="example-section">
+    <mat-checkbox
+      (change)="isDeleteAllImagesAndComments = $event.checked"
+      color="primary"
+      class="check-box"
+      >このイベントで投稿した写真とコメントを全て削除する
+    </mat-checkbox>
+  </section>
+</mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button matDialogClose>キャンセル</button>
-    <button (click)="exitEvent()" color="warn" mat-raised-button>退会</button>
-  </mat-dialog-actions>
-</div>
+<mat-dialog-actions align="end">
+  <button mat-button matDialogClose>キャンセル</button>
+  <button (click)="exitEvent()" color="warn" mat-raised-button>退会</button>
+</mat-dialog-actions>

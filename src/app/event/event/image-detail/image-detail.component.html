@@ -1,53 +1,49 @@
-<body>
-  <header>
-    <app-comment-header
-      *ngIf="imageProvider$ | async as provider"
-      [provider]="provider"
-    ></app-comment-header>
-  </header>
-  <div class="conatainer">
-    <div class="grid" *ngIf="image$ | async as image">
-      <div class="thumbnail">
-        <img [src]="image.imageURL" [alt]="" />
-        <div class="area">
-          <!-- いいね -->
-          <div>
-            <ng-container *ngIf="!isLiked">
-              <button mat-icon-button (click)="likeImage(image.imageId)">
-                <mat-icon class="like">favorite_border</mat-icon>
-                <span class="like-count">{{ likedCount }}</span>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="isLiked">
-              <button mat-icon-button (click)="UnLikeImage(image.imageId)">
-                <mat-icon class="like">favorite</mat-icon>
-                <span class="like-count">{{ likedCount }}</span>
-              </button>
-            </ng-container>
-          </div>
-          <!-- 投稿時間表示 -->
-          <div>
-            <ng-container *ngIf="image$">
-              <div class="image-createAt">
-                {{ image.createAt.toDate() | date: 'yyyy年MM月dd ' }}
-              </div>
-            </ng-container>
-          </div>
-        </div>
+<div class="header-wrap">
+  <app-comment-header
+    *ngIf="imageProvider$ | async as provider"
+    [provider]="provider"
+  ></app-comment-header>
+</div>
+<div class="conatainer">
+  <div class="grid" *ngIf="image$ | async as image">
+    <div class="thumbnail">
+      <img [src]="image.imageURL" [alt]="" />
+      <div class="area">
+        <!-- いいね -->
+        <button
+          *ngIf="!isLiked"
+          mat-icon-button
+          (click)="likeImage(image.imageId)"
+        >
+          <mat-icon class="like">favorite_border</mat-icon>
+          <span class="like-count">{{ likedCount }}</span>
+        </button>
+        <button
+          *ngIf="isLiked"
+          mat-icon-button
+          (click)="UnLikeImage(image.imageId)"
+        >
+          <mat-icon class="like">favorite</mat-icon>
+          <span class="like-count">{{ likedCount }}</span>
+        </button>
+        <!-- 投稿時間表示 -->
+        <span *ngIf="image$" class="image-createAt">
+          {{ image.createAt.toDate() | date: 'yyyy年MM月dd ' }}
+        </span>
       </div>
+    </div>
 
-      <div class="comment">
-        <div class="comment__list">
-          <app-comment-list
-            class="comment__inner"
-            [eventId]="eventId"
-            [imageId]="imageId"
-          ></app-comment-list>
-        </div>
-        <div class="comment__form">
-          <app-comment-form [image]="image"></app-comment-form>
-        </div>
+    <div class="comment">
+      <div class="comment__list">
+        <app-comment-list
+          class="comment__inner"
+          [eventId]="eventId"
+          [imageId]="imageId"
+        ></app-comment-list>
+      </div>
+      <div class="comment__form">
+        <app-comment-form [image]="image"></app-comment-form>
       </div>
     </div>
   </div>
-</body>
+</div>

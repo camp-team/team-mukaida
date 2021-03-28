@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "comments",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "eventId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ownerId",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "images",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
@@ -23,7 +37,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "uid",
+          "fieldPath": "createdAt",
           "order": "DESCENDING"
         }
       ]
@@ -37,7 +51,21 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "images",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "eventId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "uid",
           "order": "DESCENDING"
         }
       ]
@@ -85,7 +113,7 @@
       ]
     },
     {
-      "collectionGroup": "comments",
+      "collectionGroup": "videos",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
         {
@@ -93,7 +121,21 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "ownerId",
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "videos",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "eventId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "uid",
           "order": "ASCENDING"
         }
       ]

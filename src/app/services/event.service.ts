@@ -121,10 +121,13 @@ export class EventService {
 
   getJoinedEventUsers(eventId: string): Observable<User[]> {
     return this.db
-      .collection(`events/${eventId}/joinedUids`)
+      .collection(`events/${eventId}/joinedUids`, (ref) =>
+        ref.orderBy('updatedAt', 'asc')
+      )
       .valueChanges()
       .pipe(
         switchMap((joinedUids: any) => {
+          console.log(joinedUids);
           if (joinedUids.length) {
             return combineLatest(
               joinedUids.map((ids) => this.userService.getUserData(ids.uid))
@@ -137,10 +140,9 @@ export class EventService {
   }
 
   getOldJoinedEventUser(eventId: string) {
-    // return this.db
-    //   .collection(`events/${eventId}/joinedUids`, (ref) => {
-    //     ref.orderBy('updatedAt', 'esc').limit(1)
-    //   })
+    return this.db.collection(`events/${eventId}/joinedUids`, (ref) =>
+      ref.orderBy('updatedAt', 'asc').limit(1)
+    );
   }
 
   judgePassword(password: string, eventId: string) {
@@ -212,7 +214,7 @@ export class EventService {
       | 'descliption'
       | 'thumbnailURL'
       | 'joinedUserCount'
-      | 'createAt'
+      | 'createdAt'
     >,
     eventId: string
   ): Promise<void> {

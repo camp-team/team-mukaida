@@ -9,13 +9,11 @@ mat-dialog-content {
   @include sp {
     padding: 0 16px;
   }
-  p {
-    text-align: center;
-    font-weight: 500;
-  }
 }
 
 .heading {
+  text-align: center;
+  font-weight: 500;
   margin-bottom: 32px;
 }
 

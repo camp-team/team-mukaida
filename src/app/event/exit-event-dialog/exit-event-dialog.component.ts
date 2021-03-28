@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/interfaces/user';
 import { FormControl } from '@angular/forms';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exit-event-dialog',
@@ -16,9 +17,9 @@ import { FormControl } from '@angular/forms';
 })
 export class ExitEventDialogComponent implements OnInit {
   isDeleteAllImagesAndComments: false;
-  joinedUsers: Observable<User[]> = this.eventService.getJoinedEventUsers(
-    this.data.eventId
-  );
+  joinedUsers: Observable<User[]> = this.eventService
+    .getJoinedEventUsers(this.data.eventId)
+    .pipe(tap((data) => console.log(data)));
 
   transfarForm = new FormControl();
   selected = 0;

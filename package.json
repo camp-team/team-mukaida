@@ -32,6 +32,7 @@
     "croppie": "^2.6.5",
     "firebase": "^8.0.1",
     "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.13.2",
     "promise-polyfill": "8.2.0",
     "rxjs": "~6.5.4",
     "tsc": "^1.20150623.0",

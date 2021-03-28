@@ -15,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RecentPostsComponent } from './recent-posts/recent-posts.component';
 import { CreateEventComponent } from './home/create-event/create-event.component';
+import { DefaultEventComponent } from './home/default-event/default-event.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CreateEventComponent } from './home/create-event/create-event.component
     EventListCardComponent,
     RecentPostsComponent,
     CreateEventComponent,
+    DefaultEventComponent,
   ],
   imports: [
     CommonModule,

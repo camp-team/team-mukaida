@@ -7,9 +7,11 @@
 
 .create-event-wrapper {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: url(/assets/images/bg-img.png) no-repeat center/cover;
   padding: 80px 0;
+  display: grid;
+  place-items: center;
   @include sp {
     padding: 24px 0;
   }
@@ -68,5 +70,15 @@
   }
   mat-form-feild {
     box-sizing: border-box;
+  }
+}
+
+.footer {
+  width: 100%;
+  height: 53px;
+  background-color: rgba($color-accent, 0.95);
+  &__copy {
+    color: #fff;
+    font-size: 14px;
   }
 }

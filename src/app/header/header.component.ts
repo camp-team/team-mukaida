@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Event } from '../interfaces/event';
@@ -26,17 +25,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private routeService: RouteParamsService,
     private router: Router,
-    private snackBar: MatSnackBar
-  ) {
+    private cd: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
     this.subscription.add(
       this.routeService.eventIdSubject.subscribe((data) => {
         this.eventId = data;
         this.event$ = this.eventService.getEvent(this.eventId);
+        this.cd.detectChanges();
       })
     );
-  }
 
-  ngOnInit(): void {
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
         if (!user) {

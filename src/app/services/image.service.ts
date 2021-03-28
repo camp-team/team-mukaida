@@ -71,43 +71,47 @@ export class ImageService {
       .pipe(take(1))
       .toPromise()
       .then((ids) => {
-        return this.db
-          .collectionGroup<Image>('images', (ref) =>
-            ref
-              .where('eventId', 'in', ids)
-              .orderBy('createdAt', 'desc')
-              .limit(20)
-          )
-          .valueChanges()
-          .pipe(
-            switchMap((images: Image[]) => {
-              if (images.length) {
-                const unduplicatedUids: string[] = Array.from(
-                  new Set(images.map((image) => image.uid))
-                );
-                const users$: Observable<User[]> = combineLatest(
-                  unduplicatedUids.map((userId) =>
-                    this.userService.getUserData(userId)
-                  )
-                );
-                return combineLatest([of(images), users$]);
-              } else {
-                return of([]);
-              }
-            }),
-            map(([images, users]) => {
-              if (images?.length) {
-                return images.map((image: Image) => {
-                  return {
-                    ...image,
-                    user: users.find((user: User) => image.uid === user?.uid),
-                  };
-                });
-              } else {
-                return [];
-              }
-            })
-          );
+        if (ids.length) {
+          return this.db
+            .collectionGroup<Image>('images', (ref) =>
+              ref
+                .where('eventId', 'in', ids)
+                .orderBy('createdAt', 'desc')
+                .limit(20)
+            )
+            .valueChanges()
+            .pipe(
+              switchMap((images: Image[]) => {
+                if (images.length) {
+                  const unduplicatedUids: string[] = Array.from(
+                    new Set(images.map((image) => image.uid))
+                  );
+                  const users$: Observable<User[]> = combineLatest(
+                    unduplicatedUids.map((userId) =>
+                      this.userService.getUserData(userId)
+                    )
+                  );
+                  return combineLatest([of(images), users$]);
+                } else {
+                  return of([]);
+                }
+              }),
+              map(([images, users]) => {
+                if (images?.length) {
+                  return images.map((image: Image) => {
+                    return {
+                      ...image,
+                      user: users.find((user: User) => image.uid === user?.uid),
+                    };
+                  });
+                } else {
+                  return [];
+                }
+              })
+            );
+        } else {
+          return of(null);
+        }
       });
   }
 

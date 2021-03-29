@@ -20,7 +20,10 @@
   <mat-tab-group class="mat-tab" mat-align-tabs="center">
     <mat-tab label="新着投稿">
       <ng-container *ngIf="postList$ | async as posts; else default">
-        <div class="mat-tab__card-layout mat-tab__card-layout--posts">
+        <div
+          class="mat-tab__card-layout mat-tab__card-layout--posts"
+          [class.default]="!posts"
+        >
           <app-recent-posts
             *ngFor="let post of posts"
             [post]="post"
@@ -29,8 +32,21 @@
           ></app-recent-posts>
         </div>
       </ng-container>
+
+      <ng-container
+        *ngIf="videoService.isLoading || imageService.isLoading || isLoading"
+      >
+        <div class="loading">
+          <img class="loading__svg" src="assets/images/loading.svg" alt="" />
+        </div>
+      </ng-container>
+
       <ng-template #default>
-        <app-default-event></app-default-event>
+        <app-default-event
+          *ngIf="
+            !videoService.isLoading && !imageService.isLoading && !isLoading
+          "
+        ></app-default-event>
       </ng-template>
     </mat-tab>
 

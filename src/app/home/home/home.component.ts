@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Event } from 'src/app/interfaces/event';
 import { PostWithUser } from 'src/app/interfaces/post';
 import { User } from 'src/app/interfaces/user';
@@ -20,6 +20,7 @@ import { CreateEventDialogComponent } from './create-event-dialog/create-event-d
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  isLoading: boolean;
   uid: string;
   user$: Observable<User> = this.authService.user$;
   images$: Observable<PostWithUser[]>;
@@ -53,9 +54,9 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EventService,
     private authService: AuthService,
-    private imageService: ImageService,
+    public imageService: ImageService,
     private routeService: RouteParamsService,
-    private videoService: VideoService
+    public videoService: VideoService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +72,7 @@ export class HomeComponent implements OnInit {
   }
 
   async postsInit(): Promise<void> {
+    this.isLoading = true;
     this.images$ = await this.imageService.getRecentImagesInJoinedEvents(
       this.uid
     );
@@ -80,10 +82,11 @@ export class HomeComponent implements OnInit {
 
     this.postList$ = combineLatest([this.images$, this.videos$]).pipe(
       map(([images, videos]) => {
-        if (images?.length) {
+        if (images?.length && videos?.length) {
           return images.concat(videos);
         }
-      })
+      }),
+      tap(() => (this.isLoading = false))
     );
   }
 

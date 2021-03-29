@@ -18,6 +18,7 @@ export class ImageService {
   uid: string;
   joinedEvents$: Observable<Event[]>;
   joinedEventIds: string[];
+  isLoading: boolean;
 
   constructor(
     private db: AngularFirestore,
@@ -66,6 +67,7 @@ export class ImageService {
   async getRecentImagesInJoinedEvents(
     uid: string
   ): Promise<Observable<PostWithUser[]>> {
+    this.isLoading = true;
     return this.userService
       .getJoinedEventIds(uid)
       .pipe(take(1))
@@ -112,7 +114,8 @@ export class ImageService {
         } else {
           return of(null);
         }
-      });
+      })
+      .finally(() => (this.isLoading = false));
   }
 
   getImage(eventId: string, imageId: string): Observable<Image> {

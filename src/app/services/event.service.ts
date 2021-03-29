@@ -138,6 +138,25 @@ export class EventService {
       );
   }
 
+  getJoinedEventUsersByDesc(eventId: string): Observable<User[]> {
+    return this.db
+      .collection(`events/${eventId}/joinedUids`, (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
+      .valueChanges()
+      .pipe(
+        switchMap((joinedUids: any) => {
+          if (joinedUids.length) {
+            return combineLatest(
+              joinedUids.map((ids) => this.userService.getUserData(ids.uid))
+            );
+          } else {
+            return of(null);
+          }
+        })
+      );
+  }
+
   getOldestJoinedEventUser(eventId: string) {
     return this.db
       .collection(`events/${eventId}/joinedUids`, (ref) =>

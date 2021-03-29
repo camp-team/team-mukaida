@@ -3,13 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, tap, map } from 'rxjs/operators';
 import { EventWithOwner } from 'src/app/interfaces/event';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventService } from 'src/app/services/event.service';
 import { RouteParamsService } from 'src/app/services/route-params.service';
 import { EventDeleteDialogComponent } from '../event-delete-dialog/event-delete-dialog.component';
 import { ExitEventDialogComponent } from '../exit-event-dialog/exit-event-dialog.component';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-event',
@@ -24,6 +25,9 @@ export class EventComponent implements OnInit {
       return this.eventServise.getEventWithOwner(this.eventId).pipe(take(1));
     })
   );
+  joinedUsers$: Observable<User[]>;
+  joinedRemainingPrticipantCount: number;
+  visibleaPrticipantCount = 4;
   eventInvitateURL = location.href.replace('event/', '');
 
   constructor(
@@ -40,6 +44,21 @@ export class EventComponent implements OnInit {
       this.eventId = params.get('eventId');
       this.routeService.eventIdSubject.next(this.eventId);
     });
+
+    this.joinedUsers$ = this.eventServise
+      .getJoinedEventUsersByDesc(this.eventId)
+      .pipe(
+        tap(
+          (users) =>
+            (this.joinedRemainingPrticipantCount =
+              users.length - this.visibleaPrticipantCount)
+        )
+      )
+      .pipe(
+        map((users) => {
+          return users.filter((user) => user.hasOwnProperty('avatarURL'));
+        })
+      );
   }
 
   openDeleteEventDialog() {

@@ -16,12 +16,37 @@
           <dt class="event__title">{{ event.title }}</dt>
           <dd class="event__description">{{ event.descliption }}</dd>
           <dd class="event__users">
-            <ul class="users">
-              <li
-                class="users__item"
+            <div class="users">
+              <figure
+                class="users__owner users__item"
                 [style.background-image]="'url(' + event.user?.avatarURL + ')'"
-              ></li>
-            </ul>
+              >
+                <img
+                  class="users__owner-icon"
+                  src="assets/images/crown.svg"
+                  alt=""
+                  width="20px"
+                  height="20px"
+                />
+              </figure>
+              <ng-container
+                *ngFor="let participant of joinedUsers$ | async; index as i"
+              >
+                <figure
+                  *ngIf="i < visibleaPrticipantCount"
+                  class="users__item"
+                  [style.background-image]="
+                    'url(' + participant?.avatarURL + ')'
+                  "
+                ></figure>
+              </ng-container>
+              <div
+                class="users__all-participant"
+                *ngIf="joinedRemainingPrticipantCount"
+              >
+                ...他{{ joinedRemainingPrticipantCount }}名
+              </div>
+            </div>
           </dd>
           <div class="event__share">
             <button

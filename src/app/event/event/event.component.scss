@@ -1,6 +1,10 @@
 @import 'variables';
 @import 'mixins';
 
+figure {
+  margin: 0;
+}
+
 .event {
   &__head {
     position: relative;
@@ -156,10 +160,11 @@
 }
 
 .users {
-  margin: 0;
+  margin-top: 36px;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   list-style: none;
   &__item {
     width: 32px;
@@ -172,5 +177,17 @@
       width: 40px;
       height: 40px;
     }
+  }
+  &__owner {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  &__owner-icon {
+    position: absolute;
+    top: -20px;
+  }
+  &__all-participant {
+    margin-top: 8px;
   }
 }

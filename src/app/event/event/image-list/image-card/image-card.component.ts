@@ -66,7 +66,7 @@ export class ImageCardComponent implements OnInit {
     private router: Router
   ) {
     this.authServise.user$.subscribe((user) => {
-      this.uid = user.uid;
+      this.uid = user?.uid;
     });
   }
 

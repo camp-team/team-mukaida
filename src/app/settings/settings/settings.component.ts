@@ -35,7 +35,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe((user) => {
       this.user = user;
-      this.oldImageUrl = user.avatarURL;
+      this.oldImageUrl = user?.avatarURL;
       this.form.patchValue({
         ...user,
       });

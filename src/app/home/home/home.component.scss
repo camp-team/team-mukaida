@@ -8,8 +8,12 @@
     justify-content: space-evenly;
     font-family: 'M PLUS Rounded 1c', sans-serif;
     align-items: center;
-    padding-top: 56px;
-    margin: 56px 0;
+    padding: 112px 0 56px;
+    background: linear-gradient(
+      60deg,
+      rgba($color-accent, 0.88),
+      $color-accent
+    );
   }
 }
 

@@ -98,6 +98,8 @@ export class EventService {
         switchMap((events) => {
           if (events.length === 0) {
             return of(null);
+          } else {
+            return of(events);
           }
         })
       );

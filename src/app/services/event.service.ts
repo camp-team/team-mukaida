@@ -4,15 +4,15 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
-import { switchMap, map, take } from 'rxjs/operators';
-import { Event, EventWithOwner } from '../interfaces/event';
 import * as firebase from 'firebase';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
+import { Event, EventWithOwner } from '../interfaces/event';
 import { Image } from '../interfaces/image';
 import { Password } from '../interfaces/password';
-import { UserService } from './user.service';
-import { CommentService } from './comment.service';
 import { User } from '../interfaces/user';
+import { CommentService } from './comment.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -93,7 +93,16 @@ export class EventService {
       .collectionGroup<Event>('events', (ref) =>
         ref.where('ownerId', '==', uid)
       )
-      .valueChanges();
+      .valueChanges()
+      .pipe(
+        switchMap((events) => {
+          if (events.length === 0) {
+            return of(null);
+          } else {
+            return of(events);
+          }
+        })
+      );
   }
 
   getJoinedEvents(uid: string): Observable<Event[]> {

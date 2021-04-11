@@ -2,7 +2,8 @@
 @import 'mixins';
 
 .default {
-  padding: 16px;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  padding: 24px 16px;
   @include pc {
     padding: 24px 120px;
   }
@@ -21,6 +22,11 @@
     font-weight: 600;
     color: $color-font;
     margin-bottom: 24px;
+    @include pc {
+      font-size: 24px;
+      margin-bottom: 48px;
+      height: 36px;
+    }
   }
   &__block {
     display: grid;
@@ -30,11 +36,20 @@
     @include pc {
       grid-template-columns: 1fr 1fr;
     }
+    img {
+      margin-bottom: 24px;
+    }
   }
   &__text-wrap {
-    width: 50%;
+    width: 90%;
     opacity: 0.8;
     margin-bottom: 24px;
+    order: 2;
+    text-align: center;
+  }
+  &__block-child {
+    display: grid;
+    grid-template-columns: 1fr;
   }
   &__btn {
     margin-top: 24px;
@@ -46,18 +61,22 @@
     color: #fff;
     font-size: 14px;
     font-weight: 700;
-    font-family: 'M PLUS Rounded 1c', sans-serif;
     outline: none;
     transition: background-color 0.4s, color 0.4s;
-    margin-left: auto;
     cursor: pointer;
     border: 1px solid #fa776d;
     background-color: #fa776d;
   }
   img {
     width: 300px;
+    box-shadow: 16px 16px 2rem -2rem hsl(200 50% 20% / 60%);
   }
   &__icon {
     color: $color-accent;
+    @include pc {
+      font-size: 36px;
+      margin-right: 16px;
+      height: 36px;
+    }
   }
 }

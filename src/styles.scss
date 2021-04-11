@@ -49,7 +49,7 @@ button {
   max-width: 1200px;
   padding: 0 16px;
   @include pc {
-    padding: 0 24px;
+    padding: 56px 24px;
   }
   &--create-event {
     max-width: 960px;

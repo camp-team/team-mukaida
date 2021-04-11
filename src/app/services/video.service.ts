@@ -15,6 +15,8 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class VideoService {
+  isLoading: boolean;
+
   constructor(
     private db: AngularFirestore,
     private storage: AngularFireStorage,
@@ -106,6 +108,7 @@ export class VideoService {
   async getRecentVideosInJoinedEvents(
     uid: string
   ): Promise<Observable<PostWithUser[]>> {
+    this.isLoading = true;
     return this.userService
       .getJoinedEventIds(uid)
       .pipe(take(1))
@@ -152,7 +155,8 @@ export class VideoService {
         } else {
           return of(null);
         }
-      });
+      })
+      .finally(() => (this.isLoading = false));
   }
 
   deleteVideo(eventId: string, videoId: string, thumbnailId: string): void {

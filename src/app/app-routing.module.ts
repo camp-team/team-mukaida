@@ -20,14 +20,16 @@ const routes: Routes = [
     component: NotFoundComponent,
   },
   {
-    path: 'settings',
-    loadChildren: () =>
-      import('./settings/settings.module').then((m) => m.SettingsModule),
-  },
-  {
     path: '',
     component: ShellComponent,
     children: [
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.module').then((m) => m.SettingsModule),
+        canLoad: [AuthGuard],
+        canActivate: [AuthGuard],
+      },
       {
         path: '',
         loadChildren: () =>

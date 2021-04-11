@@ -1,26 +1,11 @@
 <div class="container">
-  <!-- <div class="home-header">
-    <div class="descriptions">
-      <p class="descriptions__title">Instacircleについて</p>
-      <p>家族や友達と画像を共有出来ます。</p>
-      <p>
-        イベントを作成してリンクをを共有したり、教えてもらったリンクに参加しましょう！
-      </p>
-    </div>
-    <div class="actions">
-      <button (click)="openJoinEventDialog()" class="actions__join-btn">
-        イベント参加
-      </button>
-      <button routerLink="/create-event" class="actions__create-btn">
-        イベント作成
-      </button>
-    </div>
-  </div> -->
-
   <mat-tab-group class="mat-tab" mat-align-tabs="center">
     <mat-tab label="新着投稿">
       <ng-container *ngIf="postList$ | async as posts; else default">
-        <div class="mat-tab__card-layout mat-tab__card-layout--posts">
+        <div
+          class="mat-tab__card-layout mat-tab__card-layout--posts"
+          [class.default]="!posts"
+        >
           <app-recent-posts
             *ngFor="let post of posts"
             [post]="post"
@@ -29,13 +14,26 @@
           ></app-recent-posts>
         </div>
       </ng-container>
+
+      <ng-container
+        *ngIf="videoService.isLoading || imageService.isLoading || isLoading"
+      >
+        <div class="loading">
+          <img class="loading__svg" src="assets/images/loading.svg" alt="" />
+        </div>
+      </ng-container>
+
       <ng-template #default>
-        <app-default-event></app-default-event>
+        <app-default-event
+          *ngIf="
+            !videoService.isLoading && !imageService.isLoading && !isLoading
+          "
+        ></app-default-event>
       </ng-template>
     </mat-tab>
 
     <mat-tab label="主催イベント">
-      <ng-container *ngIf="myOwnedEvents$ | async as events">
+      <ng-container *ngIf="myOwnedEvents$ | async as events; else default">
         <div class="mat-tab__card-layout">
           <app-event-list-card
             *ngFor="let event of events"
@@ -44,15 +42,17 @@
             (click)="streamParams(event.eventId)"
           ></app-event-list-card>
         </div>
-        <app-default-event *ngIf="events.length == 0"></app-default-event>
       </ng-container>
+      <ng-template #default>
+        <app-default-event></app-default-event>
+      </ng-template>
     </mat-tab>
 
     <mat-tab label="参加イベント">
-      <ng-container *ngIf="postList$ | async as posts; else default">
+      <ng-container *ngIf="joinedEvents$ | async as events; else default">
         <div class="mat-tab__card-layout">
           <app-event-list-card
-            *ngFor="let event of joinedEvents$ | async as events"
+            *ngFor="let event of events | async as events"
             [event]="event"
             [routerLink]="'/event/' + event?.eventId"
             (click)="streamParams(event.eventId)"

@@ -1,4 +1,9 @@
+@import 'mixins';
+
 :host {
   display: block;
-  padding: 53px 0;
+  padding: 56px 0 53px;
+  @include pc {
+    padding: 0 0 53px;
+  }
 }
